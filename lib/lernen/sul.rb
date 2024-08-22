@@ -15,16 +15,23 @@ module Lernen
   # - `#step(input)`
   class SUL
     # Creates a SUL from the given block as an implementation of a membership query.
-    def self.from_block(&) = BlockSUL.new(&)
+    def self.from_block(cache: true, &) = BlockSUL.new(cache:, &)
 
-    def initialize
+    def initialize(cache: true)
+      @cache = cache ? {} : nil
+      @num_cached_queries = 0
       @num_queries = 0
       @num_steps = 0
     end
 
     # Returns statistics information as a `Hash` object.
     def stats
-      { num_queries: @num_queries, num_steps: @num_steps }
+      {
+        num_cache: @cache&.size || 0,
+        num_cached_queries: @num_cached_queries,
+        num_queries: @num_queries,
+        num_steps: @num_steps
+      }
     end
 
     # Runs a membership query with the given inputs.
@@ -32,6 +39,12 @@ module Lernen
     # Note that this method does not accept the empty string due to no outpus.
     # If you need to call `query` with the empty string, you should use `MooreSUL#query_empty` instead.
     def query(inputs)
+      cached = @cache && @cache[inputs]
+      if cached
+        @num_cached_queries += 1
+        return cached
+      end
+
       if inputs.empty?
         raise ArgumentError, "`query` does not accept the empty string. Please use `query_empty` instead."
       end
@@ -44,6 +57,8 @@ module Lernen
 
       @num_queries += 1
       @num_steps += inputs.size
+
+      @cache[inputs] = outputs
 
       outputs
     end
@@ -77,6 +92,10 @@ module Lernen
   # - `#step(input)`
   # - `#query_empty`
   class MooreSUL < SUL
+    def initialize(cache: true)
+      super
+    end
+
     # Runs a membership query with the given inputs.
     #
     # This is *abstract*.
@@ -89,8 +108,8 @@ module Lernen
   #
   # A block is expected to behave like a membership query.
   class BlockSUL < MooreSUL
-    def initialize(&block)
-      super
+    def initialize(cache: true, &block)
+      super(cache:)
 
       @block = block
       @inputs = []
