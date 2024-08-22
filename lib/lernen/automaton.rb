@@ -50,6 +50,23 @@ module Lernen
     def ==(other)
       initial_state == other.initial_state && accept_states == other.accept_states && transitions == other.transitions
     end
+
+    # Returns a mermaid diagram.
+    def to_mermaid
+      mmd = +""
+
+      mmd << "flowchart TD\n"
+
+      states = [initial_state] + accept_states.to_a + transitions.keys.map { |(q, _)| q } + transitions.values
+      states.uniq!
+
+      states.sort.each { |q| mmd << (accept_states.include?(q) ? "  #{q}(((#{q})))\n" : "  #{q}((#{q}))\n") }
+      mmd << "\n"
+
+      transitions.each { |(q1, i), q2| mmd << "  #{q1} -- #{i} --> #{q2}\n" }
+
+      mmd.dup
+    end
   end
 
   # Moore is a deterministic Moore machine.
@@ -75,6 +92,23 @@ module Lernen
     def ==(other)
       initial_state == other.initial_state && outputs == other.outputs && transitions == other.transitions
     end
+
+    # Returns a mermaid diagram.
+    def to_mermaid
+      mmd = +""
+
+      mmd << "flowchart TD\n"
+
+      states = [initial_state] + transitions.keys.map { |(q, _)| q } + transitions.values
+      states.uniq!
+
+      states.sort.each { |q| mmd << "  #{q}((\"#{q}|#{outputs[q]}\"))\n" }
+      mmd << "\n"
+
+      transitions.each { |(q1, i), q2| mmd << "  #{q1} -- #{i} --> #{q2}\n" }
+
+      mmd.dup
+    end
   end
 
   # Mealy is a deterministic Mealy machine.
@@ -96,6 +130,23 @@ module Lernen
     # Checks equality.
     def ==(other)
       initial_state == other.initial_state && transitions == other.transitions
+    end
+
+    # Returns a mermaid diagram.
+    def to_mermaid
+      mmd = +""
+
+      mmd << "flowchart TD\n"
+
+      states = [initial_state] + transitions.keys.map { |(q, _)| q } + transitions.values.map { |(_, q)| q }
+      states.uniq!
+
+      states.sort.each { |q| mmd << "  #{q}((#{q}))\n" }
+      mmd << "\n"
+
+      transitions.each { |(q1, i), (o, q2)| mmd << "  #{q1} -- \"#{i}|#{o}\" --> #{q2}\n" }
+
+      mmd.dup
     end
   end
 end
