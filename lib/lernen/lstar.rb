@@ -103,7 +103,7 @@ module Lernen
       automaton =
         case @automaton_type
         in :dfa
-          accept_states = state_to_prefix.to_a.filter { |(_i, q)| @table[q][0] }.to_set { |(i, _q)| i }
+          accept_states = state_to_prefix.to_a.filter { |(_, q)| @table[q][0] }.to_set { |(i, _)| i }
           DFA.new(0, accept_states, transitions)
         in :moore
           outputs = state_to_prefix.transform_values { |q| @table[q][0] }
@@ -153,7 +153,9 @@ module Lernen
             observation_table.prefixes << prefix unless observation_table.prefixes.include?(prefix)
           end
         else
-          new_prefix, new_suffix = CexProcessor.process(sul, hypothesis, cex, state_to_prefix, cex_processing:)
+          old_prefix, new_input, new_suffix =
+            CexProcessor.process(sul, hypothesis, cex, state_to_prefix, cex_processing:)
+          new_prefix = old_prefix + [new_input]
           observation_table.prefixes << new_prefix unless observation_table.prefixes.include?(new_prefix)
           observation_table.suffixes << new_suffix unless observation_table.suffixes.include?(new_suffix)
         end

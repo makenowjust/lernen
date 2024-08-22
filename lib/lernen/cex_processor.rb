@@ -23,7 +23,7 @@ module Lernen
 
         prefix = state_to_prefix[next_state]
         suffix = cex[i + 1...]
-        return state_to_prefix[current_state] + [a], suffix if expected_output != sul.query(prefix + suffix).last
+        return state_to_prefix[current_state], a, suffix if expected_output != sul.query(prefix + suffix).last
 
         current_state = next_state
       end
@@ -43,9 +43,7 @@ module Lernen
         prefix = cex[0...mid]
         suffix = cex[mid...]
 
-        prefix_state = hypothesis.initial_state
-        prefix.each { |a| _, prefix_state = hypothesis.step(prefix_state, a) }
-
+        _, prefix_state = hypothesis.run(prefix)
         if expected_output == sul.query(state_to_prefix[prefix_state] + suffix).last
           low = mid
         else
@@ -56,10 +54,8 @@ module Lernen
       prefix = cex[0...low]
       suffix = cex[high...]
 
-      prefix_state = hypothesis.initial_state
-      prefix.each { |a| _, prefix_state = hypothesis.step(prefix_state, a) }
-
-      [state_to_prefix[prefix_state] + [cex[low]], suffix]
+      _, prefix_state = hypothesis.run(prefix)
+      [state_to_prefix[prefix_state], cex[low], suffix]
     end
   end
 end

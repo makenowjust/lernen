@@ -16,3 +16,4 @@ require_relative "lernen/sul"
 require_relative "lernen/version"
 
 require_relative "lernen/lstar"
+require_relative "lernen/kearns_vazirani"

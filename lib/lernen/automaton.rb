@@ -1,9 +1,37 @@
 # frozen_string_literal: true
 
 module Lernen
+  # Automaton is an abstract class for automata.
+  #
+  # Note that this class is *abstract*. You should implement the following method:
+  #
+  # - `#step(state, input)`
+  class Automaton
+    # Computes a transition for the given `input` from the current `state`.
+    #
+    # This is *abstract*.
+    def step(_state, _input)
+      raise TypeError, "abstract method: `step`"
+    end
+
+    # Runs this automaton with the given input string and returns an output sequence
+    # and a state after running.
+    def run(inputs)
+      state = @initial_state
+      outputs = []
+      inputs.each do |input|
+        output, state = step(state, input)
+        outputs << output
+      end
+      [outputs, state]
+    end
+  end
+
   # DFA is a deterministic finite-state automaton.
-  class DFA
+  class DFA < Automaton
     def initialize(initial_state, accept_states, transitions)
+      super()
+
       @initial_state = initial_state
       @accept_states = accept_states
       @transitions = transitions
@@ -25,8 +53,10 @@ module Lernen
   end
 
   # Moore is a deterministic Moore machine.
-  class Moore
+  class Moore < Automaton
     def initialize(initial_state, outputs, transitions)
+      super()
+
       @initial_state = initial_state
       @outputs = outputs
       @transitions = transitions
@@ -48,8 +78,10 @@ module Lernen
   end
 
   # Mealy is a deterministic Mealy machine.
-  class Mealy
+  class Mealy < Automaton
     def initialize(initial_state, transitions)
+      super()
+
       @initial_state = initial_state
       @transitions = transitions
     end
