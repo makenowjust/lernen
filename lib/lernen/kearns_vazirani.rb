@@ -32,8 +32,8 @@ module Lernen
         @root = Node[suffix, {}]
 
         suffix_out = sul.query(suffix).last
-        @root.edges[suffix_out] = Leaf[suffix]
-        @paths[suffix] = [suffix_out]
+        @root.edges[suffix_out] = Leaf[[]]
+        @paths[[]] = [suffix_out]
 
         cex_out = sul.query(cex).last
         @root.edges[cex_out] = Leaf[cex]
@@ -69,14 +69,14 @@ module Lernen
       queue = []
       prefix_to_state = {}
 
-      queue << @root.suffix
-      prefix_to_state[@root.suffix] = prefix_to_state.size
+      queue << []
+      prefix_to_state[[]] = prefix_to_state.size
 
       until queue.empty?
         prefix = queue.shift
         state = prefix_to_state[prefix]
-        @alphabet.each do |a|
-          word = prefix + [a]
+        @alphabet.each do |input|
+          word = prefix + [input]
           next_prefix = sift(word)
 
           unless prefix_to_state.include?(next_prefix)
@@ -87,10 +87,10 @@ module Lernen
           next_state = prefix_to_state[next_prefix]
           case @automaton_type
           in :dfa | :moore
-            transitions[[state, a]] = next_state
+            transitions[[state, input]] = next_state
           in :mealy
-            out = @sul.query(next_prefix).last
-            transitions[[state, a]] = [out, next_state]
+            output = @sul.query(word).last
+            transitions[[state, input]] = [output, next_state]
           end
         end
       end
