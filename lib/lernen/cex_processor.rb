@@ -10,6 +10,8 @@ module Lernen
         process_linear(sul, hypothesis, cex, state_to_prefix)
       in :binary
         process_binary(sul, hypothesis, cex, state_to_prefix)
+      in :exponential
+        process_exponential(sul, hypothesis, cex, state_to_prefix)
       end
     end
 
@@ -32,11 +34,10 @@ module Lernen
     # Processes a given `cex` by binary search.
     #
     # It is known as the Rivest-Schapire (RS) technique.
-    def self.process_binary(sul, hypothesis, cex, state_to_prefix)
+    def self.process_binary(sul, hypothesis, cex, state_to_prefix, low: 0)
       expected_output = sul.query(cex).last
 
-      low = 0
-      high = cex.size
+      high = cex.size - 1
 
       while high - low > 1
         mid = (low + high) / 2
@@ -56,6 +57,38 @@ module Lernen
 
       _, prefix_state = hypothesis.run(prefix)
       [state_to_prefix[prefix_state], cex[low], suffix]
+    end
+
+    # Processes a given `cex` by exponential seatch.
+    #
+    # This idea is described in this paper.
+    #
+    # Isberner, Malte, and Bernhard Steffen. "An abstract framework for counterexample
+    # analysis in active automata learning." International Conference on Grammatical
+    # Inference. PMLR, 2014.
+    def self.process_exponential(sul, hypothesis, cex, state_to_prefix)
+      expected_output = sul.query(cex).last
+
+      prev_bp = 0
+      bp = 1
+
+      loop do
+        if bp >= cex.size
+          bp = cex.size
+          break
+        end
+
+        prefix = cex[0...bp]
+        suffix = cex[bp...]
+
+        _, prefix_state = hypothesis.run(prefix)
+        break if expected_output != sul.query(state_to_prefix[prefix_state] + suffix).last
+
+        prev_bp = bp
+        bp *= 2
+      end
+
+      process_binary(sul, hypothesis, cex, state_to_prefix, low: prev_bp)
     end
   end
 end

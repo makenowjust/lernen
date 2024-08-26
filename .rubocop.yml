@@ -32,3 +32,6 @@ Metrics/ParameterLists:
 
 Metrics/PerceivedComplexity:
   Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
