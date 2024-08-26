@@ -75,11 +75,12 @@ module Lernen
 
   # This equivalence oracles uses random-walk exploration for equivalence checking.
   class RandomWalkOracle < Oracle
-    def initialize(alphabet, sul, step_limit: 500, reset_prob: 0.09)
+    def initialize(alphabet, sul, step_limit: 500, reset_prob: 0.09, rand: Random)
       super(alphabet, sul)
 
       @step_limit = step_limit
       @reset_prob = reset_prob
+      @rand = rand
     end
 
     # Finds a conterexample against the given `hypothesis` automaton.
@@ -93,12 +94,12 @@ module Lernen
       while random_steps_done < @step_limit
         random_steps_done += 1
 
-        if rand < @reset_prob
+        if @rand.rand < @reset_prob
           inputs = []
           reset_internal(hypothesis)
         end
 
-        inputs << @alphabet.sample
+        inputs << @alphabet[@rand.rand(@alphabet.size)]
 
         @num_steps += 1
         h_out, @current_state = hypothesis.step(@current_state, inputs.last)
