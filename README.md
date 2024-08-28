@@ -1,6 +1,6 @@
 # Lernen
 
-> a simple automata learning library.
+> a simple automata learning library written in Ruby.
 
 ## Usage
 
