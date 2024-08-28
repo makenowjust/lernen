@@ -85,15 +85,15 @@ module Lernen
 
       @basis = []
       @frontier = {}
+
+      @incomplete_basis = []
     end
 
     # Runs the L# algoritghm and returns an inferred automaton.
     def learn
-      @basis << []
+      add_basis([])
 
       loop do
-        update_frontier
-
         next if promotion || completion || identification
 
         hypothesis = check_hypothesis
@@ -140,6 +140,7 @@ module Lernen
 
     def add_basis(prefix)
       @basis << prefix
+      @incomplete_basis << prefix
       prefix_node = @observation_tree[prefix]
       @frontier.each do |border, eq_prefixes|
         border_node = @observation_tree[border]
@@ -158,7 +159,7 @@ module Lernen
     def update_frontier
       @frontier.each do |border, eq_prefixes|
         border_node = @observation_tree[border]
-        @frontier[border] = eq_prefixes.filter do |prefix|
+        eq_prefixes.filter! do |prefix|
           prefix_node = @observation_tree[prefix]
           check_apartness(prefix_node, border_node).nil?
         end
@@ -232,46 +233,53 @@ module Lernen
     end
 
     def promotion
-      isolated_borders = @frontier.to_a.filter { |(_, eq_prefixes)| eq_prefixes.empty? }.map { |(border, _)| border }
+      @frontier.each do |new_prefix, eq_prefixes|
+        next unless eq_prefixes.empty?
 
-      return false if isolated_borders.empty?
+        @frontier.delete(new_prefix)
+        add_basis(new_prefix)
 
-      new_prefix = isolated_borders.first
-      @frontier.delete(new_prefix)
-      add_basis(new_prefix)
+        return true
+      end
 
-      true
+      false
     end
 
     def completion
-      incomplete_borders =
-        @basis
-          .flat_map { |prefix| @alphabet.map { |a| prefix + [a] } }
-          .filter do |border|
-            @observation_tree[border].nil? || (!@basis.include?(border) && !@frontier.include?(border))
-          end
+      updated = false
 
-      return false if incomplete_borders.empty?
+      until @incomplete_basis.empty?
+        prefix = @incomplete_basis.pop
+        prefix_tree = @observation_tree[prefix]
 
-      incomplete_borders.each do |border|
-        @observation_tree.query(border)
-        add_frontier(border)
+        @alphabet.each do |input|
+          border = prefix + [input]
+          next if prefix_tree.edges[input] && (@basis.include?(border) || @frontier.include?(border))
+
+          @observation_tree.query(border)
+          add_frontier(border)
+
+          updated = true
+        end
       end
 
-      true
+      updated
     end
 
     def identification
-      unidentified_borders = @frontier.keys.filter { @frontier[_1].size >= 2 }
+      @frontier.each do |border, eq_prefixes|
+        next unless eq_prefixes.size >= 2
 
-      return false if unidentified_borders.empty?
+        prefix1 = eq_prefixes[0]
+        prefix2 = eq_prefixes[1]
+        witness = compute_witness(prefix1, prefix2)
+        @observation_tree.query(border + witness)
+        update_frontier
 
-      border = unidentified_borders.first
-      prefix1, prefix2 = @frontier[border][0...2]
-      witness = compute_witness(prefix1, prefix2)
-      @observation_tree.query(border + witness)
+        return true
+      end
 
-      true
+      false
     end
 
     def check_hypothesis
@@ -300,6 +308,7 @@ module Lernen
       return hypothesis if cex.nil?
 
       process_cex(hypothesis, state_to_prefix, cex)
+      update_frontier
 
       nil
     end

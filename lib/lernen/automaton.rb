@@ -25,6 +25,38 @@ module Lernen
       end
       [outputs, state]
     end
+
+    # Checks equivalence between `self` and `other` on the given `alphabet`.
+    def check_equivalence(alphabet, other)
+      return [] unless instance_of?(other.class)
+
+      case self
+      when DFA
+        return [] unless accept_states.include?(initial_state) == other.accept_states.include?(other.initial_state)
+      when Moore
+        return [] unless outputs[initial_state] == other.outputs[other.initial_state]
+      end
+
+      queue = []
+      visited = Set.new
+      queue << [[], initial_state, other.initial_state]
+      visited << [initial_state, other.initial_state]
+      until queue.empty?
+        path, self_state, other_state = queue.shift
+        alphabet.each do |input|
+          self_output, self_next_state = step(self_state, input)
+          other_output, other_next_state = other.step(other_state, input)
+          return path + [input] if self_output != other_output
+          next_pair = [self_next_state, other_next_state]
+          unless visited.include?(next_pair)
+            queue << [path + [input], *next_pair]
+            visited << next_pair
+          end
+        end
+      end
+
+      nil
+    end
   end
 
   # DFA is a deterministic finite-state automaton.
@@ -66,6 +98,58 @@ module Lernen
       transitions.each { |(q1, i), q2| mmd << "  #{q1} -- #{i} --> #{q2}\n" }
 
       mmd.dup
+    end
+
+    # Returns a random DFA.
+    #
+    # The result DFA is complete, and all states in the result DFA are reachable
+    # to some accepting states or the sink state. However, the result DFA may be
+    # non-minimal.
+    def self.random(
+      alphabet:,
+      max_state_size:,
+      max_accept_state_ratio: 0.5,
+      min_state_size: 1,
+      sink_state_prob: 0.4,
+      random: Random
+    )
+      state_size = random.rand(min_state_size..max_state_size)
+      accept_state_ratio = [max_accept_state_ratio * random.rand, 0.01].max
+      accept_state_size = [state_size, (state_size * accept_state_ratio).ceil].min
+
+      initial_state = 0
+      non_accepting_states = (0...state_size).to_a
+      non_accepting_states.shuffle!(random:)
+      accept_states = non_accepting_states.pop(accept_state_size).to_set
+
+      sink_state = random.rand < sink_state_prob ? non_accepting_states.pop : nil
+
+      transitions = {}
+      accept_states.each_with_index do |accept_state, i|
+        next if accept_state == initial_state
+        n = i + 1 == accept_state_size ? non_accepting_states.size : random.rand(non_accepting_states.size)
+        state = initial_state
+        non_accepting_states
+          .pop(n)
+          .each do |next_state|
+            next if next_state == initial_state
+            input = alphabet.sample(random:)
+            transitions[[state, input]] = next_state
+            state = next_state
+          end
+        input = alphabet.sample(random:)
+        transitions[[state, input]] = accept_state
+      end
+
+      state_size.times do |state|
+        alphabet.each do |input|
+          next if transitions[[state, input]]
+          next_state = state == sink_state ? sink_state : random.rand(state_size)
+          transitions[[state, input]] = next_state
+        end
+      end
+
+      new(initial_state, accept_states, transitions)
     end
   end
 

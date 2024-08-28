@@ -17,6 +17,17 @@ module Lernen
     # Creates a SUL from the given block as an implementation of a membership query.
     def self.from_block(cache: true, &) = BlockSUL.new(cache:, &)
 
+    # Creates a SUL from the given automaton as an implementation.
+    def self.from_automaton(automaton, cache: true) =
+      case automaton
+      when DFA
+        DFASimulatorSUL.new(automaton, cache:)
+      when Mealy
+        MealySimulatorSUL.new(automaton, cache:)
+      when Moore
+        MooreSimulatorSUL.new(automaton, cache:)
+      end
+
     def initialize(cache: true)
       @cache = cache ? {} : nil
       @num_cached_queries = 0
@@ -96,11 +107,76 @@ module Lernen
       super
     end
 
-    # Runs a membership query with the given inputs.
+    # Runs a membership query with the empty input.
     #
     # This is *abstract*.
     def query_empty
       raise TypeError, "abstract method: `query_empty`"
+    end
+  end
+
+  # BaseSimulatorSUL is a base implementation of SUL on automaton simulators.
+  module BaseSimulatorSUL
+    # It is a setup procedure of this SUL.
+    def setup
+      @state = @automaton.initial_state
+    end
+
+    # It is a shutdown procedure of this SUL.
+    def shutdown
+      @state = nil
+    end
+
+    # Runs a membership query with the given inputs.
+    def step(input)
+      output, @state = @automaton.step(@state, input)
+      output
+    end
+  end
+
+  # DFASimulatorSUL is a SUL on a DFA simuator.
+  class DFASimulatorSUL < MooreSUL
+    include BaseSimulatorSUL
+
+    def initialize(automaton, cache: true)
+      super(cache:)
+
+      @automaton = automaton
+      @state = nil
+    end
+
+    # Runs a membership query with the empty input.
+    def query_empty
+      @automaton.accept_states.include?(@automaton.initial_state)
+    end
+  end
+
+  # MealySimulatorSUL is a SUL on a Mealy simuator.
+  class MealySimulatorSUL < SUL
+    include BaseSimulatorSUL
+
+    def initialize(automaton, cache: true)
+      super(cache:)
+
+      @automaton = automaton
+      @state = nil
+    end
+  end
+
+  # MooreSimulatorSUL is a SUL on a Moore simuator.
+  class MooreSimulatorSUL < MooreSUL
+    include BaseSimulatorSUL
+
+    def initialize(automaton, cache: true)
+      super(cache:)
+
+      @automaton = automaton
+      @state = nil
+    end
+
+    # Runs a membership query with the empty input.
+    def query_empty
+      @automaton.outputs[@automaton.initial_state]
     end
   end
 
@@ -126,7 +202,7 @@ module Lernen
       @block.call(@inputs)
     end
 
-    # Runs a membership query with the given inputs.
+    # Runs a membership query with the empty input.
     def query_empty
       @block.call([])
     end
