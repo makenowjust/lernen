@@ -15,3 +15,8 @@ group :development do
   gem "syntax_tree", "~> 6.2.0"
   gem "yard", "~> 0.9"
 end
+
+group :profile do
+  gem "stackprof", "~> 0.2.26"
+  gem "vernier"
+end
