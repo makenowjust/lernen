@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-class TestLSharp < Minitest::Test
+require_relative "test_helper"
+
+class TestKearnsVazirani < Minitest::Test
   def test_learn_dfa
     alphabet = %w[0 1]
     sul = Lernen::SUL.from_block { |inputs| inputs.count { _1 == "1" } % 4 == 3 }
     oracle = Lernen::BreadthFirstExplorationOracle.new(alphabet, sul)
-    hypothesis = Lernen::LSharp.learn(alphabet, sul, oracle, automaton_type: :dfa)
+    hypothesis = Lernen::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type: :dfa)
 
     expected =
       Lernen::DFA.new(
@@ -30,7 +32,7 @@ class TestLSharp < Minitest::Test
     alphabet = %w[0 1]
     sul = Lernen::SUL.from_block { |inputs| inputs.count { _1 == "1" } % 4 }
     oracle = Lernen::BreadthFirstExplorationOracle.new(alphabet, sul)
-    hypothesis = Lernen::LSharp.learn(alphabet, sul, oracle, automaton_type: :moore)
+    hypothesis = Lernen::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type: :moore)
 
     expected =
       Lernen::Moore.new(
@@ -55,7 +57,7 @@ class TestLSharp < Minitest::Test
     alphabet = %w[0 1]
     sul = Lernen::SUL.from_block { |inputs| inputs.count { _1 == "1" } % 4 == 3 }
     oracle = Lernen::BreadthFirstExplorationOracle.new(alphabet, sul)
-    hypothesis = Lernen::LSharp.learn(alphabet, sul, oracle, automaton_type: :moore)
+    hypothesis = Lernen::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type: :moore)
 
     expected =
       Lernen::Moore.new(
@@ -80,7 +82,7 @@ class TestLSharp < Minitest::Test
     alphabet = %w[0 1]
     sul = Lernen::SUL.from_block { |inputs| inputs.count { _1 == "1" } % 4 }
     oracle = Lernen::BreadthFirstExplorationOracle.new(alphabet, sul)
-    hypothesis = Lernen::LSharp.learn(alphabet, sul, oracle, automaton_type: :mealy)
+    hypothesis = Lernen::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type: :mealy)
 
     expected =
       Lernen::Mealy.new(
@@ -104,7 +106,7 @@ class TestLSharp < Minitest::Test
     alphabet = %w[0 1]
     sul = Lernen::SUL.from_block { |inputs| inputs.count { _1 == "1" } % 4 == 3 }
     oracle = Lernen::BreadthFirstExplorationOracle.new(alphabet, sul)
-    hypothesis = Lernen::LSharp.learn(alphabet, sul, oracle, automaton_type: :mealy)
+    hypothesis = Lernen::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type: :mealy)
 
     expected =
       Lernen::Mealy.new(

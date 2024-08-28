@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 require "bundler/gem_tasks"
-require "minitest/test_task"
 require "yard"
+require "rake/testtask"
 require "rubocop/rake_task"
 require "syntax_tree/rake_tasks"
 
-Minitest::TestTask.create
+Rake::TestTask.new(:test) do |t|
+  t.verbose = true
+  t.pattern = "test/**/*_test.rb"
+end
 
 YARD::Rake::YardocTask.new do |t|
   t.files = ["lib/**/*.rb"]

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "test_helper"
+
 class TestOracle < Minitest::Test
   def test_breadth_first_exploration_oracle
     alphabet = %w[0 1]

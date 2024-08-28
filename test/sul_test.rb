@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "test_helper"
+
 class TestSUL < Minitest::Test
   def test_block_sul
     sul = Lernen::SUL.from_block { |inputs| inputs.count { _1 == "1" } % 4 == 3 }

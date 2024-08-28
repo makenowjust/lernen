@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "test_helper"
+
 class TestLStar < Minitest::Test
   def test_learn_dfa
     alphabet = %w[0 1]
