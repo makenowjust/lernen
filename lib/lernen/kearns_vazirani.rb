@@ -116,30 +116,28 @@ module Lernen
       old_prefix, new_input, new_suffix =
         CexProcessor.process(@sul, hypothesis, cex, state_to_prefix, cex_processing: @cex_processing)
 
-      _, old_prefix_state = hypothesis.run(old_prefix)
-      new_prefix = state_to_prefix[old_prefix_state] + [new_input]
+      new_prefix = old_prefix + [new_input]
       new_prefix_out = @sul.query(new_prefix + new_suffix).last
 
-      _, old_node_state = hypothesis.run(old_prefix + [new_input])
-      old_node_prefix = state_to_prefix[old_node_state]
-      old_node_out = @sul.query(old_node_prefix + new_suffix).last
+      replace_prefix = sift(old_prefix + [new_input])
+      replace_out = @sul.query(replace_prefix + new_suffix).last
 
-      old_node_path = @paths[old_node_prefix]
-      parent = @root
-      old_node = @root.edges[old_node_path.first]
-      old_node_path[1..].each do |out|
-        parent = old_node
-        old_node = old_node.edges[out]
+      replace_node_path = @paths[replace_prefix]
+      replace_node_parent = @root
+      replace_node = @root.edges[replace_node_path.first]
+      replace_node_path[1..].each do |out|
+        replace_node_parent = replace_node
+        replace_node = replace_node.edges[out]
       end
 
       new_node = Node[new_suffix, {}]
-      parent.edges[old_node_path.last] = new_node
+      replace_node_parent.edges[replace_node_path.last] = new_node
 
       new_node.edges[new_prefix_out] = Leaf[new_prefix]
-      @paths[new_prefix] = old_node_path + [new_prefix_out]
+      @paths[new_prefix] = replace_node_path + [new_prefix_out]
 
-      new_node.edges[old_node_out] = Leaf[old_node_prefix]
-      @paths[old_node_prefix] = old_node_path + [old_node_out]
+      new_node.edges[replace_out] = Leaf[replace_prefix]
+      @paths[replace_prefix] = replace_node_path + [replace_out]
     end
   end
 

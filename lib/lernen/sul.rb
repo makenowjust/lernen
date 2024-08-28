@@ -69,7 +69,7 @@ module Lernen
       @num_queries += 1
       @num_steps += inputs.size
 
-      @cache[inputs] = outputs
+      @cache[inputs] = outputs if @cache
 
       outputs
     end

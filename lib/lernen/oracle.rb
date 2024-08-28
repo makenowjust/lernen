@@ -69,6 +69,7 @@ module Lernen
         end
       end
 
+      @sul.shutdown
       nil
     end
   end
@@ -111,6 +112,7 @@ module Lernen
         end
       end
 
+      @sul.shutdown
       nil
     end
   end

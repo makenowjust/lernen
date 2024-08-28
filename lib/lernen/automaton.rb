@@ -27,8 +27,10 @@ module Lernen
     end
 
     # Checks equivalence between `self` and `other` on the given `alphabet`.
+    #
+    # It returns `nil` if they are equivalence, or it returns a counterexample string.
     def check_equivalence(alphabet, other)
-      return [] unless instance_of?(other.class)
+      raise ArgumentError, "Cannot check equivalence between different automata" unless instance_of?(other.class)
 
       case self
       when DFA
