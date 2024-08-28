@@ -195,6 +195,57 @@ module Lernen
 
       mmd.dup
     end
+
+    # Returns a random Moore machine.
+    def self.random(
+      alphabet:,
+      output_alphabet:,
+      max_state_size:,
+      max_arc_ratio: 0.5,
+      min_state_size: 1,
+      sink_state_prob: 0.4,
+      random: Random
+    )
+      state_size = random.rand(min_state_size..max_state_size)
+      arc_ratio = [max_arc_ratio * random.rand, 0.01].max
+      arc_state_size = [state_size, (state_size * arc_ratio).ceil].min
+
+      initial_state = 0
+      non_arc_states = (0...state_size).to_a
+      non_arc_states.shuffle!(random:)
+      arc_states = non_arc_states.pop(arc_state_size).to_set
+
+      sink_state = random.rand < sink_state_prob ? non_arc_states.pop : nil
+
+      transitions = {}
+      arc_states.each_with_index do |arc_state, i|
+        next if arc_state == initial_state
+        n = i + 1 == arc_state_size ? non_arc_states.size : random.rand(non_arc_states.size)
+        state = initial_state
+        non_arc_states
+          .pop(n)
+          .each do |next_state|
+            next if next_state == initial_state
+            input = alphabet.sample(random:)
+            transitions[[state, input]] = next_state
+            state = next_state
+          end
+        input = alphabet.sample(random:)
+        transitions[[state, input]] = arc_state
+      end
+
+      outputs = {}
+      state_size.times do |state|
+        outputs[state] = output_alphabet.sample(random:)
+        alphabet.each do |input|
+          next if transitions[[state, input]]
+          next_state = state == sink_state ? sink_state : random.rand(state_size)
+          transitions[[state, input]] = next_state
+        end
+      end
+
+      new(initial_state, outputs, transitions)
+    end
   end
 
   # Mealy is a deterministic Mealy machine.
@@ -233,6 +284,58 @@ module Lernen
       transitions.each { |(q1, i), (o, q2)| mmd << "  #{q1} -- \"#{i}|#{o}\" --> #{q2}\n" }
 
       mmd.dup
+    end
+
+    # Returns a random Mealy machine.
+    def self.random(
+      alphabet:,
+      output_alphabet:,
+      max_state_size:,
+      max_arc_ratio: 0.5,
+      min_state_size: 1,
+      sink_state_prob: 0.4,
+      random: Random
+    )
+      state_size = random.rand(min_state_size..max_state_size)
+      arc_ratio = [max_arc_ratio * random.rand, 0.01].max
+      arc_state_size = [state_size, (state_size * arc_ratio).ceil].min
+
+      initial_state = 0
+      non_arc_states = (0...state_size).to_a
+      non_arc_states.shuffle!(random:)
+      arc_states = non_arc_states.pop(arc_state_size).to_set
+
+      sink_state = random.rand < sink_state_prob ? non_arc_states.pop : nil
+
+      transitions = {}
+      arc_states.each_with_index do |arc_state, i|
+        next if arc_state == initial_state
+        n = i + 1 == arc_state_size ? non_arc_states.size : random.rand(non_arc_states.size)
+        state = initial_state
+        non_arc_states
+          .pop(n)
+          .each do |next_state|
+            next if next_state == initial_state
+            input = alphabet.sample(random:)
+            output = output_alphabet.sample(random:)
+            transitions[[state, input]] = [output, next_state]
+            state = next_state
+          end
+        input = alphabet.sample(random:)
+        output = output_alphabet.sample(random:)
+        transitions[[state, input]] = [output, arc_state]
+      end
+
+      state_size.times do |state|
+        alphabet.each do |input|
+          next if transitions[[state, input]]
+          output = output_alphabet.sample(random:)
+          next_state = state == sink_state ? sink_state : random.rand(state_size)
+          transitions[[state, input]] = [output, next_state]
+        end
+      end
+
+      new(initial_state, transitions)
     end
   end
 end

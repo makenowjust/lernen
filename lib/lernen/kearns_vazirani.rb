@@ -28,6 +28,7 @@ module Lernen
         @root.edges[cex_out] = Leaf[cex]
         @paths[cex] = [cex_out]
       in :mealy
+        prefix = cex[0...-1]
         suffix = [cex.last]
         @root = Node[suffix, {}]
 
@@ -36,8 +37,8 @@ module Lernen
         @paths[[]] = [suffix_out]
 
         cex_out = sul.query(cex).last
-        @root.edges[cex_out] = Leaf[cex]
-        @paths[cex] = [cex_out]
+        @root.edges[cex_out] = Leaf[prefix]
+        @paths[prefix] = [cex_out]
       end
     end
 
@@ -117,7 +118,7 @@ module Lernen
         CexProcessor.process(@sul, hypothesis, cex, state_to_prefix, cex_processing: @cex_processing)
 
       new_prefix = old_prefix + [new_input]
-      new_prefix_out = @sul.query(new_prefix + new_suffix).last
+      new_out = @sul.query(new_prefix + new_suffix).last
 
       replace_prefix = sift(old_prefix + [new_input])
       replace_out = @sul.query(replace_prefix + new_suffix).last
@@ -133,8 +134,8 @@ module Lernen
       new_node = Node[new_suffix, {}]
       replace_node_parent.edges[replace_node_path.last] = new_node
 
-      new_node.edges[new_prefix_out] = Leaf[new_prefix]
-      @paths[new_prefix] = replace_node_path + [new_prefix_out]
+      new_node.edges[new_out] = Leaf[new_prefix]
+      @paths[new_prefix] = replace_node_path + [new_out]
 
       new_node.edges[replace_out] = Leaf[replace_prefix]
       @paths[replace_prefix] = replace_node_path + [replace_out]

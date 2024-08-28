@@ -38,5 +38,57 @@ class TestLernen < Minitest::Test
         assert_nil cex, "Equivalence check failed (seed: #{seed}, cex: #{cex})"
       end
     end
+
+    define_method(:"test_learn_moore_#{algorithm}_#{params}") do
+      alphabet = %w[0 1 2]
+      output_alphabet = %w[a b c d]
+      50.times do |seed|
+        random = Random.new(seed * 41)
+        expected = Lernen::Moore.random(alphabet:, output_alphabet:, random:, min_state_size: 8, max_state_size: 10)
+
+        result =
+          Lernen.learn(
+            alphabet:,
+            sul: expected,
+            automaton_type: :moore,
+            oracle: :random_walk,
+            oracle_params: {
+              step_limit: 1500
+            },
+            algorithm:,
+            params:,
+            random:
+          )
+        cex = expected.check_equivalence(alphabet, result)
+
+        assert_nil cex, "Equivalence check failed (seed: #{seed}, cex: #{cex})"
+      end
+    end
+
+    define_method(:"test_learn_mealy_#{algorithm}_#{params}") do
+      alphabet = %w[0 1 2]
+      output_alphabet = %w[a b c d]
+      50.times do |seed|
+        random = Random.new(seed * 41)
+        expected = Lernen::Mealy.random(alphabet:, output_alphabet:, random:, min_state_size: 8, max_state_size: 10)
+
+        result =
+          Lernen.learn(
+            alphabet:,
+            sul: expected,
+            automaton_type: :mealy,
+            oracle: :random_walk,
+            oracle_params: {
+              step_limit: 1500
+            },
+            algorithm:,
+            params:,
+            random:
+          )
+        cex = expected.check_equivalence(alphabet, result)
+
+        assert_nil cex, "Equivalence check failed (seed: #{seed}, cex: #{cex})"
+      end
+    end
   end
 end
