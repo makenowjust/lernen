@@ -7,25 +7,42 @@
 ```ruby
 require "lernen"
 
-alphabet = %w[0 1]
-sul = Lernen::SUL.from_block { |inputs| inputs.count { _1 == "1" } % 4 == 3 }
-oracle = Lernen::BreadthFirstExplorationOracle.new(alphabet, sul)
+automaton = Lernen.learn(alphabet: %w[0 1]) do |inputs|
+  inputs.count("0") % 4 == 3
+end
 
-dfa = Lernen::LStar.learn(alphabet, sul, oracle, automaton_type: :dfa)
-# => Lernen::DFA.new(
-#      0,
-#      Set[3],
-#      {
-#        [0, "0"] => 0,
-#        [0, "1"] => 1,
-#        [1, "0"] => 1,
-#        [1, "1"] => 2,
-#        [2, "0"] => 2,
-#        [2, "1"] => 3,
-#        [3, "0"] => 3,
-#        [3, "1"] => 0
-#      }
-#    )
+puts automaton.to_mermaid
+# => flowchart TD
+#      0((0))
+#      1((1))
+#      2((2))
+#      3(((3)))
+#    
+#      0 -- 0 --> 1
+#      0 -- 1 --> 0
+#      1 -- 0 --> 2
+#      1 -- 1 --> 1
+#      2 -- 0 --> 3
+#      2 -- 1 --> 2
+#      3 -- 0 --> 0
+#      3 -- 1 --> 3
+```
+
+```mermaid
+flowchart TD
+  0((0))
+  1((1))
+  2((2))
+  3(((3)))
+
+  0 -- 0 --> 1
+  0 -- 1 --> 0
+  1 -- 0 --> 2
+  1 -- 1 --> 1
+  2 -- 0 --> 3
+  2 -- 1 --> 2
+  3 -- 0 --> 0
+  3 -- 1 --> 3
 ```
 
 ## Algorithms
