@@ -155,7 +155,8 @@ module Lernen
         else
           old_prefix, new_input, new_suffix =
             CexProcessor.process(sul, hypothesis, cex, state_to_prefix, cex_processing:)
-          new_prefix = old_prefix + [new_input]
+          _, old_state = hypothesis.run(old_prefix)
+          new_prefix = state_to_prefix[old_state] + [new_input]
           observation_table.prefixes << new_prefix unless observation_table.prefixes.include?(new_prefix)
           observation_table.suffixes << new_suffix unless observation_table.suffixes.include?(new_suffix)
         end

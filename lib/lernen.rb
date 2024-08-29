@@ -23,19 +23,24 @@ module Lernen
   # Learn an automaton.
   def self.learn(
     alphabet:,
+    call_alphabet: nil,
+    return_alphabet: nil,
     sul: nil,
     oracle: :random_walk,
     oracle_params: {},
     algorithm: :kearns_vazirani,
-    automaton_type: :dfa,
+    automaton_type: nil,
     params: {},
     random: Random,
     &sul_block
   )
+    automaton_type ||= call_alphabet ? :vpa : :dfa
+
     case sul
     when SUL
       # Do nothing
     when Automaton
+      automaton_type = sul.type
       sul = SUL.from_automaton(sul)
     when nil
       sul = SUL.from_block(&sul_block)
@@ -43,13 +48,21 @@ module Lernen
       raise ArgumentError, "Unsupported SUL: #{sul}"
     end
 
+    full_alphabet =
+      case automaton_type
+      in :dfa | :moore | :mealy
+        alphabet
+      in :vpa
+        alphabet + call_alphabet + return_alphabet
+      end
+
     case oracle
     when Oracle
       # Do nothing
     when :breadth_first_exploration
-      oracle = BreadthFirstExplorationOracle.new(alphabet, sul, **oracle_params)
+      oracle = BreadthFirstExplorationOracle.new(full_alphabet, sul, **oracle_params)
     when :random_walk
-      oracle = RandomWalkOracle.new(alphabet, sul, random:, **oracle_params)
+      oracle = RandomWalkOracle.new(full_alphabet, sul, random:, **oracle_params)
     else
       raise ArgumentError, "Unsupported oracle: #{oracle}"
     end
@@ -58,7 +71,7 @@ module Lernen
     in :lstar
       LStar.learn(alphabet, sul, oracle, automaton_type:, **params)
     in :kearns_vazirani
-      KearnsVazirani.learn(alphabet, sul, oracle, automaton_type:, **params)
+      KearnsVazirani.learn(alphabet, sul, oracle, automaton_type:, call_alphabet:, return_alphabet:, **params)
     in :lsharp
       LSharp.learn(alphabet, sul, oracle, automaton_type:, **params)
     end

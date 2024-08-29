@@ -49,11 +49,11 @@ flowchart TD
 
 Learnen supports these automata learning algorithms.
 
-| Algorithm        | Supported `automaton_type` |
-|:----------------:|:--------------------------:|
-| `LStar`          | `:dfa`, `:moore`, `:mealy` |
-| `KearnsVazirani` | `:dfa`, `:moore`, `:mealy` |
-| `LSharp`         | `:dfa`, `:moore`, `:mealy` |
+| Algorithm        | Supported `automaton_type`         |
+|:----------------:|:----------------------------------:|
+| `LStar`          | `:dfa`, `:moore`, `:mealy`         |
+| `KearnsVazirani` | `:dfa`, `:moore`, `:mealy`, `:vpa` |
+| `LSharp`         | `:dfa`, `:moore`, `:mealy`         |
 
 ## License
 
