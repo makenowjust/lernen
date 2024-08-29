@@ -5,6 +5,7 @@ module Lernen
   #
   # Note that this class is *abstract*. You should implement the following method:
   #
+  # - `#type`
   # - `#initial`
   # - `#step(state, input)`
   class Automaton
@@ -74,6 +75,11 @@ module Lernen
 
     attr_reader :initial_state, :accept_states, :transitions
     alias initial initial_state
+
+    # Returns the type of this automaton.
+    def type
+      :dfa
+    end
 
     # Computes a transition for the given `input` from the current `state`.
     def step(state, input)
@@ -170,6 +176,11 @@ module Lernen
     attr_reader :initial_state, :outputs, :transitions
     alias initial initial_state
 
+    # Returns the type of this automaton.
+    def type
+      :moore
+    end
+
     # Computes a transition for the given `input` from the current `state`.
     def step(state, input)
       next_state = @transitions[[state, input]]
@@ -262,6 +273,11 @@ module Lernen
 
     attr_reader :initial_state, :transitions
     alias initial initial_state
+
+    # Returns the type of this automaton.
+    def type
+      :mealy
+    end
 
     # Computes a transition for the given `input` from the current `state`.
     def step(state, input)
@@ -386,6 +402,11 @@ module Lernen
     end
 
     attr_reader :initial_state, :accept_states, :transitions, :returns
+
+    # Returns the type of this automaton.
+    def type
+      :vpa
+    end
 
     # Returns the initial configuration.
     def initial
