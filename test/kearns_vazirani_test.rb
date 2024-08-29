@@ -2,6 +2,8 @@
 
 require_relative "test_helper"
 
+require "prism"
+
 class TestKearnsVazirani < Minitest::Test
   def test_learn_dfa
     alphabet = %w[0 1]
@@ -124,5 +126,30 @@ class TestKearnsVazirani < Minitest::Test
       )
 
     assert_equal expected, hypothesis
+  end
+
+  def test_learn_vpa
+    alphabet = %w[1 +]
+    call_alphabet = %w[(]
+    return_alphabet = %w[)]
+    merged_alphabet = alphabet + call_alphabet + return_alphabet
+
+    sul = Lernen::SUL.from_block { |inputs| Prism.parse(inputs.join).success? }
+    oracle = Lernen::BreadthFirstExplorationOracle.new(merged_alphabet, sul)
+
+    hypothesis =
+      Lernen::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type: :vpa, call_alphabet:, return_alphabet:)
+    run = ->(str) do
+      return hypothesis.accept_states.include?(hypothesis.initial_state) if str.empty?
+      hypothesis.run(str.chars).first.last
+    end
+
+    assert run.call("")
+    assert run.call("1")
+    assert run.call("1+1")
+    assert run.call("((1)+(1))")
+    assert run.call("1++1")
+    refute run.call("(")
+    refute run.call("+")
   end
 end

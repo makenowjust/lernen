@@ -19,13 +19,13 @@ module Lernen
     def self.process_linear(sul, hypothesis, cex, state_to_prefix)
       expected_output = sul.query(cex).last
 
-      current_state = hypothesis.initial_state
-      cex.each_with_index do |a, i|
-        _, next_state = hypothesis.step(current_state, a)
+      current_state = hypothesis.initial
+      cex.each_with_index do |input, i|
+        _, next_state = hypothesis.step(current_state, input)
 
         prefix = state_to_prefix[next_state]
         suffix = cex[i + 1...]
-        return state_to_prefix[current_state], a, suffix if expected_output != sul.query(prefix + suffix).last
+        return cex[0...i], input, suffix if expected_output != sul.query(prefix + suffix).last
 
         current_state = next_state
       end
@@ -54,9 +54,7 @@ module Lernen
 
       prefix = cex[0...low]
       suffix = cex[high...]
-
-      _, prefix_state = hypothesis.run(prefix)
-      [state_to_prefix[prefix_state], cex[low], suffix]
+      [prefix, cex[low], suffix]
     end
 
     # Processes a given `cex` by exponential seatch.

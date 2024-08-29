@@ -32,7 +32,7 @@ module Lernen
 
     # Resets the internal states of this oracle.
     def reset_internal(hypothesis)
-      @current_state = hypothesis.initial_state
+      @current_state = hypothesis.initial
 
       @sul.shutdown
       @sul.setup

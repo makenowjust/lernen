@@ -119,7 +119,7 @@ module Lernen
   module BaseSimulatorSUL
     # It is a setup procedure of this SUL.
     def setup
-      @state = @automaton.initial_state
+      @state = @automaton.initial
     end
 
     # It is a shutdown procedure of this SUL.

@@ -5,6 +5,7 @@ module Lernen
   #
   # Note that this class is *abstract*. You should implement the following method:
   #
+  # - `#initial`
   # - `#step(state, input)`
   class Automaton
     # Computes a transition for the given `input` from the current `state`.
@@ -17,7 +18,7 @@ module Lernen
     # Runs this automaton with the given input string and returns an output sequence
     # and a state after running.
     def run(inputs)
-      state = @initial_state
+      state = initial
       outputs = []
       inputs.each do |input|
         output, state = step(state, input)
@@ -41,8 +42,8 @@ module Lernen
 
       queue = []
       visited = Set.new
-      queue << [[], initial_state, other.initial_state]
-      visited << [initial_state, other.initial_state]
+      queue << [[], initial, other.initial]
+      visited << [initial, other.initial]
       until queue.empty?
         path, self_state, other_state = queue.shift
         alphabet.each do |input|
@@ -72,6 +73,7 @@ module Lernen
     end
 
     attr_reader :initial_state, :accept_states, :transitions
+    alias initial initial_state
 
     # Computes a transition for the given `input` from the current `state`.
     def step(state, input)
@@ -97,7 +99,7 @@ module Lernen
       states.sort.each { |q| mmd << (accept_states.include?(q) ? "  #{q}(((#{q})))\n" : "  #{q}((#{q}))\n") }
       mmd << "\n"
 
-      transitions.each { |(q1, i), q2| mmd << "  #{q1} -- #{i} --> #{q2}\n" }
+      transitions.each { |(q1, i), q2| mmd << "  #{q1} -- \"'#{i}'\" --> #{q2}\n" }
 
       mmd.dup
     end
@@ -166,6 +168,7 @@ module Lernen
     end
 
     attr_reader :initial_state, :outputs, :transitions
+    alias initial initial_state
 
     # Computes a transition for the given `input` from the current `state`.
     def step(state, input)
@@ -188,10 +191,10 @@ module Lernen
       states = [initial_state] + transitions.keys.map { |(q, _)| q } + transitions.values
       states.uniq!
 
-      states.sort.each { |q| mmd << "  #{q}((\"#{q}|#{outputs[q]}\"))\n" }
+      states.sort.each { |q| mmd << "  #{q}((\"#{q}|'#{outputs[q]}'\"))\n" }
       mmd << "\n"
 
-      transitions.each { |(q1, i), q2| mmd << "  #{q1} -- #{i} --> #{q2}\n" }
+      transitions.each { |(q1, i), q2| mmd << "  #{q1} -- \"'#{i}'\" --> #{q2}\n" }
 
       mmd.dup
     end
@@ -258,6 +261,7 @@ module Lernen
     end
 
     attr_reader :initial_state, :transitions
+    alias initial initial_state
 
     # Computes a transition for the given `input` from the current `state`.
     def step(state, input)
@@ -281,7 +285,7 @@ module Lernen
       states.sort.each { |q| mmd << "  #{q}((#{q}))\n" }
       mmd << "\n"
 
-      transitions.each { |(q1, i), (o, q2)| mmd << "  #{q1} -- \"#{i}|#{o}\" --> #{q2}\n" }
+      transitions.each { |(q1, i), (o, q2)| mmd << "  #{q1} -- \"'#{i}'|'#{o}'\" --> #{q2}\n" }
 
       mmd.dup
     end
@@ -336,6 +340,106 @@ module Lernen
       end
 
       new(initial_state, transitions)
+    end
+  end
+
+  # VPA is a 1-module single-entry visibly pushdown automaton (1-SEVPA).
+  class VPA < Automaton
+    # Conf is a configuration on VPAs.
+    Conf = Data.define(:state, :stack)
+
+    # StateToPrefixMapping is a mapping from states to prefix strings.
+    #
+    # It can transform a configuration to an access string.
+    class StateToPrefixMapping
+      def initialize(mapping)
+        @mapping = mapping
+      end
+
+      # Transforms a configuration to an access string.
+      def [](conf)
+        return @mapping[nil] unless conf
+        result = []
+
+        conf.stack.each do |state, call_input|
+          result.concat(@mapping[state])
+          result << call_input
+        end
+        result.concat(@mapping[conf.state])
+
+        result
+      end
+
+      # Returns a prefix string of `state`.
+      def state_prefix(state)
+        @mapping[state]
+      end
+    end
+
+    def initialize(initial_state, accept_states, transitions, returns)
+      super()
+
+      @initial_state = initial_state
+      @accept_states = accept_states
+      @transitions = transitions
+      @returns = returns
+    end
+
+    attr_reader :initial_state, :accept_states, :transitions, :returns
+
+    # Returns the initial configuration.
+    def initial
+      Conf[initial_state, []]
+    end
+
+    # Computes a transition for the given `input` from the current `state`.
+    def step(conf, input)
+      next_conf = step_conf(conf, input)
+      output = !next_conf.nil? && accept_states.include?(next_conf.state) && next_conf.stack.empty?
+      [output, next_conf]
+    end
+
+    # Returns a mermaid diagram.
+    def to_mermaid
+      mmd = +""
+
+      mmd << "flowchart TD\n"
+
+      states =
+        [initial_state] + transitions.keys.map { |(q, _)| q } + transitions.values + returns.keys.map { |(q, _)| q } +
+          returns.values.flat_map { |rt| rt.flat_map { |(q1, _), q2| [q1, q2] } }
+      states.uniq!
+
+      states.sort.each { |q| mmd << (accept_states.include?(q) ? "  #{q}(((#{q})))\n" : "  #{q}((#{q}))\n") }
+      mmd << "\n"
+
+      transitions.each { |(q1, i), q2| mmd << "  #{q1} -- \"'#{i}'\" --> #{q2}\n" }
+      mmd << "\n"
+
+      returns.each { |(q1, r), rt| rt.each { |(q2, c), q3| mmd << "  #{q1} -- \"'#{r}'/(#{q2},'#{c}')\" --> #{q3}\n" } }
+
+      mmd.dup
+    end
+
+    private
+
+    def step_conf(conf, input)
+      # `nil` means the error state.
+      return nil unless conf
+
+      next_state = @transitions[[conf.state, input]]
+      return Conf[next_state, conf.stack] if next_state
+
+      return_transitions = @returns[[conf.state, input]]
+      if return_transitions
+        return nil if conf.stack.empty?
+        next_state = return_transitions[conf.stack.last]
+        return Conf[next_state, conf.stack[0...-1]]
+      end
+
+      # When there is no usual transition and no return tansition for `input`,
+      # then we assume that `input` is a call alphabet.
+      Conf[initial_state, conf.stack + [[conf.state, input]]]
     end
   end
 end

@@ -214,7 +214,7 @@ module Lernen
 
     def check_consistency(hypothesis, state_to_prefix)
       queue = []
-      queue << [[], hypothesis.initial_state, @observation_tree.root]
+      queue << [[], hypothesis.initial, @observation_tree.root]
 
       until queue.empty?
         prefix, state, node = queue.shift
