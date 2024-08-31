@@ -76,7 +76,7 @@ module Lernen
 
   # This equivalence oracles uses random-walk exploration for equivalence checking.
   class RandomWalkOracle < Oracle
-    def initialize(alphabet, sul, step_limit: 500, reset_prob: 0.09, random: Random)
+    def initialize(alphabet, sul, step_limit: 3000, reset_prob: 0.09, random: Random)
       super(alphabet, sul)
 
       @step_limit = step_limit
