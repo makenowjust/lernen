@@ -61,13 +61,11 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    stackprof (0.2.26)
     stringio (3.1.1)
     strscan (3.1.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     unicode-display_width (2.5.0)
-    vernier (1.1.2)
     yard (0.9.36)
 
 PLATFORMS
@@ -85,9 +83,7 @@ DEPENDENCIES
   rubocop-minitest (~> 0.35)
   rubocop-rake (~> 0.6)
   simplecov (~> 0.22)
-  stackprof (~> 0.2)
   syntax_tree (~> 6.2)
-  vernier (~> 1.0)
   yard (~> 0.9)
 
 BUNDLED WITH

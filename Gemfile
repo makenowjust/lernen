@@ -20,8 +20,3 @@ group :development do
   gem "syntax_tree", "~> 6.2", require: false
   gem "yard", "~> 0.9", require: false
 end
-
-group :profile do
-  gem "stackprof", "~> 0.2", require: false
-  gem "vernier", "~> 1.0", require: false
-end
