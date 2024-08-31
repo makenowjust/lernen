@@ -421,7 +421,8 @@ module Lernen
     end
 
     # Returns a mermaid diagram.
-    def to_mermaid
+    def to_mermaid(remove_error_state: true)
+      error_state = error_state() if remove_error_state
       mmd = +""
 
       mmd << "flowchart TD\n"
@@ -430,16 +431,51 @@ module Lernen
         [initial_state] + transitions.keys.map { |(q, _)| q } + transitions.values + returns.keys.map { |(q, _)| q } +
           returns.values.flat_map { |rt| rt.flat_map { |(q1, _), q2| [q1, q2] } }
       states.uniq!
+      states.delete(error_state)
 
       states.sort.each { |q| mmd << (accept_states.include?(q) ? "  #{q}(((#{q})))\n" : "  #{q}((#{q}))\n") }
       mmd << "\n"
 
-      transitions.each { |(q1, i), q2| mmd << "  #{q1} -- \"'#{i}'\" --> #{q2}\n" }
+      transitions.each do |(q1, i), q2|
+        next if q1 == error_state || q2 == error_state
+        mmd << "  #{q1} -- \"'#{i}'\" --> #{q2}\n"
+      end
       mmd << "\n"
 
-      returns.each { |(q1, r), rt| rt.each { |(q2, c), q3| mmd << "  #{q1} -- \"'#{r}'/(#{q2},'#{c}')\" --> #{q3}\n" } }
+      returns.each do |(q1, r), rt|
+        next if q1 == error_state
+        rt.each do |(q2, c), q3|
+          next if q2 == error_state || q3 == error_state
+          mmd << "  #{q1} -- \"'#{r}'/(#{q2},'#{c}')\" --> #{q3}\n"
+        end
+      end
 
       mmd.dup
+    end
+
+    # Returns an error state in this VPA.
+    def error_state
+      t =
+        transitions
+          .group_by { |(state, _), _| state }
+          .transform_values { _1.to_h { |(_, input), next_state| [input, next_state] } }
+
+      t.each do |state, d|
+        # The initial state and accepting states are not an error state.
+        next if state == initial_state || accept_states.include?(state)
+
+        # An error state should only have self-loops.
+        next unless d.all? { |_, next_state| state == next_state }
+        all_returns_are_self_loops =
+          returns.all? do |_, rt|
+            rt.filter { |(call_state, _), _| call_state == state }.all? { |_, next_state| state == next_state }
+          end
+        next unless all_returns_are_self_loops
+
+        return state
+      end
+
+      nil
     end
 
     private
