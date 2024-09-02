@@ -26,7 +26,7 @@ module Lernen
     call_alphabet: nil,
     return_alphabet: nil,
     sul: nil,
-    oracle: :random_walk,
+    oracle: :random_word,
     oracle_params: {},
     algorithm: :kearns_vazirani,
     automaton_type: nil,
@@ -63,6 +63,8 @@ module Lernen
       oracle = BreadthFirstExplorationOracle.new(full_alphabet, sul, **oracle_params)
     when :random_walk
       oracle = RandomWalkOracle.new(full_alphabet, sul, random:, **oracle_params)
+    when :random_word
+      oracle = RandomWordOracle.new(full_alphabet, sul, random:, **oracle_params)
     else
       raise ArgumentError, "Unsupported oracle: #{oracle}"
     end

@@ -116,4 +116,45 @@ module Lernen
       nil
     end
   end
+
+  # This equivalence oracles uses randomly generated words for equivalence checking.
+  class RandomWordOracle < Oracle
+    def initialize(alphabet, sul, num_words: 100, min_word_size: 10, max_word_size: 30, random: Random)
+      super(alphabet, sul)
+
+      @num_words = num_words
+      @min_word_size = min_word_size
+      @max_word_size = max_word_size
+      @random = random
+    end
+
+    # Finds a conterexample against the given `hypothesis` automaton.
+    def find_cex(hypothesis)
+      @num_calls += 1
+
+      num_done_words = 0
+      while num_done_words < @num_words
+        num_done_words += 1
+        reset_internal(hypothesis)
+
+        inputs = []
+        word_size = @random.rand(@min_word_size..@max_word_size)
+        word_size.times do
+          inputs << @alphabet.sample(random: @random)
+
+          @num_steps += 1
+          h_out, @current_state = hypothesis.step(@current_state, inputs.last)
+          s_out = @sul.step(inputs.last)
+
+          if h_out != s_out
+            @sul.shutdown
+            return inputs
+          end
+        end
+      end
+
+      @sul.shutdown
+      nil
+    end
+  end
 end

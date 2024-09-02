@@ -35,7 +35,7 @@ module Lernen
       raise ArgumentError, "Cannot check equivalence between different automata" unless instance_of?(other.class)
 
       case self
-      when DFA
+      when DFA, VPA
         return [] unless accept_states.include?(initial_state) == other.accept_states.include?(other.initial_state)
       when Moore
         return [] unless outputs[initial_state] == other.outputs[other.initial_state]
@@ -51,11 +51,12 @@ module Lernen
           self_output, self_next_state = step(self_state, input)
           other_output, other_next_state = other.step(other_state, input)
           return path + [input] if self_output != other_output
+
           next_pair = [self_next_state, other_next_state]
-          unless visited.include?(next_pair)
-            queue << [path + [input], *next_pair]
-            visited << next_pair
-          end
+          next if visited.include?(next_pair)
+
+          queue << [path + [input], *next_pair]
+          visited << next_pair
         end
       end
 
@@ -374,7 +375,6 @@ module Lernen
 
       # Transforms a configuration to an access string.
       def [](conf)
-        return @mapping[nil] unless conf
         result = []
 
         conf.stack.each do |state, call_input|
@@ -416,7 +416,8 @@ module Lernen
     # Computes a transition for the given `input` from the current `state`.
     def step(conf, input)
       next_conf = step_conf(conf, input)
-      output = !next_conf.nil? && accept_states.include?(next_conf.state) && next_conf.stack.empty?
+      next_conf = Conf[nil, []] if next_conf.nil?
+      output = accept_states.include?(next_conf.state) && next_conf.stack.empty?
       [output, next_conf]
     end
 
@@ -481,8 +482,8 @@ module Lernen
     private
 
     def step_conf(conf, input)
-      # `nil` means the error state.
-      return nil unless conf
+      # A `nil` state means the error state.
+      return nil if conf.state.nil?
 
       next_state = @transitions[[conf.state, input]]
       return Conf[next_state, conf.stack] if next_state
