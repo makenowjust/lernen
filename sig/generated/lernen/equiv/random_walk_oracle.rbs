@@ -1,0 +1,41 @@
+# Generated from lib/lernen/equiv/random_walk_oracle.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    # RandomWalkOracle provides an implementation of equivalence query
+    # that finds a counterexample by using random walk.
+    #
+    # This takes two important parameters:
+    #
+    # - `max_steps` (default: `1500`): It is a limit of steps of a random walk.
+    #     If a random walk is tried up to this value and no counterexample is found,
+    #     it returns `nil` finally.
+    # - `reset_prob` (default: `0.09`): It is a probability to reset a random walk.
+    #     On resetting a random walk, it resets a word, but it does not reset
+    #     a step counter.
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class RandomWalkOracle[In, Out] < Oracle[In, Out]
+      @alphabet: Array[In]
+
+      @max_steps: Integer
+
+      @reset_prob: Float
+
+      @random: Random
+
+      # : (
+      #     Array[In] alphabet,
+      #     System::SUL[In, Out] sul,
+      #     ?max_steps: Integer,
+      #     ?reset_prob: Float,
+      #     ?random: Random
+      #   ) -> void
+      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, ?max_steps: Integer, ?reset_prob: Float, ?random: Random) -> void
+
+      # @rbs override
+      def find_cex: ...
+    end
+  end
+end

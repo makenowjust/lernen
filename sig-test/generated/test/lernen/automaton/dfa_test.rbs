@@ -1,0 +1,16 @@
+# Generated from test/lernen/automaton/dfa_test.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    class DFATest < Minitest::Test
+      # : () -> Lernen::Automaton::DFA[String]
+      def self.mod4_dfa: () -> Lernen::Automaton::DFA[String]
+
+      # : () -> void
+      def test_run: () -> void
+
+      # : () -> void
+      def test_to_mermaid: () -> void
+    end
+  end
+end

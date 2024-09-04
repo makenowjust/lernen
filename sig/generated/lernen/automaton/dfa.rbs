@@ -1,0 +1,69 @@
+# Generated from lib/lernen/automaton/dfa.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    # DFA represents a [deterministic finite-state automaton](https://en.wikipedia.org/wiki/Deterministic_finite_automaton).
+    #
+    # @rbs generic In -- Type for input alphabet
+    class DFA[In] < MooreLike[Integer, In, bool]
+      @transition_function: Hash[[ Integer, In ], Integer]
+
+      @accept_state_set: Set[Integer]
+
+      @initial_state: Integer
+
+      # : (
+      #     Integer initial_state,
+      #     Set[Integer] accept_state_set,
+      #     Hash[[Integer, In], Integer] transition_function
+      #   ) -> void
+      def initialize: (Integer initial_state, Set[Integer] accept_state_set, Hash[[ Integer, In ], Integer] transition_function) -> void
+
+      attr_reader initial_state: Integer
+
+      attr_reader accept_state_set: Set[Integer]
+
+      attr_reader transition_function: Hash[[ Integer, In ], Integer]
+
+      # : () -> :dfa
+      def type: () -> :dfa
+
+      # @rbs override
+      def initial_conf: ...
+
+      # @rbs override
+      def step_conf: ...
+
+      # @rbs override
+      def output: ...
+
+      # Checks the structural equality between `self` and `other`.
+      #
+      # : (untyped other) -> bool
+      def ==: (untyped other) -> bool
+
+      # Returns the array of states of this DFA.
+      #
+      # The result array is sorted.
+      #
+      # : () -> Array[Integer]
+      def states: () -> Array[Integer]
+
+      # Returns a [mermaid](https://mermaid.js.org) diagram of this DFA.
+      #
+      # : (?direction: "TD" | "LR") -> String
+      def to_mermaid: (?direction: "TD" | "LR") -> String
+
+      # Generates a DFA randomly.
+      #
+      # : [In] (
+      #    alphabet: Array[In],
+      #    ?min_state_size: Integer,
+      #    ?max_state_size: Integer,
+      #    ?accept_state_size: Integer,
+      #    ?random: Random,
+      #  ) -> DFA[In]
+      def self.random: [In] (alphabet: Array[In], ?min_state_size: Integer, ?max_state_size: Integer, ?accept_state_size: Integer, ?random: Random) -> DFA[In]
+    end
+  end
+end

@@ -1,0 +1,87 @@
+# Generated from lib/lernen/learner/discrimination_tree_vpa.rb with RBS::Inline
+
+module Lernen
+  module Learner
+    # DiscriminationTreeVPA is a extended version of discrimination tree for VPA.
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Call - Type for call alphabet
+    # @rbs generic Return - Type for return alphabet
+    class DiscriminationTreeVPA[In, Call, Return]
+      type tree[In, Call, Return] = Node[In, Call, Return] | Leaf[In, Call, Return]
+
+      class Node[In, Call, Return] < Data
+        attr_reader access: Array[In | Call | Return]
+        attr_reader suffix: Array[In | Call | Return]
+        attr_reader branch: Hash[bool, tree[In, Call, Return]]
+        def self.[]: [In, Call, Return] (Array[In | Call | Return] access, Array[In | Call | Return] suffix, Hash[bool, tree[In, Call, Return]] branch) -> Node[In, Call, Return]
+      end
+
+      class Leaf[In, Call, Return] < Data
+        attr_reader prefix: Array[In | Call | Return]
+        def self.[]: [In, Call, Return] (Array[In | Call | Return] prefix) -> Leaf[In, Call, Return]
+      end
+
+      # @rbs generic In  -- Type for input alphabet
+      # @rbs generic Call - Type for call alphabet
+      # @rbs generic Return - Type for return alphabet
+      class ConfToPrefix[In, Call, Return]
+        include _ConfToPrefix[Automaton::VPA::Conf[Call], In | Call | Return]
+
+        @state_to_prefix: Hash[Integer, Array[In | Call | Return]]
+
+        # : (Hash[Integer, Array[In | Call | Return]] state_to_prefix) -> void
+        def initialize: (Hash[Integer, Array[In | Call | Return]] state_to_prefix) -> void
+
+        # @rbs override
+        def []: ...
+
+        # : (Integer state) -> Array[In | Call | Return]
+        def state_to_prefix: (Integer state) -> Array[In | Call | Return]
+      end
+
+      @root: Node[In, Call, Return]
+
+      @path_hash: Hash[Array[In | Call | Return], Array[bool]]
+
+      @cex_processing: cex_processing_method
+
+      @sul: System::MooreLikeSUL[In | Call | Return, bool]
+
+      @return_alphabet: Array[Return]
+
+      @call_alphabet: Array[Call]
+
+      @alphabet: Array[In]
+
+      # : (
+      #     Array[In] alphabet,
+      #     Array[Call] call_alphabet,
+      #     Array[Return] return_alphabet,
+      #     System::MooreLikeSUL[In, bool] sul,
+      #     cex: Array[In],
+      #     cex_processing: cex_processing_method
+      #   ) -> void
+      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In, bool] sul, cex: Array[In], cex_processing: cex_processing_method) -> void
+
+      # Returns a prefix discriminated by `word`.
+      #
+      # : (Array[In | Call | Return] word) -> Array[In | Call | Return]
+      def sift: (Array[In | Call | Return] word) -> Array[In | Call | Return]
+
+      # Constructs a hypothesis automaton from this discrimination tree.
+      #
+      # : () -> [Automaton::VPA[In, Call, Return], ConfToPrefix[In, Call, Return]]
+      def build_hypothesis: () -> [ Automaton::VPA[In, Call, Return], ConfToPrefix[In, Call, Return] ]
+
+      # Update this classification tree by the given `cex`.
+      #
+      # : (
+      #    Automaton::VPA[In, Call, Return] hypothesis,
+      #    Array[In | Call | Return] cex,
+      #    ConfToPrefix[In, Call, Return] conf_to_prefix
+      #  ) -> void
+      def process_cex: (Automaton::VPA[In, Call, Return] hypothesis, Array[In | Call | Return] cex, ConfToPrefix[In, Call, Return] conf_to_prefix) -> void
+    end
+  end
+end

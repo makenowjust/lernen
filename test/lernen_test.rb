@@ -1,12 +1,14 @@
 # frozen_string_literal: true
+# rbs_inline: enabled
 
 require_relative "test_helper"
 
-class TestLernen < Minitest::Test
+class LernenTest < Minitest::Test
   N = 30
 
-  ORACLE = :random_walk
-  ORACLE_PARAMS = { step_limit: 1500 }.freeze
+  ORACLE = :random_word #: :random_word
+  ORACLE_PARAMS = { max_words: 100 }.freeze
+  VPA_ORACLE_PARAMS = { max_words: 800 }.freeze
 
   TEST_CASES = [
     [:lstar, { cex_processing: :binary }],
@@ -24,7 +26,7 @@ class TestLernen < Minitest::Test
       alphabet = %w[0 1 2]
       N.times do |seed|
         random = Random.new(seed * 41)
-        expected = Lernen::DFA.random(alphabet:, random:, min_state_size: 8, max_state_size: 10)
+        expected = Lernen::Automaton::DFA.random(alphabet:, random:, min_state_size: 8, max_state_size: 10)
 
         result =
           Lernen.learn(
@@ -36,7 +38,7 @@ class TestLernen < Minitest::Test
             params:,
             random:
           )
-        cex = expected.check_equivalence(alphabet, result)
+        cex = Lernen::Automaton::DFA.find_separating_word(alphabet, expected, result)
 
         assert_nil cex, "Equivalence check failed (seed: #{seed})"
       end
@@ -47,7 +49,8 @@ class TestLernen < Minitest::Test
       output_alphabet = %w[a b c d]
       N.times do |seed|
         random = Random.new(seed * 41)
-        expected = Lernen::Moore.random(alphabet:, output_alphabet:, random:, min_state_size: 8, max_state_size: 10)
+        expected =
+          Lernen::Automaton::Moore.random(alphabet:, output_alphabet:, random:, min_state_size: 8, max_state_size: 10)
 
         result =
           Lernen.learn(
@@ -60,7 +63,7 @@ class TestLernen < Minitest::Test
             params:,
             random:
           )
-        cex = expected.check_equivalence(alphabet, result)
+        cex = Lernen::Automaton::Moore.find_separating_word(alphabet, expected, result)
 
         assert_nil cex, "Equivalence check failed (seed: #{seed})"
       end
@@ -71,7 +74,8 @@ class TestLernen < Minitest::Test
       output_alphabet = %w[a b c d]
       N.times do |seed|
         random = Random.new(seed * 41)
-        expected = Lernen::Mealy.random(alphabet:, output_alphabet:, random:, min_state_size: 8, max_state_size: 10)
+        expected =
+          Lernen::Automaton::Mealy.random(alphabet:, output_alphabet:, random:, min_state_size: 8, max_state_size: 10)
 
         result =
           Lernen.learn(
@@ -84,7 +88,44 @@ class TestLernen < Minitest::Test
             params:,
             random:
           )
-        cex = expected.check_equivalence(alphabet, result)
+        cex = Lernen::Automaton::Mealy.find_separating_word(alphabet, expected, result)
+
+        assert_nil cex, "Equivalence check failed (seed: #{seed})"
+      end
+    end
+
+    next unless algorithm == :kearns_vazirani
+
+    define_method(:"test_learn_vpa_#{algorithm}_#{params}") do
+      alphabet = %w[0 1 2]
+      call_alphabet = %w[(]
+      return_alphabet = %w[)]
+      N.times do |seed|
+        random = Random.new(seed * 41)
+        expected =
+          Lernen::Automaton::VPA.random(
+            alphabet:,
+            call_alphabet:,
+            return_alphabet:,
+            random:,
+            min_state_size: 8,
+            max_state_size: 10
+          )
+
+        result =
+          Lernen.learn(
+            alphabet:,
+            call_alphabet:,
+            return_alphabet:,
+            sul: expected,
+            automaton_type: :vpa,
+            oracle: ORACLE,
+            oracle_params: VPA_ORACLE_PARAMS,
+            algorithm:,
+            params:,
+            random:
+          )
+        cex = Lernen::Automaton::VPA.find_separating_word(alphabet, call_alphabet, return_alphabet, expected, result)
 
         assert_nil cex, "Equivalence check failed (seed: #{seed})"
       end

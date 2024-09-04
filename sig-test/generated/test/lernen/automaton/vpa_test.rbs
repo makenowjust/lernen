@@ -1,0 +1,16 @@
+# Generated from test/lernen/automaton/vpa_test.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    class VPATest < Minitest::Test
+      # : () -> Lernen::Automaton::VPA[String, String, String]
+      def self.dyck_vpa: () -> Lernen::Automaton::VPA[String, String, String]
+
+      # : () -> void
+      def test_run: () -> void
+
+      # : () -> void
+      def test_to_mermaid: () -> void
+    end
+  end
+end

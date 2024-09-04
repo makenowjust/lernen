@@ -1,0 +1,29 @@
+# Generated from lib/lernen/system/block_sul.rb with RBS::Inline
+
+module Lernen
+  module System
+    # BlockSUL is a system under learning (SUL) constructed from a block.
+    #
+    # A block is expected to behave like a membership query.
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class BlockSUL[In, Out] < MooreLikeSUL[In, Out]
+      @block: ^(Array[In]) -> Out
+
+      @word: Array[In]
+
+      # : (?cache: bool) { (Array[In]) -> Out } -> void
+      def initialize: (?cache: bool) { (Array[In]) -> Out } -> void
+
+      # @rbs override
+      def setup: ...
+
+      # @rbs override
+      def step: ...
+
+      # @rbs override
+      def query_empty: ...
+    end
+  end
+end

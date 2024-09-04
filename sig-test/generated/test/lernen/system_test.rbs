@@ -1,0 +1,9 @@
+# Generated from test/lernen/system_test.rb with RBS::Inline
+
+module Lernen
+  class SystemTest < Minitest::Test
+    def test_from_block: () -> untyped
+
+    def test_from_automaton: () -> untyped
+  end
+end

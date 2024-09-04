@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "bundler/gem_tasks"
-require "yard"
 require "rake/testtask"
 require "rubocop/rake_task"
 require "syntax_tree/rake_tasks"
@@ -9,11 +8,6 @@ require "syntax_tree/rake_tasks"
 Rake::TestTask.new(:test) do |t|
   t.verbose = true
   t.pattern = "test/**/*_test.rb"
-end
-
-YARD::Rake::YardocTask.new do |t|
-  t.files = ["lib/**/*.rb"]
-  t.stats_options = ["--list-undoc"]
 end
 
 RuboCop::RakeTask.new { |t| t.options = %w[--fail-level W] }
@@ -30,3 +24,28 @@ end
 
 task format: %w[rubocop:autocorrect_all stree:write]
 task lint: %w[rubocop stree:check]
+
+namespace :rbs_inline do
+  desc "Generate RBS signatures for `lib` files"
+  task :lib do
+    sh "bin/rbs-inline", "lib", "--output=sig/generated"
+  end
+
+  desc "Generate RBS signatures for `test` files"
+  task :test do
+    sh "bin/rbs-inline", "test", "--output=sig-test/generated"
+  end
+
+  task default: %i[lib test]
+end
+
+task rbs_inline: %i[rbs_inline:lib rbs_inline:test]
+
+namespace :steep do
+  desc "Run `steep check`"
+  task :check do
+    sh "bin/steep", "check"
+  end
+end
+
+task steep: %i[rbs_inline steep:check]

@@ -1,0 +1,13 @@
+# Generated from test/lernen_test.rb with RBS::Inline
+
+class LernenTest < Minitest::Test
+  N: ::Integer
+
+  ORACLE: :random_word
+
+  ORACLE_PARAMS: untyped
+
+  VPA_ORACLE_PARAMS: untyped
+
+  TEST_CASES: untyped
+end

@@ -1,0 +1,10 @@
+# Generated from test/lernen/equiv/exhaustive_search_oracle_test.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    class ExhaustiveSearchOracleTest < Minitest::Test
+      # : () -> void
+      def test_find_cex_and_stats: () -> void
+    end
+  end
+end

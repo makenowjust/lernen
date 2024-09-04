@@ -1,0 +1,28 @@
+# Generated from lib/lernen/system/transition_system_simulator.rb with RBS::Inline
+
+module Lernen
+  module System
+    # TransitionSystemSimulator is a system under learning (SUL) using a transition system simulation.
+    #
+    # @rbs generic Conf -- Type for a configuration of this automaton
+    # @rbs generic In   -- Type for input alphabet
+    # @rbs generic Out  -- Type for output values
+    class TransitionSystemSimulator[Conf, In, Out] < SUL[In, Out]
+      @automaton: Automaton::TransitionSystem[Conf, In, Out]
+
+      @current_conf: Conf | nil
+
+      # : (Automaton::TransitionSystem[Conf, In, Out] automaton, ?cache: bool) -> void
+      def initialize: (Automaton::TransitionSystem[Conf, In, Out] automaton, ?cache: bool) -> void
+
+      # @rbs override
+      def setup: ...
+
+      # @rbs override
+      def shutdown: ...
+
+      # @rbs override
+      def step: ...
+    end
+  end
+end

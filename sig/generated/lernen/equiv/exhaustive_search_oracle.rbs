@@ -1,0 +1,38 @@
+# Generated from lib/lernen/equiv/exhaustive_search_oracle.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    # ExhaustiveSearchOracle provides an implementation of equivalence query
+    # that finds a counterexample by using exhaustive search to `depth` products
+    # of input alphabet characters.
+    #
+    # For example, with `alphabet = %w[0 1]` and `depth = 3`, this oracle queries
+    # the following 14 words for finding a counterexample.
+    #
+    # ```ruby
+    # 0, 1,
+    # 00, 01, 10, 11,
+    # 000, 001, 010, 011, 100, 101, 110, 111
+    # ```
+    #
+    # As the strategy, this oracle is extremingly slow and we do not recommend to use
+    # this oracle for non-testing purposes.
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class ExhaustiveSearchOracle[In, Out] < Oracle[In, Out]
+      @alphabet: Array[In]
+
+      @depth: Integer
+
+      # @rbs alphabet: Array[In]
+      # @rbs sul: System::SUL[In, Out]
+      # @rbs depth: Integer
+      # @rbs return: void
+      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, ?depth: Integer) -> void
+
+      # @rbs override
+      def find_cex: ...
+    end
+  end
+end

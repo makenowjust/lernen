@@ -1,0 +1,13 @@
+# Generated from test/lernen/system/transition_system_simulator_test.rb with RBS::Inline
+
+module Lernen
+  module System
+    class TransitionSystemSimulatorTest < Minitest::Test
+      # : () -> void
+      def test_step: () -> void
+
+      # : () -> void
+      def test_query_and_stats: () -> void
+    end
+  end
+end

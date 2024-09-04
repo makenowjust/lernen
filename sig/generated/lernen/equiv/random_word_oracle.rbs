@@ -1,0 +1,45 @@
+# Generated from lib/lernen/equiv/random_word_oracle.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    # RandomWordOracle provides an implementation of equivalence query
+    # that finds a counterexample by using random word generation.
+    #
+    # This takes three important parameters:
+    #
+    # - `max_words` (default: `100`): It is a limit of number of random words.
+    #     If random words is generated and tried up to this value and no counterexample
+    #     is found, it returns `nil` finally.
+    # - `min_word_size` (default: `1`): It is the minimal size of randomly generated word.
+    #     It should be greater than `0`.
+    # - `max_word_size` (default: `30`): It is the maximal size of randomly generated word.
+    #     It should be greater than or equal to `min_word_size`.
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class RandomWordOracle[In, Out] < Oracle[In, Out]
+      @alphabet: Array[In]
+
+      @max_word: Integer
+
+      @min_word_size: Integer
+
+      @max_word_size: Integer
+
+      @random: Random
+
+      # : (
+      #     Array[In] alphabet,
+      #     System::SUL[In, Out] sul,
+      #     ?max_words: Integer,
+      #     ?min_word_size: Integer,
+      #     ?max_word_size: Integer,
+      #     ?random: Random,
+      #   ) -> void
+      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, ?max_words: Integer, ?min_word_size: Integer, ?max_word_size: Integer, ?random: Random) -> void
+
+      # @rbs override
+      def find_cex: ...
+    end
+  end
+end

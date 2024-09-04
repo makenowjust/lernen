@@ -1,0 +1,63 @@
+# Generated from lib/lernen/automaton/moore_like.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    # MooreLike represents a Moore-like transition system.
+    #
+    # This transition system has an output value for each configuration (or state).
+    # Therefore, the following invariant is required for all `conf` and `input`.
+    #
+    # ```ruby
+    # step_output, next_conf = self.step(conf, input)
+    # step_output == self.output(next_conf)
+    # ```
+    #
+    # Note that in this class, the initial output of the `#run` method is lost.
+    # If it is needed, we can use `#run_empty` instead.
+    #
+    # Note that this class is *abstract*. We should implement the following method:
+    #
+    # - `#type`
+    # - `#initial_conf`
+    # - `#step_conf(conf, input)`
+    # - `#output(conf)`
+    #
+    # @rbs generic Conf -- Type for a configuration of this automaton
+    # @rbs generic In   -- Type for input alphabet
+    # @rbs generic Out  -- Type for output values
+    class MooreLike[Conf, In, Out] < TransitionSystem[Conf, In, Out]
+      # Runs a transition from the given configuration with the given input.
+      # It looks like `#step`, but it does not return an output value because
+      # it can be computed by `#output` in this class.
+      #
+      # This is an abstract method.
+      #
+      # : (Conf conf, In innput) -> Conf
+      def step_conf: (Conf conf, In innput) -> Conf
+
+      # Returns the output value for the given configuration.
+      #
+      # This is an abstract method.
+      #
+      # : (Conf conf) -> Out
+      def output: (Conf conf) -> Out
+
+      # @rbs override
+      def step: ...
+
+      # Runs and returns the output value of the transitions for the empty string.
+      #
+      # : () -> Out
+      def run_empty: () -> Out
+
+      # Finds a separating word between `automaton1` and `automaton2`.
+      #
+      # : [Conf, In, Out] (
+      #    Array[In] alphabet,
+      #    MooreLike[Conf, In, Out] automaton1,
+      #    MooreLike[Conf, In, Out] automaton2
+      #  ) -> (Array[In] | nil)
+      def self.find_separating_word: [Conf, In, Out] (Array[In] alphabet, MooreLike[Conf, In, Out] automaton1, MooreLike[Conf, In, Out] automaton2) -> (Array[In] | nil)
+    end
+  end
+end

@@ -1,0 +1,14 @@
+# Generated from test/lernen/learner/lstar_test.rb with RBS::Inline
+
+module Lernen
+  module Learner
+    class LStarTest < Minitest::Test
+      # () -> void
+      def test_learn_dfa: () -> untyped
+
+      def test_learn_moore: () -> untyped
+
+      def test_learn_mealy: () -> untyped
+    end
+  end
+end

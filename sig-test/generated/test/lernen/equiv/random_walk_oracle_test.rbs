@@ -1,0 +1,10 @@
+# Generated from test/lernen/equiv/random_walk_oracle_test.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    class RandomWalkOracleTest < Minitest::Test
+      # : () -> void
+      def test_find_cex: () -> void
+    end
+  end
+end

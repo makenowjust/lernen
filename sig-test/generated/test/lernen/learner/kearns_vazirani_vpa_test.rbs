@@ -1,0 +1,10 @@
+# Generated from test/lernen/learner/kearns_vazirani_vpa_test.rb with RBS::Inline
+
+module Lernen
+  module Learner
+    class KearnsVaziraniVPATest < Minitest::Test
+      # () -> void
+      def test_learn: () -> untyped
+    end
+  end
+end

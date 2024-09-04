@@ -1,0 +1,6 @@
+# Generated from lib/lernen/version.rb with RBS::Inline
+
+module Lernen
+  # The version string.
+  VERSION: ::String
+end

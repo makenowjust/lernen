@@ -33,5 +33,17 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Lint/ShadowingOuterLocalVariable:
+  Enabled: false
+
 Style/NumericPredicate:
+  Enabled: false
+
+Style/AccessorGrouping:
+  Enabled: false
+
+Style/CommentedKeyword:
+  Enabled: false
+
+Minitest/MultipleAssertions:
   Enabled: false

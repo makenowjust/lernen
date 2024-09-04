@@ -1,0 +1,16 @@
+# Generated from test/lernen/automaton/mealy_test.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    class MealyTest < Minitest::Test
+      # : () -> Lernen::Automaton::Mealy[String, Integer]
+      def self.mod4_mealy: () -> Lernen::Automaton::Mealy[String, Integer]
+
+      # : () -> void
+      def test_run: () -> void
+
+      # : () -> void
+      def test_to_mermaid: () -> void
+    end
+  end
+end

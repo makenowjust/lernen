@@ -27,3 +27,5 @@ jobs:
       run: bundle exec rake test
     - name: Run lint
       run: bundle exec rake lint
+    - name: Run typecheck
+      run: bundle exec rake steep

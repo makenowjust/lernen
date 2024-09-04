@@ -1,4 +1,5 @@
 /.bundle/
+/.gem_rbs_collection/
 /.yardoc
 /_yardoc/
 /coverage/

@@ -1,0 +1,16 @@
+# Generated from test/lernen/automaton/moore_test.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    class MooreTest < Minitest::Test
+      # : () -> Lernen::Automaton::Moore[String, Integer]
+      def self.mod4_moore: () -> Lernen::Automaton::Moore[String, Integer]
+
+      # : () -> void
+      def test_run: () -> void
+
+      # : () -> void
+      def test_to_mermaid: () -> void
+    end
+  end
+end

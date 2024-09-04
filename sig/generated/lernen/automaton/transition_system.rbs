@@ -1,0 +1,90 @@
+# Generated from lib/lernen/automaton/transition_system.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    # TransitionSystem represents a labelled transition system.
+    #
+    # We assume that this transition system is *deterministic* and *complete*;
+    # thus, the transition function should be defined for all states and input
+    # characters, and the destination configuration of a transition should be one.
+    #
+    # Also, this transition system has an output value for each transition. From
+    # this point of view, this definition is much like Mealy machines. However,
+    # this class is more generic. Actually, this is a superclass of Moore machines,
+    # DFA, etc.
+    #
+    # Note that this class is *abstract*. We should implement the following method:
+    #
+    # - `#type`
+    # - `#initial_conf`
+    # - `#step(conf, input)`
+    #
+    # @rbs generic Conf -- Type for a configuration of this automaton
+    # @rbs generic In   -- Type for input alphabet
+    # @rbs generic Out  -- Type for output values
+    class TransitionSystem[Conf, In, Out]
+      # Returns the automaton type.
+      #
+      # This is an abstract method.
+      #
+      # : () -> transition_system_type
+      def type: () -> transition_system_type
+
+      # Returns the initial configuration.
+      #
+      # This is an abstract method.
+      #
+      # : () -> Conf
+      def initial_conf: () -> Conf
+
+      # Runs a transition from the given configuration with the given input.
+      #
+      # It returns a pair of the output value and the next configuration of
+      # this transition.
+      #
+      # This is an abstract method.
+      #
+      # : (Conf conf, In input) -> [Out, Conf]
+      def step: (Conf conf, In input) -> [ Out, Conf ]
+
+      # Runs transitions from the initial configuration with the given word.
+      #
+      # It returns a pair of the output values and the final configuration of
+      # the transitions.
+      #
+      # : (Array[In] word) -> [Array[Out], Conf]
+      def run: (Array[In] word) -> [ Array[Out], Conf ]
+
+      # Finds a separating word between `automaton1` and `automaton2`.
+      #
+      # : [Conf, In, Out] (
+      #    Array[In] alphabet,
+      #    TransitionSystem[Conf, In, Out] automaton1,
+      #    TransitionSystem[Conf, In, Out] automaton2
+      #  ) -> (Array[In] | nil)
+      def self.find_separating_word: [Conf, In, Out] (Array[In] alphabet, TransitionSystem[Conf, In, Out] automaton1, TransitionSystem[Conf, In, Out] automaton2) -> (Array[In] | nil)
+
+      # Generates a transition function randomly.
+      #
+      # To make a transition function connected, this method generates
+      # a transition function in the following mannar.
+      #
+      # 1. Decide a number of states within `min_state_size..max_state_size` randomly.
+      # 2. Divides the states into `num_reachable_paths` partitions.
+      # 3. Generate a path from the initial state for each paratition.
+      # 4. Generate transition for all `state` and `input`.
+      #
+      # This method returns a pair of a transition function and an array of reachable paths.
+      # The initial state of the result transition function is `0`.
+      #
+      # : [In] (
+      #    alphabet: Array[In],
+      #    ?min_state_size: Integer,
+      #    ?max_state_size: Integer,
+      #    ?num_reachable_paths: Integer,
+      #    ?random: Random,
+      #  ) -> [Hash[[Integer, In], Integer], Array[Array[Integer]]]
+      def self.random_transition_function: [In] (alphabet: Array[In], ?min_state_size: Integer, ?max_state_size: Integer, ?num_reachable_paths: Integer, ?random: Random) -> [ Hash[[ Integer, In ], Integer], Array[Array[Integer]] ]
+    end
+  end
+end

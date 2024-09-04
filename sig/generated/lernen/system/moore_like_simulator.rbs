@@ -1,0 +1,31 @@
+# Generated from lib/lernen/system/moore_like_simulator.rb with RBS::Inline
+
+module Lernen
+  module System
+    # MooreLikeSimulator is a system under learning (SUL) using a Moore-like machine simulation.
+    #
+    # @rbs generic Conf -- Type for a configuration of this automaton
+    # @rbs generic In   -- Type for input alphabet
+    # @rbs generic Out  -- Type for output values
+    class MooreLikeSimulator[Conf, In, Out] < MooreLikeSUL[In, Out]
+      @automaton: Automaton::MooreLike[Conf, In, Out]
+
+      @current_conf: Conf | nil
+
+      # : (Automaton::MooreLike[Conf, In, Out] automaton, ?cache: bool) -> void
+      def initialize: (Automaton::MooreLike[Conf, In, Out] automaton, ?cache: bool) -> void
+
+      # @rbs override
+      def setup: ...
+
+      # @rbs override
+      def shutdown: ...
+
+      # @rbs override
+      def step: ...
+
+      # @rbs override
+      def query_empty: ...
+    end
+  end
+end

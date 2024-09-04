@@ -1,0 +1,112 @@
+# Generated from lib/lernen/automaton/vpa.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    # VPA represents a [visily pushdown automaton](https://en.wikipedia.org/wiki/Nested_word#Visibly_pushdown_automaton).
+    #
+    # Especially, this definition represents 1-SEVPA (1-module single-entry visibly pushdown automaton).
+    #
+    # @rbs generic In -- Type for input alphabet
+    # @rbs generic Call - Type for call alphabet
+    # @rbs generic Return - Type for return alphabet
+    class VPA[In, Call, Return] < MooreLike[VPA::Conf[Call] | nil, In | Call | Return, bool]
+      class Conf[Call] < Data
+        attr_reader state: Integer
+        attr_reader stack: Array[[ Integer, Call ]]
+        def self.[]: [Call] (Integer state, Array[[ Integer, Call ]] stack) -> Conf[Call]
+      end
+
+      @return_transition_function: Hash[[ Integer, Return ], Hash[[ Integer, Call ], Integer]]
+
+      @transition_function: Hash[[ Integer, In ], Integer]
+
+      @accept_state_set: Set[Integer]
+
+      @initial_state: Integer
+
+      # : (
+      #     Integer initial_state,
+      #     Set[Integer] accept_state_set,
+      #     Hash[[Integer, In], Integer] transition_function.
+      #     Hash[[Integer, Return], Hash[[Integer, Call], Integer]] return_transition_function
+      #   ) -> void
+      def initialize: (untyped initial_state, untyped accept_state_set, untyped transition_function, untyped return_transition_function) -> untyped
+
+      attr_reader initial_state: Integer
+
+      attr_reader accept_state_set: Set[Integer]
+
+      attr_reader transition_function: Hash[[ Integer, In ], Integer]
+
+      attr_reader return_transition_function: Hash[[ Integer, Return ], Hash[[ Integer, Call ], Integer]]
+
+      # @rbs return: :vpa
+      def type: () -> :vpa
+
+      # @rbs override
+      def initial_conf: ...
+
+      # @rbs override
+      def step_conf: ...
+
+      # @rbs override
+      def output: ...
+
+      # Checks the structural equality between `self` and `other`.
+      #
+      # : (untyped other) -> bool
+      def ==: (untyped other) -> bool
+
+      # Returns the array of states of this VPA.
+      #
+      # The result array is sorted.
+      #
+      # : () -> Array[Integer]
+      def states: () -> Array[Integer]
+
+      # Returns the error state of this VPA.
+      #
+      # An error state is:
+      #
+      # - neither a initial state nor accepting states, and
+      # - only having self-loops for all `input`.
+      #
+      # If an error state is not found, it returns `nil`.
+      #
+      # : () -> (Integer | nil)
+      def error_state: () -> (Integer | nil)
+
+      # Returns a [mermaid](https://mermaid.js.org) diagram of this VPA.
+      #
+      # : (
+      #    ?show_error_state: bool,
+      #    ?direction: "TD" | "LR"
+      #  ) -> String
+      def to_mermaid: (?show_error_state: bool, ?direction: "TD" | "LR") -> String
+
+      # Finds a separating word between `vpa1` and `vpa2`.
+      #
+      # : [In, Call, Return] (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet,
+      #    Array[Return] return_alphabet,
+      #    VPA[In, Call, Return] vpa1,
+      #    VPA[In, Call, Return] vpa2
+      #  ) -> (Array[In | Call | Return] | nil)
+      def self.find_separating_word: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, VPA[In, Call, Return] vpa1, VPA[In, Call, Return] vpa2) -> (Array[In | Call | Return] | nil)
+
+      # Generates a VPA randomly.
+      #
+      # : [In, Call, Return] (
+      #    alphabet: Array[In],
+      #    call_alphabet: Array[Call],
+      #    return_alphabet: Array[Return],
+      #    ?min_state_size: Integer,
+      #    ?max_state_size: Integer,
+      #    ?accept_state_size: Integer,
+      #    ?random: Random,
+      #  ) -> VPA[In, Call, Return]
+      def self.random: [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_alphabet: Array[Return], ?min_state_size: Integer, ?max_state_size: Integer, ?accept_state_size: Integer, ?random: Random) -> VPA[In, Call, Return]
+    end
+  end
+end

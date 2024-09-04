@@ -1,0 +1,68 @@
+# Generated from lib/lernen/equiv/oracle.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    # Oracle is an oracle for answering a equivalence query.
+    #
+    # On running equivalence queries, this records the statistics information.
+    # We can obtain this information by `Oracle#stats`.
+    #
+    # Note that this class is *abstract*. You should implement the following method:
+    #
+    # - `#find_cex(hypothesis)`
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class Oracle[In, Out]
+      @sul: System::SUL[In, Out]
+
+      @num_calls: Integer
+
+      @num_queries: Integer
+
+      @num_steps: Integer
+
+      @current_conf: untyped
+
+      # : (System::SUL[In, Out] sul) -> void
+      def initialize: (System::SUL[In, Out] sul) -> void
+
+      # Finds a conterexample against the given `hypothesis` automaton.
+      # If it is found, it returns the counterexample word, or it returns `nil` otherwise.
+      #
+      # A counterexample means that it separates a sul and a hypothesis automaton on an output
+      # value, i.e., `hypothesis.run(cex)[0].last != sul.query(cex).last`. We also assume
+      # a counterexample is minimal; that is, there is no `n` (where `0 <= n < cex.size`)
+      # such that `hypothesis.run(cex[0...n])[0].last != sul.query(cex[0...n]).last`.
+      #
+      # : [Conf] (Automaton::TransitionSystem[Conf, In, Out] hypothesis) -> (Array[In] | nil)
+      def find_cex: [Conf] (Automaton::TransitionSystem[Conf, In, Out] hypothesis) -> (Array[In] | nil)
+
+      # Returns the statistics information as a `Hash` object.
+      #
+      # The result hash contains the following values.
+      #
+      # - `num_calls`: The number of calls of `find_cex`.
+      # - `num_queries`: The number of queries.
+      # - `num_steps`: The total number of steps.
+      #
+      # : () -> Hash[Symbol, Integer]
+      def stats: () -> Hash[Symbol, Integer]
+
+      private
+
+      # Resets the internal states of this oracle.
+      #
+      # : [Conf] (Automaton::TransitionSystem[Conf, In, Out] hypothesis) -> void
+      def reset_internal: [Conf] (Automaton::TransitionSystem[Conf, In, Out] hypothesis) -> void
+
+      # Runs a transition of both a hypothesis and a SUL.
+      #
+      # : [Conf] (
+      #    Automaton::TransitionSystem[Conf, In, Out] hypothesis,
+      #    In input
+      #  ) -> [Out, Out]
+      def step_internal: [Conf] (Automaton::TransitionSystem[Conf, In, Out] hypothesis, In input) -> [ Out, Out ]
+    end
+  end
+end

@@ -1,0 +1,63 @@
+# Generated from lib/lernen/automaton/mealy.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    # Mealy represents a [Mealy machine](https://en.wikipedia.org/wiki/Mealy_machine).
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class Mealy[In, Out] < TransitionSystem[Integer, In, Out]
+      @initial_state: Integer
+
+      @transition_function: Hash[[ Integer, In ], [ Out, Integer ]]
+
+      # : (
+      #     Integer initial_state,
+      #     Hash[[Integer, In], [Out, Integer]] transition_function
+      #   ) -> void
+      def initialize: (Integer initial_state, Hash[[ Integer, In ], [ Out, Integer ]] transition_function) -> void
+
+      attr_reader initial_state: Integer
+
+      attr_reader transition_function: Hash[[ Integer, In ], [ Out, Integer ]]
+
+      # : () -> :mealy
+      def type: () -> :mealy
+
+      # @rbs override
+      def initial_conf: ...
+
+      # @rbs override
+      def step: ...
+
+      # Checks the structural equality between `self` and `other`.
+      #
+      # : (untyped other) -> bool
+      def ==: (untyped other) -> bool
+
+      # Returns the array of states of this Mealy machine.
+      #
+      # The result array is sorted.
+      #
+      # : () -> Array[Integer]
+      def states: () -> Array[Integer]
+
+      # Returns a [mermaid](https://mermaid.js.org) diagram of this Mealy machine.
+      #
+      # : (?direction: "TD" | "LR") -> String
+      def to_mermaid: (?direction: "TD" | "LR") -> String
+
+      # Generates a Mealy machine randomly.
+      #
+      # : [In, Out] (
+      #    alphabet: Array[In],
+      #    output_alphabet: Array[Out],
+      #    ?min_state_size: Integer,
+      #    ?max_state_size: Integer,
+      #    ?num_reachable_paths: Integer,
+      #    ?random: Random,
+      #  ) -> Mealy[In, Out]
+      def self.random: [In, Out] (alphabet: Array[In], output_alphabet: Array[Out], ?min_state_size: Integer, ?max_state_size: Integer, ?num_reachable_paths: Integer, ?random: Random) -> Mealy[In, Out]
+    end
+  end
+end

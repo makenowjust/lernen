@@ -1,0 +1,71 @@
+# Generated from lib/lernen/automaton/moore.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    # Moore represents a [Moore machine](https://en.wikipedia.org/wiki/Moore_machine).
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class Moore[In, Out] < MooreLike[Integer, In, Out]
+      @transition_function: Hash[[ Integer, In ], Integer]
+
+      @output_function: Hash[Integer, Out]
+
+      @initial_state: Integer
+
+      # : (
+      #     Integer initial_state,
+      #     Hash[Integer, Out] output_function,
+      #     Hash[[Integer, In], Integer] transition_function,
+      #   ) -> void
+      def initialize: (Integer initial_state, Hash[Integer, Out] output_function, Hash[[ Integer, In ], Integer] transition_function) -> void
+
+      attr_reader initial_state: Integer
+
+      attr_reader output_function: Hash[Integer, Out]
+
+      attr_reader transition_function: Hash[[ Integer, In ], Integer]
+
+      # : () -> :moore
+      def type: () -> :moore
+
+      # @rbs override
+      def initial_conf: ...
+
+      # @rbs override
+      def step_conf: ...
+
+      # @rbs override
+      def output: ...
+
+      # Checks the structural equality between `self` and `other`.
+      #
+      # : (untyped other) -> bool
+      def ==: (untyped other) -> bool
+
+      # Returns the array of states of this Moore machine.
+      #
+      # The result array is sorted.
+      #
+      # : () -> Array[Integer]
+      def states: () -> Array[Integer]
+
+      # Returns a [mermaid](https://mermaid.js.org) diagram of this Moore machine.
+      #
+      # : (?direction: "TD" | "LR") -> String
+      def to_mermaid: (?direction: "TD" | "LR") -> String
+
+      # Generates a Moore machine randomly.
+      #
+      # : [In, Out] (
+      #    alphabet: Array[In],
+      #    output_alphabet: Array[Out],
+      #    ?min_state_size: Integer,
+      #    ?max_state_size: Integer,
+      #    ?num_reachable_paths: Integer,
+      #    ?random: Random,
+      #  ) -> Moore[In, Out]
+      def self.random: [In, Out] (alphabet: Array[In], output_alphabet: Array[Out], ?min_state_size: Integer, ?max_state_size: Integer, ?num_reachable_paths: Integer, ?random: Random) -> Moore[In, Out]
+    end
+  end
+end

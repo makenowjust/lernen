@@ -1,0 +1,11 @@
+# Generated from lib/lernen/equiv.rb with RBS::Inline
+
+module Lernen
+  # This is a namespace for equivalence query oracles.
+  #
+  # A equivalence query check the given hypothesis automaton is equivalence
+  # to a SUL. If that is not, it returns a counterexample, which leads
+  # different output values between the hypothesis and the SUL.
+  module Equiv
+  end
+end

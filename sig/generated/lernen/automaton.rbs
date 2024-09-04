@@ -1,0 +1,15 @@
+# Generated from lib/lernen/automaton.rb with RBS::Inline
+
+module Lernen
+  # This is a namespace for types of automata (transition systems).
+  #
+  # In this library, the following transition systems are supported.
+  #
+  # - `DFA` (deterministic finite-state automaton) ([Wikipedia](https://en.wikipedia.org/wiki/Deterministic_finite_automaton))
+  # - `Mealy` machine ([Wikipedia](https://en.wikipedia.org/wiki/Mealy_machine))
+  # - `Moore` machine ([Wikipedia](https://en.wikipedia.org/wiki/Moore_machine))
+  # - `VPA` (visibly pushdown automaton) ([Wikipedia](https://en.wikipedia.org/wiki/Nested_word#Visibly_pushdown_automaton))
+  module Automaton
+    type transition_system_type = :dfa | :moore | :mealy | :vpa
+  end
+end
