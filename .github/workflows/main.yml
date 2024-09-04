@@ -28,6 +28,6 @@ jobs:
     - name: Run lint
       run: bundle exec rake lint
     - name: Run typecheck
-      run:
+      run: |
         bundle exec rbs collection install
         bundle exec rake steep
