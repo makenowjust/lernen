@@ -50,8 +50,6 @@ GEM
       racc
     prettier_print (1.2.1)
     prism (0.30.0)
-    psych (5.1.2)
-      stringio
     racc (1.8.1)
     rainbow (3.1.1)
     rake (13.2.1)
@@ -63,8 +61,6 @@ GEM
     rbs-inline (0.7.0)
       prism (>= 0.29, < 0.31)
       rbs (~> 3.5.0)
-    rdoc (6.7.0)
-      psych (>= 4.0.0)
     regexp_parser (2.9.2)
     rexml (3.3.6)
       strscan
@@ -110,7 +106,6 @@ GEM
       securerandom (>= 0.1)
       strscan (>= 1.0.0)
       terminal-table (>= 2, < 4)
-    stringio (3.1.1)
     strscan (3.1.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
@@ -119,7 +114,6 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
-    yard (0.9.36)
 
 PLATFORMS
   arm64-darwin-23
@@ -132,14 +126,12 @@ DEPENDENCIES
   prism (~> 0.30)
   rake (~> 13.0)
   rbs-inline (~> 0.7)
-  rdoc (~> 6.7.0)
   rubocop (~> 1.63)
   rubocop-minitest (~> 0.35)
   rubocop-rake (~> 0.6)
   simplecov (~> 0.22)
   steep (~> 1.7)
   syntax_tree (~> 6.2)
-  yard (~> 0.9)
 
 BUNDLED WITH
    2.6.0.dev
