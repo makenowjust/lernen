@@ -14,7 +14,7 @@ Once getting an automaton from a program, we earn some benefits:
     Model checking ensures some good properties about the system, e.g., that two different implementations of the system behave exactly the same.
 
 **Lernen** is an automata learning library written in Ruby.
-This library includes implementations of not only eminent automata learning algorithms such as Angluin's $L^\ast$ and $\textrm{Kearns-Vazirani}$ ($\textrm{KV}$), but also a modern algorithm such as $L^\#$.
+This library includes implementations of not only eminent automata learning algorithms such as Angluin's $L^\ast$ and $\textrm{Kearns-Vazirani}$ ($\textrm{KV}$), but also a modern algorithm such as $L^\\#$.
 Also, this library supports inferring an automaton accepting a non-regular language, namely VPA (visibly pushdown automaton).
 
 As case studies of the real-world applications of automata learning, we introduce two examples with Lernen.
