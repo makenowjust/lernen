@@ -7,8 +7,8 @@ class LernenTest < Minitest::Test
   N = 30
 
   ORACLE = :random_word #: :random_word
-  ORACLE_PARAMS = { max_words: 100 }.freeze
-  VPA_ORACLE_PARAMS = { max_words: 800 }.freeze
+  ORACLE_PARAMS = { max_words: 100 }.freeze #: Hash[Symbol, Integer]
+  VPA_ORACLE_PARAMS = { max_words: 800 }.freeze #: Hash[Symbol, Integer]
 
   TEST_CASES = [
     [:lstar, { cex_processing: :binary }],
@@ -19,7 +19,7 @@ class LernenTest < Minitest::Test
     [:kearns_vazirani, { cex_processing: :linear }],
     [:kearns_vazirani, { cex_processing: :exponential }],
     [:lsharp, {}]
-  ].freeze
+  ].freeze #: Array[[Lernen::algorithm_name, Hash[Symbol, Symbol]]]
 
   TEST_CASES.each do |(algorithm, params)|
     define_method(:"test_learn_dfa_#{algorithm}_#{params}") do
@@ -121,7 +121,7 @@ class LernenTest < Minitest::Test
             automaton_type: :vpa,
             oracle: ORACLE,
             oracle_params: VPA_ORACLE_PARAMS,
-            algorithm:,
+            algorithm:, #: :kearns_vazirani
             params:,
             random:
           )

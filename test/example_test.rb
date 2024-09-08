@@ -6,11 +6,11 @@ require_relative "test_helper"
 require "open3"
 
 class ExampleTest < Minitest::Test
-  # Currently, a RBS signature for `open3` is missing.
-  EXAMPLES_DIR = File.expand_path("../examples", __dir__) # steep:ignore
+  EXAMPLES_DIR = File.expand_path("../examples", __dir__ || ".") #: String
 
   #: (*String cmd) -> String
   def capture(*cmd)
+    # Currently, a RBS signature for `open3` is missing.
     stdout, exit_code = Open3.capture2(*cmd) # steep:ignore
 
     assert_equal 0, exit_code
@@ -18,6 +18,7 @@ class ExampleTest < Minitest::Test
     stdout
   end
 
+  #: () -> void
   def test_text_example_uri_parse_regexp
     assert_equal <<~STDOUT, capture("bundle", "exec", "ruby", File.join(EXAMPLES_DIR, "uri_parse_regexp.rb"))
       Infer `URI.parse` DFA...
@@ -29,6 +30,7 @@ class ExampleTest < Minitest::Test
     STDOUT
   end
 
+  #: () -> void
   def test_text_example_ripper_prism
     assert_equal <<~'STDOUT', capture("bundle", "exec", "ruby", File.join(EXAMPLES_DIR, "ripper_prism.rb"))
       Infer Ripper VPA...

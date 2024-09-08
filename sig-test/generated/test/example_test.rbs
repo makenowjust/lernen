@@ -1,13 +1,14 @@
 # Generated from test/example_test.rb with RBS::Inline
 
 class ExampleTest < Minitest::Test
-  # Currently, a RBS signature for `open3` is missing.
-  EXAMPLES_DIR: untyped
+  EXAMPLES_DIR: String
 
   # : (*String cmd) -> String
   def capture: (*String cmd) -> String
 
-  def test_text_example_uri_parse_regexp: () -> untyped
+  # : () -> void
+  def test_text_example_uri_parse_regexp: () -> void
 
-  def test_text_example_ripper_prism: () -> untyped
+  # : () -> void
+  def test_text_example_ripper_prism: () -> void
 end

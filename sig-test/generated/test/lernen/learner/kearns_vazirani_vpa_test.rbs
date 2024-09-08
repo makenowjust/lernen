@@ -3,8 +3,8 @@
 module Lernen
   module Learner
     class KearnsVaziraniVPATest < Minitest::Test
-      # () -> void
-      def test_learn: () -> untyped
+      # : () -> void
+      def test_learn: () -> void
     end
   end
 end

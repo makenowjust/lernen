@@ -5,9 +5,9 @@ class LernenTest < Minitest::Test
 
   ORACLE: :random_word
 
-  ORACLE_PARAMS: untyped
+  ORACLE_PARAMS: Hash[Symbol, Integer]
 
-  VPA_ORACLE_PARAMS: untyped
+  VPA_ORACLE_PARAMS: Hash[Symbol, Integer]
 
-  TEST_CASES: untyped
+  TEST_CASES: Array[[ Lernen::algorithm_name, Hash[Symbol, Symbol] ]]
 end
