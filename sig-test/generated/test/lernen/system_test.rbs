@@ -2,8 +2,10 @@
 
 module Lernen
   class SystemTest < Minitest::Test
-    def test_from_block: () -> untyped
+    # : () -> void
+    def test_from_block: () -> void
 
-    def test_from_automaton: () -> untyped
+    # : () -> void
+    def test_from_automaton: () -> void
   end
 end

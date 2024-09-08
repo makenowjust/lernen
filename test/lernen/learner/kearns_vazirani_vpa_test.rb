@@ -9,7 +9,7 @@ require "prism"
 module Lernen
   module Learner
     class KearnsVaziraniVPATest < Minitest::Test
-      # () -> void
+      #: () -> void
       def test_learn
         alphabet = %w[1 +]
         call_alphabet = %w[(]

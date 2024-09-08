@@ -3,12 +3,14 @@
 module Lernen
   module Learner
     class KearnsVaziraniTest < Minitest::Test
-      # () -> void
-      def test_learn_dfa: () -> untyped
+      # : () -> void
+      def test_learn_dfa: () -> void
 
-      def test_learn_moore: () -> untyped
+      # : () -> void
+      def test_learn_moore: () -> void
 
-      def test_learn_mealy: () -> untyped
+      # : () -> void
+      def test_learn_mealy: () -> void
     end
   end
 end

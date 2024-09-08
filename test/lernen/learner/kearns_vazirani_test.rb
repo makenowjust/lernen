@@ -6,7 +6,7 @@ require_relative "../../test_helper"
 module Lernen
   module Learner
     class KearnsVaziraniTest < Minitest::Test
-      # () -> void
+      #: () -> void
       def test_learn_dfa
         alphabet = %w[0 1]
         sul = System.from_block { |word| word.count("1") % 4 == 3 }
@@ -32,6 +32,7 @@ module Lernen
         assert_equal expected, hypothesis
       end
 
+      #: () -> void
       def test_learn_moore
         alphabet = %w[0 1]
         sul = System.from_block { |word| word.count("1") % 4 }
@@ -57,6 +58,7 @@ module Lernen
         assert_equal expected, hypothesis
       end
 
+      #: () -> void
       def test_learn_mealy
         alphabet = %w[0 1]
         sul = System.from_block { |word| word.count("1") % 4 }

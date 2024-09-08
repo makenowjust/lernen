@@ -10,12 +10,14 @@ require_relative "automaton/vpa_test"
 
 module Lernen
   class SystemTest < Minitest::Test
+    #: () -> void
     def test_from_block
       sul = System.from_block { _1.count("1") % 4 == 3 }
 
       assert_equal [false, false, true, false], sul.query(%w[1 1 1 1])
     end
 
+    #: () -> void
     def test_from_automaton
       dfa_sul = System.from_automaton(Automaton::DFATest.mod4_dfa)
       mealy_sul = System.from_automaton(Automaton::MealyTest.mod4_mealy)

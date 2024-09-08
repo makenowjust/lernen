@@ -1,0 +1,14 @@
+# Generated from test/example_test.rb with RBS::Inline
+
+class ExampleTest < Minitest::Test
+  EXAMPLES_DIR: String
+
+  # : (*String cmd) -> String
+  def capture: (*String cmd) -> String
+
+  # : () -> void
+  def test_text_example_uri_parse_regexp: () -> void
+
+  # : () -> void
+  def test_text_example_ripper_prism: () -> void
+end
