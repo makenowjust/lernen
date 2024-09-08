@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["TSUYUSATO Kitsune"]
   spec.email = ["make.just.on@gmail.com"]
 
-  spec.summary = "a simple automata leraning library"
+  spec.summary = "an automata leraning library"
   spec.description = ""
   spec.homepage = "https://github.com/makenowjust/lernen"
   spec.license = "MIT"
