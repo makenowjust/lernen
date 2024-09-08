@@ -6,7 +6,7 @@ require "rubocop/rake_task"
 require "syntax_tree/rake_tasks"
 
 Rake::TestTask.new(:test) do |t|
-  t.verbose = true
+  t.verbose = false
   t.pattern = "test/**/*_test.rb"
 end
 

@@ -19,6 +19,7 @@ module Lernen
     # - `#type`
     # - `#initial_conf`
     # - `#step(conf, input)`
+    # - `#to_graph`
     #
     # @rbs generic Conf -- Type for a configuration of this automaton
     # @rbs generic In   -- Type for input alphabet
@@ -56,6 +57,15 @@ module Lernen
         raise TypeError, "abstract method: `step`"
       end
 
+      # Returns a graph of this transition system.
+      #
+      # This is an abstract method.
+      #
+      #: () -> Graph
+      def to_graph
+        raise TypeError, "abstract method: `to_graph`"
+      end
+
       # rubocop:enable Lint/UnusedMethodArgument
 
       # Runs transitions from the initial configuration with the given word.
@@ -73,6 +83,16 @@ module Lernen
         end
         [outputs, conf]
       end
+
+      # Returns a [Mermaid](https://mermaid.js.org) diagram of this transition system.
+      #
+      #: (?direction: "TD" | "LR") -> String
+      def to_mermaid(direction: "TD") = to_graph.to_mermaid(direction:)
+
+      # Returns a [GraphViz](https://graphviz.org) DOT diagram of this transition system.
+      #
+      #: () -> String
+      def to_dot = to_graph.to_dot
 
       # Finds a separating word between `automaton1` and `automaton2`.
       #

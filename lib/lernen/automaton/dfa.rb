@@ -64,24 +64,20 @@ module Lernen
         state_set.to_a.sort!
       end
 
-      # Returns a [mermaid](https://mermaid.js.org) diagram of this DFA.
-      #
-      #: (?direction: "TD" | "LR") -> String
-      def to_mermaid(direction: "TD")
-        mmd = +""
+      # @rbs override
+      def to_graph
+        nodes =
+          states.to_h do |state|
+            shape = accept_state_set.include?(state) ? :doublecircle : :circle #: Graph::node_shape
+            [state, Graph::Node[state.to_s, shape]]
+          end
 
-        mmd << "flowchart #{direction}\n"
+        edges =
+          transition_function.map do |(state, input), next_state|
+            Graph::Edge[state, input.inspect, next_state] # steep:ignore
+          end
 
-        states.each do |state|
-          mmd << (accept_state_set.include?(state) ? "  #{state}(((#{state})))\n" : "  #{state}((#{state}))\n")
-        end
-        mmd << "\n"
-
-        transition_function.each do |(state, input), next_state|
-          mmd << "  #{state} -- \"'#{input}'\" --> #{next_state}\n"
-        end
-
-        mmd.freeze
+        Graph.new(nodes, edges)
       end
 
       # Generates a DFA randomly.

@@ -76,13 +76,10 @@ module Lernen
       # : () -> (Integer | nil)
       def error_state: () -> (Integer | nil)
 
-      # Returns a [mermaid](https://mermaid.js.org) diagram of this VPA.
+      # Returns a graph of this VPA.
       #
-      # : (
-      #    ?show_error_state: bool,
-      #    ?direction: "TD" | "LR"
-      #  ) -> String
-      def to_mermaid: (?show_error_state: bool, ?direction: "TD" | "LR") -> String
+      # (?shows_error_state: bool) -> String
+      def to_graph: (?shows_error_state: untyped) -> untyped
 
       # Finds a separating word between `vpa1` and `vpa2`.
       #

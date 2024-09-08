@@ -49,10 +49,8 @@ module Lernen
       # : () -> Array[Integer]
       def states: () -> Array[Integer]
 
-      # Returns a [mermaid](https://mermaid.js.org) diagram of this DFA.
-      #
-      # : (?direction: "TD" | "LR") -> String
-      def to_mermaid: (?direction: "TD" | "LR") -> String
+      # @rbs override
+      def to_graph: ...
 
       # Generates a DFA randomly.
       #

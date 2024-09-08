@@ -1,0 +1,58 @@
+# Generated from lib/lernen/graph.rb with RBS::Inline
+
+module Lernen
+  # Graph represents a labelled directed graph.
+  #
+  # This is an intermediate data structure for rendering Mermaid and Graphviz diagrams.
+  class Graph
+    type node_shape = :circle | :doublecircle
+
+    class Node < Data
+      attr_reader label: String
+      attr_reader shape: node_shape
+      def self.[]: (String label, node_shape shape) -> Node
+    end
+
+    class Edge < Data
+      attr_reader from: Integer
+      attr_reader label: String
+      attr_reader to: Integer
+      def self.[]: (Integer from, String label, Integer to) -> Edge
+    end
+
+    # Returns the escaped string for Mermaid diagrams.
+    #
+    # See https://mermaid.js.org/syntax/flowchart.html#entity-codes-to-escape-characters.
+    #
+    # : (String label) -> String
+    def self.mermaid_escape: (String label) -> String
+
+    # Returns the escaped string for GraphViz DOTs.
+    #
+    # See https://graphviz.org/docs/attr-types/escString/.
+    #
+    # : (String label) -> String
+    def self.dot_escape: (String label) -> String
+
+    @edges: Array[Edge]
+
+    @nodes: Hash[Integer, Node]
+
+    # : (Hash[Integer, Node] nodes, Array[Edge] edges) -> void
+    def initialize: (Hash[Integer, Node] nodes, Array[Edge] edges) -> void
+
+    attr_reader nodes: Hash[Integer, Node]
+
+    attr_reader edges: Array[Edge]
+
+    # Returns a [Mermaid](https://mermaid.js.org) diagram of this graph.
+    #
+    # : (?direction: "TD" | "LR") -> String
+    def to_mermaid: (?direction: "TD" | "LR") -> String
+
+    # Returns a [GraphViz](https://graphviz.org) DOT diagram of this graph.
+    #
+    # : () -> String
+    def to_dot: () -> String
+  end
+end
