@@ -7,6 +7,7 @@ require_relative "lernen/version"
 
 require_relative "lernen/automaton"
 require_relative "lernen/equiv"
+require_relative "lernen/graph"
 require_relative "lernen/learner"
 require_relative "lernen/system"
 

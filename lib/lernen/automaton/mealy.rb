@@ -56,22 +56,16 @@ module Lernen
         state_set.to_a.sort!
       end
 
-      # Returns a [mermaid](https://mermaid.js.org) diagram of this Mealy machine.
-      #
-      #: (?direction: "TD" | "LR") -> String
-      def to_mermaid(direction: "TD")
-        mmd = +""
+      # @rbs override
+      def to_graph
+        nodes = states.to_h { |state| [state, Graph::Node[state.to_s, :circle]] }
 
-        mmd << "flowchart #{direction}\n"
+        edges =
+          transition_function.map do |(state, input), (output, next_state)|
+            Graph::Edge[state, "#{input.inspect} | #{output.inspect}", next_state] # steep:ignore
+          end
 
-        states.each { |state| mmd << "  #{state}((#{state}))\n" }
-        mmd << "\n"
-
-        transition_function.each do |(state, input), (output, next_state)|
-          mmd << "  #{state} -- \"'#{input}'|'#{output}'\" --> #{next_state}\n"
-        end
-
-        mmd.freeze
+        Graph.new(nodes, edges)
       end
 
       # Generates a Mealy machine randomly.

@@ -11,6 +11,9 @@ module Lernen
 
       # : () -> void
       def test_to_mermaid: () -> void
+
+      # : () -> void
+      def test_to_dot: () -> void
     end
   end
 end

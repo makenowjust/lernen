@@ -18,6 +18,7 @@ module Lernen
     # - `#type`
     # - `#initial_conf`
     # - `#step(conf, input)`
+    # - `#to_graph`
     #
     # @rbs generic Conf -- Type for a configuration of this automaton
     # @rbs generic In   -- Type for input alphabet
@@ -47,6 +48,13 @@ module Lernen
       # : (Conf conf, In input) -> [Out, Conf]
       def step: (Conf conf, In input) -> [ Out, Conf ]
 
+      # Returns a graph of this transition system.
+      #
+      # This is an abstract method.
+      #
+      # : () -> Graph
+      def to_graph: () -> Graph
+
       # Runs transitions from the initial configuration with the given word.
       #
       # It returns a pair of the output values and the final configuration of
@@ -54,6 +62,16 @@ module Lernen
       #
       # : (Array[In] word) -> [Array[Out], Conf]
       def run: (Array[In] word) -> [ Array[Out], Conf ]
+
+      # Returns a [Mermaid](https://mermaid.js.org) diagram of this transition system.
+      #
+      # : (?direction: "TD" | "LR") -> String
+      def to_mermaid: (?direction: "TD" | "LR") -> String
+
+      # Returns a [GraphViz](https://graphviz.org) DOT diagram of this transition system.
+      #
+      # : () -> String
+      def to_dot: () -> String
 
       # Finds a separating word between `automaton1` and `automaton2`.
       #

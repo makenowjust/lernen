@@ -145,40 +145,38 @@ module Lernen
         nil
       end
 
-      # Returns a [mermaid](https://mermaid.js.org) diagram of this VPA.
+      # Returns a graph of this VPA.
       #
-      #: (
-      #    ?show_error_state: bool,
-      #    ?direction: "TD" | "LR"
-      #  ) -> String
-      def to_mermaid(show_error_state: false, direction: "TD")
-        error_state = error_state() unless show_error_state
+      # (?shows_error_state: bool) -> String
+      def to_graph(shows_error_state: false)
+        error_state = error_state() unless shows_error_state
 
-        mmd = +""
+        nodes =
+          states
+            .filter_map do |state|
+              next if state == error_state
+              shape = accept_state_set.include?(state) ? :doublecircle : :circle #: Graph::node_shape
+              [state, Graph::Node[state.to_s, shape]]
+            end
+            .to_h
 
-        mmd << "flowchart #{direction}\n"
-
-        states.each do |state|
-          next if state == error_state
-          mmd << (accept_state_set.include?(state) ? "  #{state}(((#{state})))\n" : "  #{state}((#{state}))\n")
-        end
-        mmd << "\n"
-
-        transition_function.each do |(state, i), next_state|
-          next if state == error_state || next_state == error_state
-          mmd << "  #{state} -- \"'#{i}'\" --> #{next_state}\n"
-        end
-        mmd << "\n"
-
-        return_transition_function.each do |(state, return_input), return_transition_guard|
-          next if state == error_state
-          return_transition_guard.each do |(call_state, call_input), next_state|
-            next if call_state == error_state || next_state == error_state
-            mmd << "  #{state} -- \"'#{return_input}'/(#{call_state},'#{call_input}')\" --> #{next_state}\n"
+        edges =
+          transition_function.filter_map do |(state, input), next_state|
+            next if state == error_state || next_state == error_state
+            Graph::Edge[state, input.inspect, next_state] # steep:ignore
           end
-        end
 
-        mmd.freeze
+        edges +=
+          return_transition_function.flat_map do |(state, return_input), return_transition_guard|
+            next [] if state == error_state
+            return_transition_guard.map do |(call_state, call_input), next_state|
+              next if call_state == error_state || next_state == error_state
+              label = "#{return_input.inspect} / (#{call_state}, #{call_input.inspect})" # steep:ignore
+              Graph::Edge[state, label, next_state]
+            end
+          end
+
+        Graph.new(nodes, edges)
       end
 
       # Finds a separating word between `vpa1` and `vpa2`.

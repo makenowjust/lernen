@@ -65,22 +65,19 @@ module Lernen
         state_set.to_a.sort!
       end
 
-      # Returns a [mermaid](https://mermaid.js.org) diagram of this Moore machine.
-      #
-      #: (?direction: "TD" | "LR") -> String
-      def to_mermaid(direction: "TD")
-        mmd = +""
+      # @rbs override
+      def to_graph
+        nodes =
+          states.to_h do |state|
+            [state, Graph::Node["#{state} | #{output_function[state].inspect}", :circle]] # steep:ignore
+          end
 
-        mmd << "flowchart #{direction}\n"
+        edges =
+          transition_function.map do |(state, input), next_state|
+            Graph::Edge[state, input.inspect, next_state] # steep:ignore
+          end
 
-        states.each { |state| mmd << "  #{state}((\"#{state}|'#{output_function[state]}'\"))\n" }
-        mmd << "\n"
-
-        transition_function.each do |(state, input), next_state|
-          mmd << "  #{state} -- \"'#{input}'\" --> #{next_state}\n"
-        end
-
-        mmd.freeze
+        Graph.new(nodes, edges)
       end
 
       # Generates a Moore machine randomly.
