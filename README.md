@@ -367,7 +367,7 @@ new_valid_and_http_url?(sep_word.join)
 Because of `valid_and_http_url?("http:?%") != new_valid_and_http_url?("http:?%")`, we can answer the first question:
 *Validations with `URI.parse` and `URI` regexp are not the same because they behave differently with `"http:?%"`.*
 
-### Case Study 2: Two Parsers for Ruby
+### Case Study 2: Two Parsers for Ruby ([`examples/ripper_prism.rb`](./examples/ripper_prism.rb))
 
 Since 3.2, Ruby has two parser implementations: [`parse.y`](https://github.com/ruby/ruby/blob/master/parse.y) and [Prism](https://github.com/ruby/prism).
 `parse.y` is a traditional LALR parser and Prism is a hand-written recursive descent parser.
