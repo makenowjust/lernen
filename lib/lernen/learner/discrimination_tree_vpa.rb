@@ -100,7 +100,7 @@ module Lernen
         @root.branch[empty_out] = Leaf[[]]
         @path_hash[[]] = [empty_out]
 
-        cex_out = sul.query(cex).last
+        cex_out = sul.query_last(cex)
         @root.branch[cex_out] = Leaf[cex] # steep:ignore
         @path_hash[cex] = [cex_out] # steep:ignore
       end
@@ -115,7 +115,7 @@ module Lernen
         until node.is_a?(Leaf)
           full_word = node.access + word + node.suffix
 
-          out = @sul.query(full_word).last
+          out = @sul.query_last(full_word)
           path << out
 
           unless node.branch.include?(out) # steep:ignore
@@ -234,10 +234,10 @@ module Lernen
           call_prefix = conf_to_prefix.state_to_prefix(call_state)
           new_prefix = call_prefix + [call_input] + old_state_prefix + [new_input]
         end
-        new_out = @sul.query(new_access + new_prefix + new_suffix).last
+        new_out = @sul.query_last(new_access + new_prefix + new_suffix)
 
         replace_prefix = conf_to_prefix.state_to_prefix(replace_state.state) # steep:ignore
-        replace_out = @sul.query(new_access + replace_prefix + new_suffix).last
+        replace_out = @sul.query_last(new_access + replace_prefix + new_suffix)
 
         replace_node_path = @path_hash[replace_prefix]
         replace_node_parent = @root
@@ -251,10 +251,10 @@ module Lernen
         replace_node_parent.branch[replace_node_path.last] = new_node # steep:ignore
 
         new_node.branch[new_out] = Leaf[new_prefix] # steep:ignore
-        @path_hash[new_prefix] = replace_node_path + [new_out] # steep:ignore
+        @path_hash[new_prefix] = replace_node_path + [new_out]
 
         new_node.branch[replace_out] = Leaf[replace_prefix] # steep:ignore
-        @path_hash[replace_prefix] = replace_node_path + [replace_out] # steep:ignore
+        @path_hash[replace_prefix] = replace_node_path + [replace_out]
       end
     end
   end

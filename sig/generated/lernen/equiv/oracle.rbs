@@ -31,9 +31,9 @@ module Lernen
       # If it is found, it returns the counterexample word, or it returns `nil` otherwise.
       #
       # A counterexample means that it separates a sul and a hypothesis automaton on an output
-      # value, i.e., `hypothesis.run(cex)[0].last != sul.query(cex).last`. We also assume
+      # value, i.e., `hypothesis.run(cex)[0].last != sul.query_last(cex)`. We also assume
       # a counterexample is minimal; that is, there is no `n` (where `0 <= n < cex.size`)
-      # such that `hypothesis.run(cex[0...n])[0].last != sul.query(cex[0...n]).last`.
+      # such that `hypothesis.run(cex[0...n])[0].last != sul.query_last(cex[0...n])`.
       #
       # : [Conf] (Automaton::TransitionSystem[Conf, In, Out] hypothesis) -> (Array[In] | nil)
       def find_cex: [Conf] (Automaton::TransitionSystem[Conf, In, Out] hypothesis) -> (Array[In] | nil)

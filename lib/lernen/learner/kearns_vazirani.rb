@@ -68,7 +68,7 @@ module Lernen
           in :dfa | :moore
             transition_function[[0, input]] = 0
           in :mealy
-            out = sul.query([input]).last
+            out = sul.query_last([input])
             transition_function[[0, input]] = [out, 0]
           end
         end

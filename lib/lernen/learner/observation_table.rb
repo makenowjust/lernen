@@ -113,8 +113,8 @@ module Lernen
 
         @suffixes[@table[prefix].size..].each do |suffix| # steep:ignore
           word = prefix + suffix
-          output = word.empty? && (sul = @sul).is_a?(System::MooreLikeSUL) ? sul.query_empty : @sul.query(word).last
-          @table[prefix] << output # steep:ignore
+          output = word.empty? && (sul = @sul).is_a?(System::MooreLikeSUL) ? sul.query_empty : @sul.query_last(word)
+          @table[prefix] << output
         end
       end
 

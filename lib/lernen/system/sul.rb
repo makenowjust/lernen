@@ -86,6 +86,13 @@ module Lernen
         outputs
       end
 
+      # Runs a membership query with the given word, and returns the last output.
+      #
+      # It is the same as `query(word).last`.
+      #
+      #: (Array[In] word) -> Out
+      def query_last(word) = query(word).last # steep:ignore
+
       # rubocop:disable Lint/UnusedMethodArgument
 
       # It is a setup procedure of this SUL.

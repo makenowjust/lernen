@@ -62,7 +62,7 @@ module Lernen
           @root.branch[empty_out] = Leaf[[]]
           @path_hash[[]] = [empty_out]
 
-          cex_out = sul.query(cex).last
+          cex_out = sul.query_last(cex)
           @root.branch[cex_out] = Leaf[cex]
           @path_hash[cex] = [cex_out]
         in :mealy
@@ -70,11 +70,11 @@ module Lernen
           suffix = [cex.last]
           @root = Node[suffix, {}]
 
-          suffix_out = sul.query(suffix).last
+          suffix_out = sul.query_last(suffix)
           @root.branch[suffix_out] = Leaf[[]]
           @path_hash[[]] = [suffix_out]
 
-          cex_out = sul.query(cex).last
+          cex_out = sul.query_last(cex)
           @root.branch[cex_out] = Leaf[prefix]
           @path_hash[prefix] = [cex_out]
         end
@@ -90,11 +90,11 @@ module Lernen
         until node.is_a?(Leaf)
           full_word = word + node.suffix
 
-          out = @sul.query(full_word).last
+          out = @sul.query_last(full_word)
           path << out
 
-          unless node.branch.include?(out) # steep:ignore
-            node.branch[out] = Leaf[word] # steep:ignore
+          unless node.branch.include?(out)
+            node.branch[out] = Leaf[word]
             @path_hash[word] = path
           end
 
@@ -136,7 +136,7 @@ module Lernen
             in :dfa | :moore
               transition_function[[state, input]] = next_state
             in :mealy
-              output = @sul.query(word).last
+              output = @sul.query_last(word)
               transition_function[[state, input]] = [output, next_state]
             end
           end
@@ -173,10 +173,10 @@ module Lernen
         _, replace_state = hypothesis.step(old_state, new_input)
 
         new_prefix = state_to_prefix[old_state] + [new_input]
-        new_out = @sul.query(new_prefix + new_suffix).last
+        new_out = @sul.query_last(new_prefix + new_suffix)
 
         replace_prefix = state_to_prefix[replace_state]
-        replace_out = @sul.query(replace_prefix + new_suffix).last
+        replace_out = @sul.query_last(replace_prefix + new_suffix)
 
         replace_node_path = @path_hash[replace_prefix]
         replace_node_parent = @root
