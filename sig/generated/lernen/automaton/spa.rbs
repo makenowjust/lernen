@@ -1,0 +1,52 @@
+# Generated from lib/lernen/automaton/spa.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    # SPA represents a system of procedural automata.
+    #
+    # @rbs generic In -- Type for input alphabet
+    # @rbs generic Call - Type for call alphabet
+    # @rbs generic Return - Type for return alphabet
+    class SPA[In, Call, Return] < MooreLike[SPA::conf[Call], In | Call | Return, bool]
+      class Conf[Call] < Data
+        attr_reader prev: conf[Call]
+        attr_reader proc: Call
+        attr_reader state: Integer
+        def self.[]: [Call] (conf[Call] prev, Call proc, Integer state) -> Conf[Call]
+      end
+
+      type conf[Call] = Conf[Call] | :init | :term | :sink
+
+      @initial_proc: Call
+
+      @proc_to_dfa: Hash[Call, DFA[In | Call]]
+
+      # : (
+      #     Call initial_proc,
+      #     Hash[Call, DFA[In | Call]] proc_to_dfa
+      #   ) -> void
+      def initialize: (Call initial_proc, Hash[Call, DFA[In | Call]] proc_to_dfa) -> void
+
+      attr_reader initial_proc: Call
+
+      attr_reader proc_to_dfa: Hash[Call, DFA[In | Call]]
+
+      # : () -> :spa
+      def type: () -> :spa
+
+      # @rbs override
+      def initial_conf: ...
+
+      # @rbs override
+      def step_conf: ...
+
+      # @rbs override
+      def output: ...
+
+      # Checks the structural equality between `self` and `other`.
+      #
+      # : (untyped other) -> bool
+      def ==: (untyped other) -> bool
+    end
+  end
+end
