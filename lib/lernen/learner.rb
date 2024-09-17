@@ -23,3 +23,5 @@ require "lernen/learner/kearns_vazirani_vpa"
 
 require "lernen/learner/observation_tree"
 require "lernen/learner/lsharp"
+
+require "lernen/learner/atr_manager"

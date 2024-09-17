@@ -1,0 +1,66 @@
+# Generated from lib/lernen/learner/atr_manager.rb with RBS::Inline
+
+module Lernen
+  module Learner
+    # ATRManager is a collection to manage access, terminating, and return sequences.
+    #
+    # @rbs generic In -- Type for input alphabet
+    # @rbs generic Call - Type for call alphabet
+    # @rbs generic Return - Type for return alphabet
+    class ATRManager[In, Call, Return]
+      @scan_procs: bool
+
+      @return_input: Return
+
+      @call_alphabet_set: Set[Call]
+
+      @alphabet: Array[In]
+
+      @proc_to_return_sequence: Hash[Call, Array[In | Call | Return]]
+
+      @proc_to_terminating_sequence: Hash[Call, Array[In | Call | Return]]
+
+      @proc_to_access_sequence: Hash[Call, Array[In | Call | Return]]
+
+      # : (
+      #     Array[In] alphabet,
+      #     Array[Call] call_alphabet,
+      #     Return return_input,
+      #     ?scan_procs: bool
+      #   ) -> void
+      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Return return_input, ?scan_procs: bool) -> void
+
+      # : (Array[In | Call | Return] cex) -> Array[Call]
+      def scan_positive_cex: (Array[In | Call | Return] cex) -> Array[Call]
+
+      # : (
+      #     Hash[Call, Automaton::DFA[In | Call]] procs,
+      #     Hash[Call, Hash[Integer, Array[In | Call]]] state_to_prefix_mapping
+      #   ) -> void
+      def scan_procs: (Hash[Call, Automaton::DFA[In | Call]] procs, Hash[Call, Hash[Integer, Array[In | Call]]] state_to_prefix_mapping) -> void
+
+      private
+
+      # : (Array[In | Call | Return] cex) -> Array[Call]
+      def extract_potential_terminating_sequences: (Array[In | Call | Return] cex) -> Array[Call]
+
+      # : (Array[In | Call | Return] cex) -> void
+      def extract_potential_access_and_return_sequences: (Array[In | Call | Return] cex) -> void
+
+      # : (Array[In | Call | Return] word) -> Array[In | Call | Return]
+      def minify_well_matched: (Array[In | Call | Return] word) -> Array[In | Call | Return]
+
+      # : (Hash[Call, Array[In | Call | Return]]) -> void
+      def optimize_sequences: (Hash[Call, Array[In | Call | Return]]) -> void
+
+      # : [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
+      def expand: [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
+
+      # : (Array[In | Call | Return] word, Integer index) -> Integer
+      def find_call_index: (Array[In | Call | Return] word, Integer index) -> Integer
+
+      # : (Array[In | Call | Return] word, Integer index) -> Integer
+      def find_return_index: (Array[In | Call | Return] word, Integer index) -> Integer
+    end
+  end
+end
