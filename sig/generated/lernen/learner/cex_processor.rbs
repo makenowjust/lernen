@@ -4,10 +4,6 @@ module Lernen
   module Learner
     type cex_processing_method = :linear | :binary | :exponential
 
-    interface _ConfToPrefix[Conf, In]
-      def []: (Conf conf) -> Array[In]
-    end
-
     # CexProcessor contains implementations of counterexample processing functions.
     #
     # A counterexample is a word that leads to the different result between

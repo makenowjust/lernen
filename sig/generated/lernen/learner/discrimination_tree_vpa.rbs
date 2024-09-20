@@ -22,24 +22,6 @@ module Lernen
         def self.[]: [In, Call, Return] (Array[In | Call | Return] prefix) -> Leaf[In, Call, Return]
       end
 
-      # @rbs generic In  -- Type for input alphabet
-      # @rbs generic Call - Type for call alphabet
-      # @rbs generic Return - Type for return alphabet
-      class ConfToPrefix[In, Call, Return]
-        include _ConfToPrefix[Automaton::VPA::Conf[Call], In | Call | Return]
-
-        @state_to_prefix: Hash[Integer, Array[In | Call | Return]]
-
-        # : (Hash[Integer, Array[In | Call | Return]] state_to_prefix) -> void
-        def initialize: (Hash[Integer, Array[In | Call | Return]] state_to_prefix) -> void
-
-        # @rbs override
-        def []: ...
-
-        # : (Integer state) -> Array[In | Call | Return]
-        def state_to_prefix: (Integer state) -> Array[In | Call | Return]
-      end
-
       @root: Node[In, Call, Return]
 
       @path_hash: Hash[Array[In | Call | Return], Array[bool]]

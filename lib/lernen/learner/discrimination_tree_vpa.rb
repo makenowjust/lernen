@@ -16,7 +16,7 @@ module Lernen
 
       # @rbs!
       #   type tree[In, Call, Return] = Node[In, Call, Return]
-      #                                    | Leaf[In, Call, Return]
+      #                               | Leaf[In, Call, Return]
       #
       #   class Node[In, Call, Return] < Data
       #     attr_reader access: Array[In | Call | Return]
@@ -35,39 +35,6 @@ module Lernen
       #       Array[In | Call | Return] prefix
       #     ) -> Leaf[In, Call, Return]
       #   end
-
-      # @rbs generic In  -- Type for input alphabet
-      # @rbs generic Call - Type for call alphabet
-      # @rbs generic Return - Type for return alphabet
-      class ConfToPrefix
-        # @rbs!
-        #   include _ConfToPrefix[Automaton::VPA::Conf[Call], In | Call | Return]
-
-        # @rbs @state_to_prefix: Hash[Integer, Array[In | Call | Return]]
-
-        #: (Hash[Integer, Array[In | Call | Return]] state_to_prefix) -> void
-        def initialize(state_to_prefix)
-          @state_to_prefix = state_to_prefix
-        end
-
-        # @rbs override
-        def [](conf)
-          prefix = []
-
-          conf.stack.each do |state, call_input|
-            prefix.concat(@state_to_prefix[state])
-            prefix << call_input
-          end
-          prefix.concat(@state_to_prefix[conf.state])
-
-          prefix
-        end
-
-        #: (Integer state) -> Array[In | Call | Return]
-        def state_to_prefix(state)
-          @state_to_prefix[state]
-        end
-      end
 
       # @rbs @alphabet: Array[In]
       # @rbs @call_alphabet: Array[Call]
