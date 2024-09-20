@@ -10,6 +10,8 @@ module Lernen
   end
 end
 
+require "lernen/learner/acex"
+require "lernen/learner/prefix_transformer_acex"
 require "lernen/learner/cex_processor"
 
 require "lernen/learner/observation_table"

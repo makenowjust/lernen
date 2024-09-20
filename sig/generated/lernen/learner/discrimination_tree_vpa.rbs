@@ -71,17 +71,17 @@ module Lernen
 
       # Constructs a hypothesis automaton from this discrimination tree.
       #
-      # : () -> [Automaton::VPA[In, Call, Return], ConfToPrefix[In, Call, Return]]
-      def build_hypothesis: () -> [ Automaton::VPA[In, Call, Return], ConfToPrefix[In, Call, Return] ]
+      # : () -> [Automaton::VPA[In, Call, Return], Hash[Integer, Array[In | Call | Return]]]
+      def build_hypothesis: () -> [ Automaton::VPA[In, Call, Return], Hash[Integer, Array[In | Call | Return]] ]
 
       # Update this classification tree by the given `cex`.
       #
       # : (
       #    Automaton::VPA[In, Call, Return] hypothesis,
       #    Array[In | Call | Return] cex,
-      #    ConfToPrefix[In, Call, Return] conf_to_prefix
+      #    Hash[Integer, Array[In | Call | Return]] state_to_prefix
       #  ) -> void
-      def process_cex: (Automaton::VPA[In, Call, Return] hypothesis, Array[In | Call | Return] cex, ConfToPrefix[In, Call, Return] conf_to_prefix) -> void
+      def process_cex: (Automaton::VPA[In, Call, Return] hypothesis, Array[In | Call | Return] cex, Hash[Integer, Array[In | Call | Return]] state_to_prefix) -> void
     end
   end
 end

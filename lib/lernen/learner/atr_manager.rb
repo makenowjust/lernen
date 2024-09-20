@@ -161,7 +161,7 @@ module Lernen
 
       #: [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
       def expand(word)
-        Automaton::ProcUtil.expand(word, @proc_to_terminating_sequence)
+        Automaton::ProcUtil.expand(@return_input, word, @proc_to_terminating_sequence)
       end
 
       #: (Array[In | Call | Return] word, Integer index) -> Integer

@@ -5,10 +5,18 @@ module Lernen
     # ProcUtil provides utility functions for words in `SPA`.
     module ProcUtil
       # : [In, Call, Return] (
+      #     Return return_input,
       #     Array[In | Call] word,
       #     Hash[Call, Array[In | Call | Return]] proc_to_terminating_sequence,
       #   ) -> Array[In | Call | Return]
-      def self.expand: [In, Call, Return] (Array[In | Call] word, Hash[Call, Array[In | Call | Return]] proc_to_terminating_sequence) -> Array[In | Call | Return]
+      def self.expand: [In, Call, Return] (Return return_input, Array[In | Call] word, Hash[Call, Array[In | Call | Return]] proc_to_terminating_sequence) -> Array[In | Call | Return]
+
+      # : [In, Call, Return] (
+      #     Set[Call] call_alphabet_set,
+      #     Return return_input,
+      #     Array[In | Call | Return] word
+      #   ) -> Array[In | Call]
+      def self.project: [In, Call, Return] (Set[Call] call_alphabet_set, Return return_input, Array[In | Call | Return] word) -> Array[In | Call]
 
       # : [In, Call, Return] (
       #     Set[Call] call_alphabet_set,

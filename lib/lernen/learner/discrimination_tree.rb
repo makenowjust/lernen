@@ -166,17 +166,22 @@ module Lernen
       #    Hash[Integer, Array[In]] state_to_prefix
       #  ) -> void
       def process_cex(hypothesis, cex, state_to_prefix)
-        old_prefix, new_input, new_suffix =
-          CexProcessor.process(@sul, hypothesis, cex, state_to_prefix, cex_processing: @cex_processing)
+        state_to_prefix_lambda = ->(state) { state_to_prefix[state] }
+        acex = PrefixTransformerAcex.new(cex, @sul, hypothesis, state_to_prefix_lambda)
 
-        _, old_state = hypothesis.run(old_prefix)
+        n = CexProcessor.process(acex, cex_processing: @cex_processing)
+        old_prefix = cex[0...n]
+        new_input = cex[n]
+        new_suffix = cex[n + 1...]
+
+        _, old_state = hypothesis.run(old_prefix) # steep:ignore
         _, replace_state = hypothesis.step(old_state, new_input)
 
         new_prefix = state_to_prefix[old_state] + [new_input]
-        new_out = @sul.query_last(new_prefix + new_suffix)
+        new_out = @sul.query_last(new_prefix + new_suffix) # steep:ignore
 
         replace_prefix = state_to_prefix[replace_state]
-        replace_out = @sul.query_last(replace_prefix + new_suffix)
+        replace_out = @sul.query_last(replace_prefix + new_suffix) # steep:ignore
 
         replace_node_path = @path_hash[replace_prefix]
         replace_node_parent = @root
@@ -186,7 +191,7 @@ module Lernen
           replace_node = replace_node.branch[out] # steep:ignore
         end
 
-        new_node = Node[new_suffix, {}]
+        new_node = Node[new_suffix, {}] # steep:ignore
         replace_node_parent.branch[replace_node_path.last] = new_node # steep:ignore
 
         new_node.branch[new_out] = Leaf[new_prefix]

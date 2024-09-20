@@ -131,7 +131,7 @@ module Lernen
 
       # Constructs a hypothesis automaton from this discrimination tree.
       #
-      #: () -> [Automaton::VPA[In, Call, Return], ConfToPrefix[In, Call, Return]]
+      #: () -> [Automaton::VPA[In, Call, Return], Hash[Integer, Array[In | Call | Return]]]
       def build_hypothesis
         transition_function = {}
         return_transition_function = {}
@@ -203,11 +203,9 @@ module Lernen
 
         accept_state_set =
           state_to_prefix.to_a.filter { |(_, prefix)| @path_hash[prefix][0] }.to_set { |(state, _)| state }
-        state_to_prefix[nil] = [@return_alphabet.first] unless @return_alphabet.empty?
-        conf_to_prefix = ConfToPrefix.new(state_to_prefix)
         automaton = Automaton::VPA.new(0, accept_state_set, transition_function, return_transition_function)
 
-        [automaton, conf_to_prefix]
+        [automaton, state_to_prefix]
       end
 
       # Update this classification tree by the given `cex`.
@@ -215,29 +213,45 @@ module Lernen
       #: (
       #    Automaton::VPA[In, Call, Return] hypothesis,
       #    Array[In | Call | Return] cex,
-      #    ConfToPrefix[In, Call, Return] conf_to_prefix
+      #    Hash[Integer, Array[In | Call | Return]] state_to_prefix
       #  ) -> void
-      def process_cex(hypothesis, cex, conf_to_prefix)
-        old_prefix, new_input, new_suffix =
-          CexProcessor.process(@sul, hypothesis, cex, conf_to_prefix, cex_processing: @cex_processing)
+      def process_cex(hypothesis, cex, state_to_prefix)
+        conf_to_prefix = ->(conf) do
+          prefix = []
 
-        _, old_state = hypothesis.run(old_prefix)
-        _, replace_state = hypothesis.step(old_state, new_input)
+          conf.stack.each do |state, call_input|
+            prefix.concat(state_to_prefix[state])
+            prefix << call_input
+          end
+          prefix.concat(state_to_prefix[conf.state])
 
-        new_access = conf_to_prefix[Automaton::VPA::Conf[hypothesis.initial_state, replace_state.stack]] # steep:ignore
+          prefix
+        end
 
-        old_state_prefix = conf_to_prefix.state_to_prefix(old_state.state) # steep:ignore
-        if @alphabet.include?(new_input)
+        acex = PrefixTransformerAcex.new(cex, @sul, hypothesis, conf_to_prefix)
+        n = CexProcessor.process(acex, cex_processing: @cex_processing)
+        old_prefix = cex[0...n]
+        new_input = cex[n]
+        new_suffix = cex[n + 1...]
+
+        _, old_conf = hypothesis.run(old_prefix) # steep:ignore
+        _, replace_conf = hypothesis.step(old_conf, new_input)
+
+        new_access_conf = Automaton::VPA::Conf[hypothesis.initial_state, replace_conf.stack] # steep:ignore
+        new_access = conf_to_prefix.call(new_access_conf)
+
+        old_state_prefix = state_to_prefix[old_conf.state] # steep:ignore
+        if @alphabet.include?(new_input) # steep:ignore
           new_prefix = old_state_prefix + [new_input]
         else
-          call_state, call_input = old_state.stack.last # steep:ignore
-          call_prefix = conf_to_prefix.state_to_prefix(call_state)
+          call_state, call_input = old_conf.stack.last # steep:ignore
+          call_prefix = state_to_prefix[call_state]
           new_prefix = call_prefix + [call_input] + old_state_prefix + [new_input]
         end
-        new_out = @sul.query_last(new_access + new_prefix + new_suffix)
+        new_out = @sul.query_last(new_access + new_prefix + new_suffix) # steep:ignore
 
-        replace_prefix = conf_to_prefix.state_to_prefix(replace_state.state) # steep:ignore
-        replace_out = @sul.query_last(new_access + replace_prefix + new_suffix)
+        replace_prefix = state_to_prefix[replace_conf.state] # steep:ignore
+        replace_out = @sul.query_last(new_access + replace_prefix + new_suffix) # steep:ignore
 
         replace_node_path = @path_hash[replace_prefix]
         replace_node_parent = @root
@@ -247,7 +261,7 @@ module Lernen
           replace_node = replace_node.branch[out] # steep:ignore
         end
 
-        new_node = Node[new_access, new_suffix, {}]
+        new_node = Node[new_access, new_suffix, {}] # steep:ignore
         replace_node_parent.branch[replace_node_path.last] = new_node # steep:ignore
 
         new_node.branch[new_out] = Leaf[new_prefix] # steep:ignore

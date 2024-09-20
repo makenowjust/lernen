@@ -68,8 +68,14 @@ module Lernen
               observation_table.prefixes << prefix unless observation_table.prefixes.include?(prefix) # steep:ignore
             end
           else
-            old_prefix, new_input, new_suffix =
-              CexProcessor.process(sul, hypothesis, cex, state_to_prefix, cex_processing:)
+            state_to_prefix_lambda = ->(state) { state_to_prefix[state] }
+
+            acex = PrefixTransformerAcex.new(cex, sul, hypothesis, state_to_prefix_lambda)
+            n = CexProcessor.process(acex, cex_processing:)
+            old_prefix = cex[0...n]
+            new_input = cex[n]
+            new_suffix = cex[n + 1...]
+
             _, old_state = hypothesis.run(old_prefix)
             new_prefix = state_to_prefix[old_state] + [new_input]
             observation_table.prefixes << new_prefix unless observation_table.prefixes.include?(new_prefix)

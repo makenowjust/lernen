@@ -32,52 +32,32 @@ module Lernen
     module CexProcessor
       # Processes a given counterexample in the `cex_processing` way.
       #
-      # It returns a triple `[cex[0...n], cex[n], cex[n...]]` instead of `n` such that
-      # `sul.query_last(h[n] + cex[n...]) != sul.query_last(h[n + 1] + cex[n + 1...])`.
+      # It returns `n` such that `acex.effect(n) != acex.effect(n + 1)`.
       #
-      # : [Conf, In, Out] (
-      #    System::SUL[In, Out] sul,
-      #    Automaton::TransitionSystem[Conf, In, Out] hypothesis,
-      #    Array[In] cex,
-      #    _ConfToPrefix[Conf, In] conf_to_prefix,
+      # : (
+      #    Acex acex,
       #    ?cex_processing: cex_processing_method
-      #  ) -> [Array[In], In, Array[In]]
-      def self.process: [Conf, In, Out] (System::SUL[In, Out] sul, Automaton::TransitionSystem[Conf, In, Out] hypothesis, Array[In] cex, _ConfToPrefix[Conf, In] conf_to_prefix, ?cex_processing: cex_processing_method) -> [ Array[In], In, Array[In] ]
+      #  ) -> Integer
+      def self.process: (Acex acex, ?cex_processing: cex_processing_method) -> Integer
 
       private
 
       # Processes a given counterexample by linear search.
       #
-      # : [Conf, In, Out] (
-      #    System::SUL[In, Out] sul,
-      #    Automaton::TransitionSystem[Conf, In, Out] hypothesis,
-      #    Array[In] cex,
-      #    _ConfToPrefix[Conf, In] conf_to_prefix,
-      #  ) -> [Array[In], In, Array[In]]
-      def self.process_linear: [Conf, In, Out] (System::SUL[In, Out] sul, Automaton::TransitionSystem[Conf, In, Out] hypothesis, Array[In] cex, _ConfToPrefix[Conf, In] conf_to_prefix) -> [ Array[In], In, Array[In] ]
+      # : (Acex acex, low: Integer, high: Integer) -> Integer
+      def self.process_linear: (Acex acex, low: Integer, high: Integer) -> Integer
 
       # Processes a given counterexample by binary search.
       #
       # It is known as the Rivest-Schapire (RS) optimization.
       #
-      # : [Conf, In, Out] (
-      #    System::SUL[In, Out] sul,
-      #    Automaton::TransitionSystem[Conf, In, Out] hypothesis,
-      #    Array[In] cex,
-      #    _ConfToPrefix[Conf, In] conf_to_prefix,
-      #    ?low: Integer
-      #  ) -> [Array[In], In, Array[In]]
-      def self.process_binary: [Conf, In, Out] (System::SUL[In, Out] sul, Automaton::TransitionSystem[Conf, In, Out] hypothesis, Array[In] cex, _ConfToPrefix[Conf, In] conf_to_prefix, ?low: Integer) -> [ Array[In], In, Array[In] ]
+      # : (Acex acex, low: Integer, high: Integer) -> Integer
+      def self.process_binary: (Acex acex, low: Integer, high: Integer) -> Integer
 
       # Processes a given counterexample by exponential seatch.
       #
-      # : [Conf, In, Out] (
-      #    System::SUL[In, Out] sul,
-      #    Automaton::TransitionSystem[Conf, In, Out] hypothesis,
-      #    Array[In] cex,
-      #    _ConfToPrefix[Conf, In] conf_to_prefix,
-      #  ) -> [Array[In], In, Array[In]]
-      def self.process_exponential: [Conf, In, Out] (System::SUL[In, Out] sul, Automaton::TransitionSystem[Conf, In, Out] hypothesis, Array[In] cex, _ConfToPrefix[Conf, In] conf_to_prefix) -> [ Array[In], In, Array[In] ]
+      # : (Acex acex, low: Integer, high: Integer) -> Integer
+      def self.process_exponential: (Acex acex, low: Integer, high: Integer) -> Integer
     end
   end
 end

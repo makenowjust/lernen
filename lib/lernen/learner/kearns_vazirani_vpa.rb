@@ -39,11 +39,11 @@ module Lernen
           break if max_learning_rounds && learning_rounds == max_learning_rounds
           learning_rounds += 1
 
-          hypothesis, conf_to_prefix = tree.build_hypothesis
+          hypothesis, state_to_prefix = tree.build_hypothesis
           cex = oracle.find_cex(hypothesis) # steep:ignore
           break if cex.nil?
 
-          tree.process_cex(hypothesis, cex, conf_to_prefix)
+          tree.process_cex(hypothesis, cex, state_to_prefix)
         end
 
         hypothesis, = tree.build_hypothesis

@@ -1,0 +1,19 @@
+# Generated from test/lernen/automaton/proc_util_test.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    class ProcUtilTest < Minitest::Test
+      # : () -> void
+      def test_expand: () -> void
+
+      # : () -> void
+      def test_project: () -> void
+
+      # : () -> void
+      def test_find_call_index: () -> void
+
+      # : () -> void
+      def test_find_return_index: () -> void
+    end
+  end
+end

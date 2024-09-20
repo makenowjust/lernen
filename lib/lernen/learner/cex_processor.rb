@@ -34,24 +34,22 @@ module Lernen
     module CexProcessor
       # Processes a given counterexample in the `cex_processing` way.
       #
-      # It returns a triple `[cex[0...n], cex[n], cex[n...]]` instead of `n` such that
-      # `sul.query_last(h[n] + cex[n...]) != sul.query_last(h[n + 1] + cex[n + 1...])`.
+      # It returns `n` such that `acex.effect(n) != acex.effect(n + 1)`.
       #
-      #: [Conf, In, Out] (
-      #    System::SUL[In, Out] sul,
-      #    Automaton::TransitionSystem[Conf, In, Out] hypothesis,
-      #    Array[In] cex,
-      #    _ConfToPrefix[Conf, In] conf_to_prefix,
+      #: (
+      #    Acex acex,
       #    ?cex_processing: cex_processing_method
-      #  ) -> [Array[In], In, Array[In]]
-      def self.process(sul, hypothesis, cex, conf_to_prefix, cex_processing: :binary)
+      #  ) -> Integer
+      def self.process(acex, cex_processing: :binary)
+        low = 0
+        high = acex.size - 1
         case cex_processing
         in :linear
-          process_linear(sul, hypothesis, cex, conf_to_prefix)
+          process_linear(acex, low:, high:)
         in :binary
-          process_binary(sul, hypothesis, cex, conf_to_prefix)
+          process_binary(acex, low:, high:)
         in :exponential
-          process_exponential(sul, hypothesis, cex, conf_to_prefix)
+          process_exponential(acex, low:, high:)
         end
       end
 
@@ -59,94 +57,57 @@ module Lernen
 
       # Processes a given counterexample by linear search.
       #
-      #: [Conf, In, Out] (
-      #    System::SUL[In, Out] sul,
-      #    Automaton::TransitionSystem[Conf, In, Out] hypothesis,
-      #    Array[In] cex,
-      #    _ConfToPrefix[Conf, In] conf_to_prefix,
-      #  ) -> [Array[In], In, Array[In]]
-      def self.process_linear(sul, hypothesis, cex, conf_to_prefix)
-        expected_output = sul.query_last(cex)
-
-        current_conf = hypothesis.initial_conf
-        cex.each_with_index do |input, i|
-          _, next_conf = hypothesis.step(current_conf, input)
-
-          prefix = conf_to_prefix[next_conf]
-          suffix = cex[i + 1...]
-          return cex[0...i], input, suffix if expected_output != sul.query_last(prefix + suffix) # steep:ignore
-
-          current_conf = next_conf
+      #: (Acex acex, low: Integer, high: Integer) -> Integer
+      def self.process_linear(acex, low:, high:)
+        prev_eff = acex.effect(low)
+        index = low + 1
+        while index <= high
+          eff = acex.effect(index)
+          return index - 1 if prev_eff != eff
+          index += 1
+          prev_eff = eff
         end
 
-        raise ArgumentError, "A counterexample processing failed: is `cex` really a counterexample?"
+        raise ArgumentError
       end
 
       # Processes a given counterexample by binary search.
       #
       # It is known as the Rivest-Schapire (RS) optimization.
       #
-      #: [Conf, In, Out] (
-      #    System::SUL[In, Out] sul,
-      #    Automaton::TransitionSystem[Conf, In, Out] hypothesis,
-      #    Array[In] cex,
-      #    _ConfToPrefix[Conf, In] conf_to_prefix,
-      #    ?low: Integer
-      #  ) -> [Array[In], In, Array[In]]
-      def self.process_binary(sul, hypothesis, cex, conf_to_prefix, low: 0) # steep:ignore
-        expected_output = sul.query_last(cex)
-
-        high = cex.size - 1
+      #: (Acex acex, low: Integer, high: Integer) -> Integer
+      def self.process_binary(acex, low:, high:)
+        low_eff = acex.effect(low)
 
         while high - low > 1
-          mid = (low + high) / 2
-          prefix = cex[0...mid]
-          suffix = cex[mid...]
-
-          _, prefix_conf = hypothesis.run(prefix) # steep:ignore
-          if expected_output == sul.query_last(conf_to_prefix[prefix_conf] + suffix) # steep:ignore
+          mid = low + ((high - low) / 2)
+          mid_eff = acex.effect(mid)
+          if low_eff == mid_eff
             low = mid
           else
             high = mid
           end
         end
 
-        prefix = cex[0...low]
-        suffix = cex[high...]
-        [prefix, cex[low], suffix]
+        low
       end
 
       # Processes a given counterexample by exponential seatch.
       #
-      #: [Conf, In, Out] (
-      #    System::SUL[In, Out] sul,
-      #    Automaton::TransitionSystem[Conf, In, Out] hypothesis,
-      #    Array[In] cex,
-      #    _ConfToPrefix[Conf, In] conf_to_prefix,
-      #  ) -> [Array[In], In, Array[In]]
-      def self.process_exponential(sul, hypothesis, cex, conf_to_prefix)
-        expected_output = sul.query_last(cex)
+      #: (Acex acex, low: Integer, high: Integer) -> Integer
+      def self.process_exponential(acex, low:, high:)
+        ofs = 1
+        low_eff = acex.effect(low)
 
-        prev_bp = 0
-        bp = 1
-
-        loop do
-          if bp >= cex.size
-            bp = cex.size
-            break
-          end
-
-          prefix = cex[0...bp]
-          suffix = cex[bp...]
-
-          _, prefix_state = hypothesis.run(prefix) # steep:ignore
-          break if expected_output != sul.query_last(conf_to_prefix[prefix_state] + suffix) # steep:ignore
-
-          prev_bp = bp
-          bp *= 2
+        while low + ofs < high
+          index = low + ofs
+          eff = acex.effect(index)
+          break if low_eff != eff
+          low = index
+          ofs *= 2
         end
 
-        process_binary(sul, hypothesis, cex, conf_to_prefix, low: prev_bp)
+        process_binary(acex, low:, high:)
       end
 
       private_class_method :process_linear, :process_binary, :process_exponential
