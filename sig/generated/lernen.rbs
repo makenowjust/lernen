@@ -71,7 +71,7 @@ module Lernen
   # Learn an automaton by using the given parameters.
   #
   # This method is a frontend of the learning algorithms. Actual implementations are placed under
-  # the `Lernen::Learner` namespace.
+  # the `Lernen::Algorithm` namespace.
   #
   # ## Parameters
   #

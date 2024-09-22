@@ -1,0 +1,25 @@
+# Generated from lib/lernen/algorithm/prefix_transformer_acex.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    # PrefixTransformerAcex is an implementation of `Acex` for classic prefix transformers.
+    #
+    # @rbs generic Conf
+    # @rbs generic In
+    # @rbs generic Out
+    class PrefixTransformerAcex[Conf, In, Out] < Acex
+      # : (
+      #     Array[In] cex,
+      #     System::SUL[In, Out] sul,
+      #     Automaton::TransitionSystem[Conf, In, Out] hypothesis,
+      #     ^(Conf) -> Array[In] conf_to_prefix
+      #   ) -> void
+      def initialize: (Array[In] cex, System::SUL[In, Out] sul, Automaton::TransitionSystem[Conf, In, Out] hypothesis, ^(Conf) -> Array[In] conf_to_prefix) -> void
+
+      private
+
+      # @rbs override
+      def compute_effect: ...
+    end
+  end
+end

@@ -3,13 +3,12 @@
 
 require "set"
 
-require_relative "lernen/version"
-
-require_relative "lernen/automaton"
-require_relative "lernen/equiv"
-require_relative "lernen/graph"
-require_relative "lernen/learner"
-require_relative "lernen/system"
+require "lernen/algorithm"
+require "lernen/automaton"
+require "lernen/equiv"
+require "lernen/graph"
+require "lernen/system"
+require "lernen/version"
 
 # Lernen is an automata learning library written in Ruby.
 #
@@ -87,7 +86,7 @@ module Lernen
   # Learn an automaton by using the given parameters.
   #
   # This method is a frontend of the learning algorithms. Actual implementations are placed under
-  # the `Lernen::Learner` namespace.
+  # the `Lernen::Algorithm` namespace.
   #
   # ## Parameters
   #
@@ -241,15 +240,15 @@ module Lernen
 
     case algorithm
     in :lstar
-      Learner::LStar.learn(alphabet, sul, oracle, automaton_type:, **params)
+      Algorithm::LStar.learn(alphabet, sul, oracle, automaton_type:, **params)
     in :kearns_vazirani
       if automaton_type == :vpa
-        Learner::KearnsVaziraniVPA.learn(alphabet, call_alphabet, return_alphabet, sul, oracle, **params)
+        Algorithm::KearnsVaziraniVPA.learn(alphabet, call_alphabet, return_alphabet, sul, oracle, **params)
       else
-        Learner::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type:, **params)
+        Algorithm::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type:, **params)
       end
     in :lsharp
-      Learner::LSharp.learn(alphabet, sul, oracle, automaton_type:, **params)
+      Algorithm::LSharp.learn(alphabet, sul, oracle, automaton_type:, **params)
     end
   end
 end

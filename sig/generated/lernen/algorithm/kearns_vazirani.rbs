@@ -1,0 +1,47 @@
+# Generated from lib/lernen/algorithm/kearns_vazirani.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    # KearnzVazirani is an implementation of Kearnz-Vazirani algorithm.
+    #
+    # Kearns-Vazirani is introduced by [Kearns & Vazirani (1994) "An Introduction to
+    # Computational Learning Theory"](https://direct.mit.edu/books/monograph/2604/An-Introduction-to-Computational-Learning-Theory).
+    module KearnsVazirani
+      # Runs Kearns-Vazirani algoritghm and returns an inferred automaton.
+      #
+      # `max_learning_rounds` is a parameter for specifying the maximum number of iterations for learning.
+      # When `max_learning_rounds: nil` is specified, it means the algorithm only stops if the equivalent
+      # hypothesis is found.
+      #
+      # : [In] (
+      #    Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle,
+      #    automaton_type: :dfa,
+      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::DFA[In]
+      # : [In, Out] (
+      #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #    automaton_type: :mealy,
+      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::Mealy[In, Out]
+      # : [In, Out] (
+      #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #    automaton_type: :moore,
+      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::Moore[In, Out]
+      def self.learn: [In] (Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle, automaton_type: :dfa, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::DFA[In]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :mealy, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::Mealy[In, Out]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :moore, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::Moore[In, Out]
+
+      private
+
+      # Constructs the first hypothesis automaton.
+      #
+      # : [In, Out] (
+      #    Array[In] alphabet,
+      #    System::SUL[In, Out] sul,
+      #    automaton_type: :dfa | :mealy | :moore
+      #  ) -> Automaton::TransitionSystem[Integer, In, Out]
+      def self.construct_first_hypothesis: [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :mealy | :moore) -> Automaton::TransitionSystem[Integer, In, Out]
+    end
+  end
+end

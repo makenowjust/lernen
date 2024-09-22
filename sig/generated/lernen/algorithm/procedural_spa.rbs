@@ -1,0 +1,13 @@
+# Generated from lib/lernen/algorithm/procedural_spa.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    # ProceduralSPA is an implementation of the learning algorithm for SPA.
+    #
+    # This algorithm is described in [Frohme & Seffen (2021) "Compositional
+    # Learning of Mutually Recursive Procedural Systems"](https://link.springer.com/article/10.1007/s10009-021-00634-y).
+    module ProceduralSPA
+      def learn: (untyped alphabet, untyped call_alphabet, untyped return_input, untyped sul, untyped oracle, ?max_learning_rounds: untyped) -> untyped
+    end
+  end
+end
