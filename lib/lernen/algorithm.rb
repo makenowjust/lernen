@@ -14,6 +14,8 @@ require "lernen/algorithm/acex"
 require "lernen/algorithm/prefix_transformer_acex"
 require "lernen/algorithm/cex_processor"
 
+require "lernen/algorithm/learner"
+
 require "lernen/algorithm/observation_table"
 require "lernen/algorithm/lstar"
 

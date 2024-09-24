@@ -15,6 +15,8 @@ module Lernen
 
       @prefixes: Array[Array[In]]
 
+      @cex_processing: cex_processing_method | nil
+
       @automaton_type: Automaton::transition_system_type
 
       @sul: System::SUL[In, Out]
@@ -24,13 +26,26 @@ module Lernen
       # : (
       #     Array[In] alphabet,
       #     System::SUL[In, Out] sul,
-      #     automaton_type: :dfa | :moore | :mealy
+      #     automaton_type: :dfa | :moore | :mealy,
+      #     cex_processing: cex_processing_method | nil
       #   ) -> void
-      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :moore | :mealy) -> void
+      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :moore | :mealy, cex_processing: cex_processing_method | nil) -> void
 
-      attr_reader prefixes: Array[Array[In]]
+      # Constructs a hypothesis automaton from this observation table.
+      #
+      # : () -> [Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]]]
+      def build_hypothesis: () -> [ Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]] ]
 
-      attr_reader suffixes: Array[Array[In]]
+      # Updates this observation table by the given `cex`.
+      #
+      # : (
+      #    Array[In] cex,
+      #    Automaton::TransitionSystem[Integer, In, Out] hypothesis,
+      #    Hash[Integer, Array[In]] state_to_prefix
+      #  ) -> void
+      def refine_hypothesis: (Array[In] cex, Automaton::TransitionSystem[Integer, In, Out] hypothesis, Hash[Integer, Array[In]] state_to_prefix) -> void
+
+      private
 
       # Finds new prefixes to close.
       #
@@ -43,20 +58,20 @@ module Lernen
       # : () -> (Array[In] | nil)
       def check_consistency: () -> (Array[In] | nil)
 
-      # Update rows of this observation table.
+      # Updates rows of this observation table.
       #
       # : () -> void
       def update_table: () -> void
 
-      # Update the row for the given `prefix` of this observation table.
+      # Updates the row for the given `prefix` of this observation table.
       #
       # : (Array[In] prefix) -> void
       def update_table_row: (Array[In] prefix) -> void
 
-      # Constructs a hypothesis automaton from this observation table.
+      # Update this table to be consistent and closed.
       #
-      # : () -> [Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]]]
-      def build_hypothesis: () -> [ Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]] ]
+      # : () -> void
+      def make_consistent_and_closed: () -> void
     end
   end
 end

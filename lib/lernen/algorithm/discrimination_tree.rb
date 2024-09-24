@@ -161,11 +161,11 @@ module Lernen
       # Update this classification tree by the given `cex`.
       #
       #: (
-      #    Automaton::TransitionSystem[Integer, In, Out] hypothesis,
       #    Array[In] cex,
+      #    Automaton::TransitionSystem[Integer, In, Out] hypothesis,
       #    Hash[Integer, Array[In]] state_to_prefix
       #  ) -> void
-      def process_cex(hypothesis, cex, state_to_prefix)
+      def refine_hypothesis(cex, hypothesis, state_to_prefix)
         state_to_prefix_lambda = ->(state) { state_to_prefix[state] }
         acex = PrefixTransformerAcex.new(cex, @sul, hypothesis, state_to_prefix_lambda)
 

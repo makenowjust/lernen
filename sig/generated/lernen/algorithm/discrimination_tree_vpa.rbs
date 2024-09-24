@@ -4,9 +4,9 @@ module Lernen
   module Algorithm
     # DiscriminationTreeVPA is a extended version of discrimination tree for VPA.
     #
-    # @rbs generic In  -- Type for input alphabet
-    # @rbs generic Call - Type for call alphabet
-    # @rbs generic Return - Type for return alphabet
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
     class DiscriminationTreeVPA[In, Call, Return]
       type tree[In, Call, Return] = Node[In, Call, Return] | Leaf[In, Call, Return]
 
@@ -40,16 +40,11 @@ module Lernen
       #     Array[In] alphabet,
       #     Array[Call] call_alphabet,
       #     Array[Return] return_alphabet,
-      #     System::MooreLikeSUL[In, bool] sul,
+      #     System::MooreLikeSUL[In | Call | Return, bool] sul,
       #     cex: Array[In],
       #     cex_processing: cex_processing_method
       #   ) -> void
-      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In, bool] sul, cex: Array[In], cex_processing: cex_processing_method) -> void
-
-      # Returns a prefix discriminated by `word`.
-      #
-      # : (Array[In | Call | Return] word) -> Array[In | Call | Return]
-      def sift: (Array[In | Call | Return] word) -> Array[In | Call | Return]
+      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In | Call | Return, bool] sul, cex: Array[In], cex_processing: cex_processing_method) -> void
 
       # Constructs a hypothesis automaton from this discrimination tree.
       #
@@ -59,11 +54,18 @@ module Lernen
       # Update this classification tree by the given `cex`.
       #
       # : (
-      #    Automaton::VPA[In, Call, Return] hypothesis,
       #    Array[In | Call | Return] cex,
+      #    Automaton::VPA[In, Call, Return] hypothesis,
       #    Hash[Integer, Array[In | Call | Return]] state_to_prefix
       #  ) -> void
-      def process_cex: (Automaton::VPA[In, Call, Return] hypothesis, Array[In | Call | Return] cex, Hash[Integer, Array[In | Call | Return]] state_to_prefix) -> void
+      def refine_hypothesis: (Array[In | Call | Return] cex, Automaton::VPA[In, Call, Return] hypothesis, Hash[Integer, Array[In | Call | Return]] state_to_prefix) -> void
+
+      private
+
+      # Returns a prefix discriminated by `word`.
+      #
+      # : (Array[In | Call | Return] word) -> Array[In | Call | Return]
+      def sift: (Array[In | Call | Return] word) -> Array[In | Call | Return]
     end
   end
 end

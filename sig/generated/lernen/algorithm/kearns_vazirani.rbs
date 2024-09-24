@@ -6,12 +6,11 @@ module Lernen
     #
     # Kearns-Vazirani is introduced by [Kearns & Vazirani (1994) "An Introduction to
     # Computational Learning Theory"](https://direct.mit.edu/books/monograph/2604/An-Introduction-to-Computational-Learning-Theory).
-    module KearnsVazirani
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class KearnsVazirani[In, Out] < Learner[In, Out]
       # Runs Kearns-Vazirani algoritghm and returns an inferred automaton.
-      #
-      # `max_learning_rounds` is a parameter for specifying the maximum number of iterations for learning.
-      # When `max_learning_rounds: nil` is specified, it means the algorithm only stops if the equivalent
-      # hypothesis is found.
       #
       # : [In] (
       #    Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle,
@@ -32,16 +31,43 @@ module Lernen
                     | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :mealy, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::Mealy[In, Out]
                     | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :moore, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::Moore[In, Out]
 
+      @alphabet: Array[In]
+
+      @sul: System::SUL[In, Out]
+
+      @oracle: Equiv::Oracle[In, Out]
+
+      @automaton_type: :dfa | :moore | :mealy
+
+      @cex_processing: cex_processing_method
+
+      @tree: DiscriminationTree[In, Out] | nil
+
+      # : (
+      #     Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #     automaton_type: :dfa | :moore | :mealy,
+      #     ?cex_processing: cex_processing_method
+      #   ) -> void
+      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :dfa | :moore | :mealy, ?cex_processing: cex_processing_method) -> void
+
+      # @rbs override
+      def add_alphabet: ...
+
       private
+
+      # @rbs override
+      attr_reader oracle: untyped
+
+      # @rbs override
+      def build_hypothesis: ...
 
       # Constructs the first hypothesis automaton.
       #
-      # : [In, Out] (
-      #    Array[In] alphabet,
-      #    System::SUL[In, Out] sul,
-      #    automaton_type: :dfa | :mealy | :moore
-      #  ) -> Automaton::TransitionSystem[Integer, In, Out]
-      def self.construct_first_hypothesis: [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :mealy | :moore) -> Automaton::TransitionSystem[Integer, In, Out]
+      # : () -> Automaton::TransitionSystem[Integer, In, Out]
+      def build_first_hypothesis: () -> Automaton::TransitionSystem[Integer, In, Out]
+
+      # @rbs override
+      def refine_hypothesis: ...
     end
   end
 end

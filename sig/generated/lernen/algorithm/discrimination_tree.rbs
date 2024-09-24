@@ -56,11 +56,11 @@ module Lernen
       # Update this classification tree by the given `cex`.
       #
       # : (
-      #    Automaton::TransitionSystem[Integer, In, Out] hypothesis,
       #    Array[In] cex,
+      #    Automaton::TransitionSystem[Integer, In, Out] hypothesis,
       #    Hash[Integer, Array[In]] state_to_prefix
       #  ) -> void
-      def process_cex: (Automaton::TransitionSystem[Integer, In, Out] hypothesis, Array[In] cex, Hash[Integer, Array[In]] state_to_prefix) -> void
+      def refine_hypothesis: (Array[In] cex, Automaton::TransitionSystem[Integer, In, Out] hypothesis, Hash[Integer, Array[In]] state_to_prefix) -> void
     end
   end
 end

@@ -9,12 +9,8 @@ module Lernen
     #
     # @rbs generic In  -- Type for input alphabet
     # @rbs generic Out -- Type for output values
-    class LSharp[In, Out]
+    class LSharp[In, Out] < Learner[In, Out]
       # Runs the L# algoritghm and returns an inferred automaton.
-      #
-      # `max_learning_rounds` is a parameter for specifying the maximum number of iterations for learning.
-      # When `max_learning_rounds: nil` is specified, it means the algorithm only stops if the equivalent
-      # hypothesis is found.
       #
       # : [In] (
       #    Array[In] alphabet,
@@ -51,8 +47,6 @@ module Lernen
 
       @tree: ObservationTree[In, Out]
 
-      @max_learning_rounds: Integer | nil
-
       @automaton_type: :dfa | :mealy | :moore
 
       @oracle: Equiv::Oracle[In, Out]
@@ -66,16 +60,21 @@ module Lernen
       #     System::SUL[In, Out] sul,
       #     Equiv::Oracle[In, Out] oracle,
       #     automaton_type: :dfa | :mealy | :moore,
-      #     ?max_learning_rounds: Integer | nil
       #   ) -> void
-      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :dfa | :mealy | :moore, ?max_learning_rounds: Integer | nil) -> void
+      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :dfa | :mealy | :moore) -> void
 
-      # Runs the L# algoritghm and returns an inferred automaton.
-      #
-      # : () -> Automaton::TransitionSystem[Integer, In, Out]
-      def learn: () -> Automaton::TransitionSystem[Integer, In, Out]
+      # @rbs override
+      def build_hypothesis: ...
+
+      # @rbs override
+      def refine_hypothesis: ...
+
+      # @rbs override
+      def add_alphabet: ...
 
       private
+
+      attr_reader oracle: untyped
 
       # Checks apartness on the current observation tree between the given two nodes.
       # It returns the witness suffix if they are apart. If it is not, it returns `nil`.
@@ -104,7 +103,7 @@ module Lernen
       def update_frontier: () -> void
 
       # : () -> [Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]]]
-      def build_hypothesis: () -> [ Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]] ]
+      def build_hypothesis_internal: () -> [ Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]] ]
 
       # : (
       #     Automaton::TransitionSystem[Integer, In, Out] hypothesis,
@@ -121,15 +120,12 @@ module Lernen
       # : () -> bool
       def identification: () -> bool
 
-      # : () -> (Automaton::TransitionSystem[Integer, In, Out] | nil)
-      def check_hypothesis: () -> (Automaton::TransitionSystem[Integer, In, Out] | nil)
-
       # : (
+      #     Array[In] cex,
       #     Automaton::TransitionSystem[Integer, In, Out] hypothesis,
       #     Hash[Integer, Array[In]] state_to_prefix,
-      #     Array[In] cex,
       #   ) -> void
-      def process_cex: (Automaton::TransitionSystem[Integer, In, Out] hypothesis, Hash[Integer, Array[In]] state_to_prefix, Array[In] cex) -> void
+      def process_cex: (Array[In] cex, Automaton::TransitionSystem[Integer, In, Out] hypothesis, Hash[Integer, Array[In]] state_to_prefix) -> void
     end
   end
 end

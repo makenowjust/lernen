@@ -5,9 +5,9 @@ module Lernen
   module Algorithm
     # DiscriminationTreeVPA is a extended version of discrimination tree for VPA.
     #
-    # @rbs generic In  -- Type for input alphabet
-    # @rbs generic Call - Type for call alphabet
-    # @rbs generic Return - Type for return alphabet
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
     class DiscriminationTreeVPA
       # @rbs skip
       Node = Data.define(:access, :suffix, :branch)
@@ -48,7 +48,7 @@ module Lernen
       #    Array[In] alphabet,
       #    Array[Call] call_alphabet,
       #    Array[Return] return_alphabet,
-      #    System::MooreLikeSUL[In, bool] sul,
+      #    System::MooreLikeSUL[In | Call | Return, bool] sul,
       #    cex: Array[In],
       #    cex_processing: cex_processing_method
       #  ) -> void
@@ -70,30 +70,6 @@ module Lernen
         cex_out = sul.query_last(cex)
         @root.branch[cex_out] = Leaf[cex] # steep:ignore
         @path_hash[cex] = [cex_out] # steep:ignore
-      end
-
-      # Returns a prefix discriminated by `word`.
-      #
-      #: (Array[In | Call | Return] word) -> Array[In | Call | Return]
-      def sift(word)
-        node = @root
-        path = []
-
-        until node.is_a?(Leaf)
-          full_word = node.access + word + node.suffix
-
-          out = @sul.query_last(full_word)
-          path << out
-
-          unless node.branch.include?(out) # steep:ignore
-            node.branch[out] = Leaf[word] # steep:ignore
-            @path_hash[word] = path
-          end
-
-          node = node.branch[out] # steep:ignore
-        end
-
-        node.prefix # steep:ignore
       end
 
       # Constructs a hypothesis automaton from this discrimination tree.
@@ -178,11 +154,11 @@ module Lernen
       # Update this classification tree by the given `cex`.
       #
       #: (
-      #    Automaton::VPA[In, Call, Return] hypothesis,
       #    Array[In | Call | Return] cex,
+      #    Automaton::VPA[In, Call, Return] hypothesis,
       #    Hash[Integer, Array[In | Call | Return]] state_to_prefix
       #  ) -> void
-      def process_cex(hypothesis, cex, state_to_prefix)
+      def refine_hypothesis(cex, hypothesis, state_to_prefix)
         conf_to_prefix = ->(conf) do
           prefix = []
 
@@ -236,6 +212,32 @@ module Lernen
 
         new_node.branch[replace_out] = Leaf[replace_prefix] # steep:ignore
         @path_hash[replace_prefix] = replace_node_path + [replace_out]
+      end
+
+      private
+
+      # Returns a prefix discriminated by `word`.
+      #
+      #: (Array[In | Call | Return] word) -> Array[In | Call | Return]
+      def sift(word)
+        node = @root
+        path = []
+
+        until node.is_a?(Leaf)
+          full_word = node.access + word + node.suffix
+
+          out = @sul.query_last(full_word)
+          path << out
+
+          unless node.branch.include?(out) # steep:ignore
+            node.branch[out] = Leaf[word] # steep:ignore
+            @path_hash[word] = path
+          end
+
+          node = node.branch[out] # steep:ignore
+        end
+
+        node.prefix # steep:ignore
       end
     end
   end

@@ -6,29 +6,56 @@ module Lernen
     #
     # The idea behind this implementation is described by [Isberner (2015) "Foundations
     # of Active Automata Learning: An Algorithmic Overview"](https://eldorado.tu-dortmund.de/handle/2003/34282).
-    module KearnsVaziraniVPA
+    #
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
+    class KearnsVaziraniVPA[In, Call, Return] < Learner[In | Call | Return, bool]
       # Runs Kearns-Vazirani algoritghm for VPA and returns an inferred VPA.
-      #
-      # `max_learning_rounds` is a parameter for specifying the maximum number of iterations for learning.
-      # When `max_learning_rounds: nil` is specified, it means the algorithm only stops if the equivalent
-      # hypothesis is found.
       #
       # : [In, Call, Return] (
       #    Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
-      #    System::MooreLikeSUL[In, bool] sul, Equiv::Oracle[In, bool] oracle,
+      #    System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle,
       #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::VPA[In, Call, Return]
-      def self.learn: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In, bool] sul, Equiv::Oracle[In, bool] oracle, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::VPA[In, Call, Return]
+      def self.learn: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::VPA[In, Call, Return]
+
+      @alphabet: Array[In]
+
+      @call_alphabet: Array[Call]
+
+      @return_alphabet: Array[Return]
+
+      @sul: System::MooreLikeSUL[In | Call | Return, bool]
+
+      @oracle: Equiv::Oracle[In | Call | Return, bool]
+
+      @cex_processing: cex_processing_method
+
+      @tree: DiscriminationTreeVPA[In, Call, Return] | nil
+
+      # : (
+      #     Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
+      #     System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle,
+      #     ?cex_processing: cex_processing_method
+      #   ) -> void
+      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle, ?cex_processing: cex_processing_method) -> void
 
       private
 
+      # @rbs override
+      attr_reader oracle: untyped
+
+      # @rbs override
+      def build_hypothesis: ...
+
       # Constructs the first hypothesis VPA.
       #
-      # : [In, Call, Return] (
-      #    Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
-      #    System::MooreLikeSUL[In, bool] sul,
-      #  ) -> Automaton::VPA[In, Call, Return]
-      def self.construct_first_hypothesis: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In, bool] sul) -> Automaton::VPA[In, Call, Return]
+      # : () -> Automaton::VPA[In, Call, Return]
+      def build_first_hypothesis: () -> Automaton::VPA[In, Call, Return]
+
+      # @rbs override
+      def refine_hypothesis: ...
     end
   end
 end

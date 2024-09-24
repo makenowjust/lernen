@@ -10,12 +10,8 @@ module Lernen
     #
     # @rbs generic In  -- Type for input alphabet
     # @rbs generic Out -- Type for output values
-    class LSharp
+    class LSharp < Learner #[In, Out]
       # Runs the L# algoritghm and returns an inferred automaton.
-      #
-      # `max_learning_rounds` is a parameter for specifying the maximum number of iterations for learning.
-      # When `max_learning_rounds: nil` is specified, it means the algorithm only stops if the equivalent
-      # hypothesis is found.
       #
       #: [In] (
       #    Array[In] alphabet,
@@ -39,15 +35,14 @@ module Lernen
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::Moore[In, Out]
       def self.learn(alphabet, sul, oracle, automaton_type:, max_learning_rounds: nil) # steep:ignore
-        learner = LSharp.new(alphabet, sul, oracle, automaton_type:, max_learning_rounds:)
-        learner.learn
+        learner = LSharp.new(alphabet, sul, oracle, automaton_type:)
+        learner.learn(max_learning_rounds:)
       end
 
       # @rbs @alphabet: Array[In]
       # @rbs @sul: System::SUL[In, Out]
       # @rbs @oracle: Equiv::Oracle[In, Out]
       # @rbs @automaton_type: :dfa | :mealy | :moore
-      # @rbs @max_learning_rounds: Integer | nil
       # @rbs @tree: ObservationTree[In, Out]
       # @rbs @witness_cache: Hash[[Array[In], Array[In]], Array[In]]
       # @rbs @basis: Array[Array[In]]
@@ -59,14 +54,14 @@ module Lernen
       #    System::SUL[In, Out] sul,
       #    Equiv::Oracle[In, Out] oracle,
       #    automaton_type: :dfa | :mealy | :moore,
-      #    ?max_learning_rounds: Integer | nil
       #  ) -> void
-      def initialize(alphabet, sul, oracle, automaton_type:, max_learning_rounds: nil)
+      def initialize(alphabet, sul, oracle, automaton_type:)
+        super()
+
         @alphabet = alphabet
         @sul = sul
         @oracle = oracle
         @automaton_type = automaton_type
-        @max_learning_rounds = max_learning_rounds
 
         @tree = ObservationTree.new(sul, automaton_type:)
         @witness_cache = {}
@@ -75,30 +70,60 @@ module Lernen
         @frontier = {}
 
         @incomplete_basis = []
+
+        add_basis([])
       end
 
-      # Runs the L# algoritghm and returns an inferred automaton.
-      #
-      #: () -> Automaton::TransitionSystem[Integer, In, Out]
-      def learn
-        add_basis([])
-        learning_rounds = 0
-
+      # @rbs override
+      def build_hypothesis
         loop do
           next if promotion || completion || identification
 
-          break if @max_learning_rounds && learning_rounds == @max_learning_rounds
-          learning_rounds += 1
+          hypothesis, state_to_prefix = build_hypothesis_internal
+          cex = check_consistency(hypothesis, state_to_prefix)
+          if cex
+            process_cex(cex, hypothesis, state_to_prefix)
+            update_frontier
+            next
+          end
 
-          hypothesis = check_hypothesis
-          break if hypothesis
+          return hypothesis, state_to_prefix
         end
 
-        hypothesis, = build_hypothesis
-        hypothesis
+        raise "BUG: unreachable"
+      end
+
+      # @rbs override
+      def refine_hypothesis(cex, hypothesis, state_to_prefix)
+        @tree.query(cex)
+
+        node = @tree.root
+        state = hypothesis.initial_conf
+        cex.size.times do |n|
+          input = cex[n]
+          node = node.branch[input]
+
+          _, state = hypothesis.step(state, input)
+          state_node = @tree[state_to_prefix[state]]
+          raise "BUG: A node for the basis prefix must exist" unless state_node
+
+          if check_apartness(state_node, node)
+            cex = cex[0..n]
+            break
+          end
+        end
+
+        process_cex(cex, hypothesis, state_to_prefix)
+      end
+
+      # @rbs override
+      def add_alphabet(input)
+        @alphabet << input
       end
 
       private
+
+      attr_reader :oracle
 
       # Checks apartness on the current observation tree between the given two nodes.
       # It returns the witness suffix if they are apart. If it is not, it returns `nil`.
@@ -197,7 +222,7 @@ module Lernen
       end
 
       #: () -> [Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]]]
-      def build_hypothesis
+      def build_hypothesis_internal
         transitions = {}
         prefix_to_state = @basis.each_with_index.to_h
 
@@ -326,47 +351,12 @@ module Lernen
         false
       end
 
-      #: () -> (Automaton::TransitionSystem[Integer, In, Out] | nil)
-      def check_hypothesis
-        hypothesis, state_to_prefix = build_hypothesis
-
-        cex = check_consistency(hypothesis, state_to_prefix)
-        unless cex
-          cex0 = @oracle.find_cex(hypothesis)
-          if cex0
-            @tree.query(cex0)
-            node = @tree.root
-            state = hypothesis.initial_conf
-            cex0.size.times do |n|
-              input = cex0[n]
-              node = node.branch[input]
-
-              _, state = hypothesis.step(state, input)
-              state_node = @tree[state_to_prefix[state]]
-              raise "BUG: A node for the basis prefix must exist" unless state_node
-
-              if check_apartness(state_node, node)
-                cex = cex0[0..n]
-                break
-              end
-            end
-          end
-        end
-
-        return hypothesis if cex.nil?
-
-        process_cex(hypothesis, state_to_prefix, cex)
-        update_frontier
-
-        nil
-      end
-
       #: (
+      #    Array[In] cex,
       #    Automaton::TransitionSystem[Integer, In, Out] hypothesis,
       #    Hash[Integer, Array[In]] state_to_prefix,
-      #    Array[In] cex,
       #  ) -> void
-      def process_cex(hypothesis, state_to_prefix, cex)
+      def process_cex(cex, hypothesis, state_to_prefix)
         border = @frontier.keys.find { cex[0..._1.size] == _1 }
         raise ArgumentError, "A border must exist" unless border
 

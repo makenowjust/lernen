@@ -7,19 +7,19 @@ module Lernen
     #
     # The idea behind this implementation is described by [Isberner (2015) "Foundations
     # of Active Automata Learning: An Algorithmic Overview"](https://eldorado.tu-dortmund.de/handle/2003/34282).
-    module KearnsVaziraniVPA
+    #
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
+    class KearnsVaziraniVPA < Learner #[In | Call | Return, bool]
       # Runs Kearns-Vazirani algoritghm for VPA and returns an inferred VPA.
-      #
-      # `max_learning_rounds` is a parameter for specifying the maximum number of iterations for learning.
-      # When `max_learning_rounds: nil` is specified, it means the algorithm only stops if the equivalent
-      # hypothesis is found.
       #
       #: [In, Call, Return] (
       #    Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
-      #    System::MooreLikeSUL[In, bool] sul, Equiv::Oracle[In, bool] oracle,
+      #    System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle,
       #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::VPA[In, Call, Return]
-      def self.learn(
+      def self.learn( # steep:ignore
         alphabet,
         call_alphabet,
         return_alphabet,
@@ -28,51 +28,84 @@ module Lernen
         cex_processing: :binary,
         max_learning_rounds: nil
       )
-        hypothesis = construct_first_hypothesis(alphabet, call_alphabet, return_alphabet, sul)
-        cex = oracle.find_cex(hypothesis) # steep:ignore
-        return hypothesis if cex.nil? # steep:ignore
+        learner = new(alphabet, call_alphabet, return_alphabet, sul, oracle, cex_processing:)
+        learner.learn(max_learning_rounds:)
+      end
 
-        tree = DiscriminationTreeVPA.new(alphabet, call_alphabet, return_alphabet, sul, cex:, cex_processing:)
-        learning_rounds = 0
+      # @rbs @alphabet: Array[In]
+      # @rbs @call_alphabet: Array[Call]
+      # @rbs @return_alphabet: Array[Return]
+      # @rbs @sul: System::MooreLikeSUL[In | Call | Return, bool]
+      # @rbs @oracle: Equiv::Oracle[In | Call | Return, bool]
+      # @rbs @cex_processing: cex_processing_method
+      # @rbs @tree: DiscriminationTreeVPA[In, Call, Return] | nil
 
-        loop do
-          break if max_learning_rounds && learning_rounds == max_learning_rounds
-          learning_rounds += 1
+      #: (
+      #    Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
+      #    System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle,
+      #    ?cex_processing: cex_processing_method
+      #  ) -> void
+      def initialize(alphabet, call_alphabet, return_alphabet, sul, oracle, cex_processing: :binary)
+        super()
 
-          hypothesis, state_to_prefix = tree.build_hypothesis
-          cex = oracle.find_cex(hypothesis) # steep:ignore
-          break if cex.nil?
+        @alphabet = alphabet.dup
+        @call_alphabet = call_alphabet
+        @return_alphabet = return_alphabet
+        @sul = sul
+        @oracle = oracle
+        @cex_processing = cex_processing
 
-          tree.process_cex(hypothesis, cex, state_to_prefix)
-        end
-
-        hypothesis, = tree.build_hypothesis
-        hypothesis
+        @tree = nil
       end
 
       private
 
+      # @rbs override
+      attr_reader :oracle
+
+      # @rbs override
+      def build_hypothesis
+        tree = @tree
+        return tree.build_hypothesis if tree
+
+        [build_first_hypothesis, {}]
+      end
+
       # Constructs the first hypothesis VPA.
       #
-      #: [In, Call, Return] (
-      #    Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
-      #    System::MooreLikeSUL[In, bool] sul,
-      #  ) -> Automaton::VPA[In, Call, Return]
-      def self.construct_first_hypothesis(alphabet, call_alphabet, return_alphabet, sul)
+      #: () -> Automaton::VPA[In, Call, Return]
+      def build_first_hypothesis
         transition_function = {}
-        alphabet.each { |input| transition_function[[0, input]] = 0 }
+        @alphabet.each { |input| transition_function[[0, input]] = 0 }
 
         return_transition_function = {}
-        return_alphabet.each do |return_input|
+        @return_alphabet.each do |return_input|
           return_transition_guard = return_transition_function[[0, return_input]] = {}
-          call_alphabet.each { |call_input| return_transition_guard[[0, call_input]] = 0 }
+          @call_alphabet.each { |call_input| return_transition_guard[[0, call_input]] = 0 }
         end
 
-        accept_state_set = sul.query_empty ? Set[0] : Set.new
+        accept_state_set = @sul.query_empty ? Set[0] : Set.new
         Automaton::VPA.new(0, accept_state_set, transition_function, return_transition_function)
       end
 
-      private_class_method :construct_first_hypothesis
+      # @rbs override
+      def refine_hypothesis(cex, hypothesis, state_to_prefix)
+        tree = @tree
+        if tree
+          tree.refine_hypothesis(cex, hypothesis, state_to_prefix) # steep:ignore
+          return
+        end
+
+        @tree =
+          DiscriminationTreeVPA.new(
+            @alphabet,
+            @call_alphabet,
+            @return_alphabet,
+            @sul,
+            cex:,
+            cex_processing: @cex_processing
+          )
+      end
     end
   end
 end
