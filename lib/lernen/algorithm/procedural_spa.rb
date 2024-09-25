@@ -12,6 +12,16 @@ module Lernen
     # @rbs generic Call   -- Type for call alphabet
     # @rbs generic Return -- Type for return alphabet
     class Procedural < Learner #[In | Call | Return, bool]
+      # @rbs @alphabet: Array[In]
+      # @rbs @call_alphabet: Array[Call]
+      # @rbs @return_input: Return
+      # @rbs @sul: System::SUL[In | Call | Return, bool]
+      # @rbs @algorithm: :lstar | :kearns_vazirani | :lsharp
+      # @rbs @algorithm_params: Hash[untyped, untyped]
+      # @rbs @cex_processing: cex_processing_method
+
+      # @rbs @manager: ATRManager[In, Call, Return]
+
       #: (
       #    Array[In] alphabet,
       #    Array[Call] call_alphabet,
