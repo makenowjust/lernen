@@ -78,6 +78,7 @@ module Lernen
   #   type oracle_type = :exhaustive_search
   #                    | :random_walk
   #                    | :random_word
+  #                    | :random_well_matched_word
   #
   #   type algorithm_name = :lstar
   #                       | :kearns_vazirani
@@ -101,7 +102,9 @@ module Lernen
   #   and use it as a SUL. Or, if it is not specified, we use a block as a SUL.
   # - `oracle`: An equivalence oracle. It is one of `:exhaustive_search`, `:random_walk`, `:random_word`, or
   #   an actual instance of `Equiv::Oracle`. If the value is a symbol, an `Equiv::Oracle` instance of the specified
-  #   kind is created with `oracle_params`. The default value is `:random_word`.
+  #   kind is created with `oracle_params`. The default value is `:random_word` if `automaton_type` is one of `:dfa`,
+  #   `:moore`, and `:mealy`, or the default value is `:random_well_matched_word` if `automaton_type` is either `:spa`
+  #   or `:vpa`.
   # - `oracle_params`: A hash of parameters for equivalence oracle. The default value is `{}`.
   # - `algorithm`: An algorithm name to use. It is one of `:lstar`, `:kearns_vazirani`, or `:lsharp`. The default value
   #   is `:kearns_vazirani`.
@@ -194,8 +197,9 @@ module Lernen
     alphabet:,
     call_alphabet: nil,
     return_alphabet: nil,
+    return_input: nil,
     sul: nil,
-    oracle: :random_word,
+    oracle: nil,
     oracle_params: {},
     algorithm: :kearns_vazirani,
     automaton_type: nil,
@@ -203,7 +207,12 @@ module Lernen
     random: Random,
     &sul_block
   )
-    automaton_type ||= call_alphabet ? :vpa : :dfa
+    automaton_type ||=
+      if call_alphabet
+        return_input ? :spa : :vpa
+      else
+        :dfa
+      end
 
     case sul
     when System::SUL
@@ -222,8 +231,11 @@ module Lernen
       in :dfa | :moore | :mealy
         alphabet
       in :vpa
+        return_alphabet ||= [return_input]
         alphabet + call_alphabet + return_alphabet
       end
+
+    oracle ||= [:vpa, :spa].include?(automaton_type) ? :random_well_matched_word : :random_word
 
     case oracle
     when Equiv::Oracle
@@ -234,6 +246,15 @@ module Lernen
       oracle = Equiv::RandomWalkOracle.new(merged_alphabet, sul, random:, **oracle_params)
     when :random_word
       oracle = Equiv::RandomWordOracle.new(merged_alphabet, sul, random:, **oracle_params)
+    when :random_well_matched_word
+      oracle = Equiv::RandomWellMatchedWordOracle.new(
+        alphabet,
+        call_alphabet, # steep:ignore
+        return_alphabet, # steep:ignore
+        sul,
+        random:, 
+        **oracle_params
+      )
     else
       raise ArgumentError, "Unsupported oracle: #{oracle}"
     end

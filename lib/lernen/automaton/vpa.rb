@@ -7,9 +7,9 @@ module Lernen
     #
     # Especially, this definition represents 1-SEVPA (1-module single-entry visibly pushdown automaton).
     #
-    # @rbs generic In -- Type for input alphabet
-    # @rbs generic Call - Type for call alphabet
-    # @rbs generic Return - Type for return alphabet
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
     class VPA < MooreLike #[VPA::Conf[Call] | nil, In | Call | Return, bool]
       # Conf is a configuration of VPA run.
       #
@@ -169,7 +169,7 @@ module Lernen
         edges +=
           return_transition_function.flat_map do |(state, return_input), return_transition_guard|
             next [] if state == error_state
-            return_transition_guard.map do |(call_state, call_input), next_state|
+            return_transition_guard.filter_map do |(call_state, call_input), next_state|
               next if call_state == error_state || next_state == error_state
               label = "#{return_input.inspect} / (#{call_state}, #{call_input.inspect})" # steep:ignore
               Graph::Edge[state, label, next_state]

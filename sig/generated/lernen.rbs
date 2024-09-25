@@ -64,7 +64,7 @@
 # Of course, we can specify more parameters to `Lernen.learn` for learning other kinds of automata
 # such as Moore or Mealy machines. Please refer the `Lernen.learn` doc.
 module Lernen
-  type oracle_type = :exhaustive_search | :random_walk | :random_word
+  type oracle_type = :exhaustive_search | :random_walk | :random_word | :random_well_matched_word
 
   type algorithm_name = :lstar | :kearns_vazirani | :lsharp
 
@@ -86,7 +86,9 @@ module Lernen
   #   and use it as a SUL. Or, if it is not specified, we use a block as a SUL.
   # - `oracle`: An equivalence oracle. It is one of `:exhaustive_search`, `:random_walk`, `:random_word`, or
   #   an actual instance of `Equiv::Oracle`. If the value is a symbol, an `Equiv::Oracle` instance of the specified
-  #   kind is created with `oracle_params`. The default value is `:random_word`.
+  #   kind is created with `oracle_params`. The default value is `:random_word` if `automaton_type` is one of `:dfa`,
+  #   `:moore`, and `:mealy`, or the default value is `:random_well_matched_word` if `automaton_type` is either `:spa`
+  #   or `:vpa`.
   # - `oracle_params`: A hash of parameters for equivalence oracle. The default value is `{}`.
   # - `algorithm`: An algorithm name to use. It is one of `:lstar`, `:kearns_vazirani`, or `:lsharp`. The default value
   #   is `:kearns_vazirani`.

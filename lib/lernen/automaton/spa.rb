@@ -5,9 +5,9 @@ module Lernen
   module Automaton
     # SPA represents a system of procedural automata.
     #
-    # @rbs generic In -- Type for input alphabet
-    # @rbs generic Call - Type for call alphabet
-    # @rbs generic Return - Type for return alphabet
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
     class SPA < MooreLike #[SPA::conf[Call], In | Call | Return, bool]
       # Conf is a configuration of SPA run.
       #
