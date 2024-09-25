@@ -33,16 +33,19 @@ module Lernen
 
       #: (
       #    Call initial_proc,
+      #    Return return_input,
       #    Hash[Call, DFA[In | Call]] proc_to_dfa
       #  ) -> void
-      def initialize(initial_proc, proc_to_dfa)
+      def initialize(initial_proc, return_input, proc_to_dfa)
         super()
 
         @initial_proc = initial_proc
+        @return_input = return_input
         @proc_to_dfa = proc_to_dfa
       end
 
       attr_reader :initial_proc #: Call
+      attr_reader :return_input #: Return
       attr_reader :proc_to_dfa #: Hash[Call, DFA[In | Call]]
 
       #: () -> :spa
@@ -77,9 +80,7 @@ module Lernen
             return Conf[prev, proc, next_state]
           end
 
-          # When there is no usual transition and no call tansition for `input`,
-          # then we assume that `input` is the return character.
-          dfa.accept_state_set.include?(state) ? prev : :sink
+          input == return_input && dfa.accept_state_set.include?(state) ? prev : :sink
         end
       end
 
@@ -90,7 +91,8 @@ module Lernen
       #
       #: (untyped other) -> bool
       def ==(other)
-        other.is_a?(SPA) && initial_proc == other.initial_proc && proc_to_dfa == other.proc_to_dfa # steep:ignore
+        other.is_a?(SPA) && initial_proc == other.initial_proc && return_input == other.return_input && # steep:ignore
+          proc_to_dfa == other.proc_to_dfa
       end
     end
   end
