@@ -11,7 +11,7 @@ module Lernen
     # @rbs generic In  -- Type for input alphabet
     # @rbs generic Out -- Type for output values
     class KearnsVazirani < Learner #[In, Out]
-      # Runs Kearns-Vazirani algoritghm and returns an inferred automaton.
+      # Runs Kearns-Vazirani algorithm and returns an inferred automaton.
       #
       #: [In] (
       #    Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle,

@@ -107,9 +107,10 @@ module Lernen
   #   or `:vpa`.
   # - `oracle_params`: A hash of parameters for equivalence oracle. The default value is `{}`.
   # - `algorithm`: An algorithm name to use. It is one of `:lstar`, `:kearns_vazirani`, or `:lsharp`. The default value
-  #   is `:kearns_vazirani`.
-  # - `automaton_type`: A type of automaton to infer. It is one of `:dfa`, `:mealy`, `:moore`, or `:vpa`. The default
-  #   value is `:dfa`, but it becomes `:vpa` if `call_alphabet` is specified.
+  #   is `:kearns_vazirani` (if `automaton_type` is one of `:dfa`, `:moore`, and `:mealy`), or `:kearns_vazirani_vpa`
+  #   (if `automaton_type` is `vpa`), or `:procedural` (if `automaton_type` is `spa`).
+  # - `automaton_type`: A type of automaton to infer. It is one of `:dfa`, `:mealy`, `:moore`, `:vpa`, and `:spa`.
+  #   The default value is `:dfa`, but it becomes `:vpa` or `:spa` if `call_alphabet` or `return_input` is specified.
   # - `params`: A hash of parameter to pass a learning algorithm. The default value is `{}`.
   # - `random`: A PRNG instance. It is used by an equivalence oracle.
   #
@@ -177,7 +178,7 @@ module Lernen
   #    sul: Automaton::VPA[In, Call, Return] | System::MooreLikeSUL[In | Call | Return, bool],
   #    ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool],
   #    ?oracle_params: Hash[Symbol, untyped],
-  #    ?algorithm: :kearns_vazirani,
+  #    ?algorithm: :kearns_vazirani_vpa,
   #    ?automaton_type: :vpa,
   #    ?params: Hash[Symbol, untyped],
   #    ?random: Random
@@ -188,11 +189,34 @@ module Lernen
   #    return_alphabet: Array[Return],
   #    ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool],
   #    ?oracle_params: Hash[Symbol, untyped],
-  #    ?algorithm: :kearns_vazirani,
+  #    ?algorithm: :kearns_vazirani_vpa,
   #    ?automaton_type: :vpa,
   #    ?params: Hash[Symbol, untyped],
   #    ?random: Random
   #  ) { (Array[In | Call | Return]) -> bool } -> Automaton::VPA[In, Call, Return]
+  #: [In, Call, Return] (
+  #    alphabet: Array[In],
+  #    call_alphabet: Array[Call],
+  #    return_input: Return,
+  #    sul: Automaton::SPA[In, Call, Return] | System::MooreLikeSUL[In | Call | Return, bool],
+  #    ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool],
+  #    ?oracle_params: Hash[Symbol, untyped],
+  #    ?algorithm: :procedural,
+  #    ?automaton_type: :spa,
+  #    ?params: Hash[Symbol, untyped],
+  #    ?random: Random
+  #  ) -> Automaton::SPA[In, Call, Return]
+  #: [In, Call, Return] (
+  #    alphabet: Array[In],
+  #    call_alphabet: Array[Call],
+  #    return_input: Return,
+  #    ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool],
+  #    ?oracle_params: Hash[Symbol, untyped],
+  #    ?algorithm: :procedural,
+  #    ?automaton_type: :spa,
+  #    ?params: Hash[Symbol, untyped],
+  #    ?random: Random
+  #  ) { (Array[In | Call | Return]) -> bool } -> Automaton::SPA[In, Call, Return]
   def self.learn(
     alphabet:,
     call_alphabet: nil,
@@ -201,7 +225,7 @@ module Lernen
     sul: nil,
     oracle: nil,
     oracle_params: {},
-    algorithm: :kearns_vazirani,
+    algorithm: nil,
     automaton_type: nil,
     params: {},
     random: Random,
@@ -230,7 +254,7 @@ module Lernen
       case automaton_type
       in :dfa | :moore | :mealy
         alphabet
-      in :vpa
+      in :vpa | :spa
         return_alphabet ||= [return_input]
         alphabet + call_alphabet + return_alphabet
       end
@@ -260,17 +284,27 @@ module Lernen
       raise ArgumentError, "Unsupported oracle: #{oracle}"
     end
 
+    algorithm ||=
+      case automaton_type
+      in :dfa | :moore | :mealy
+        :kearns_vazirani
+      in :vpa
+        :kearns_vazirani_vpa
+      in :spa
+        :procedural
+      end
+
     case algorithm
     in :lstar
       Algorithm::LStar.learn(alphabet, sul, oracle, automaton_type:, **params)
     in :kearns_vazirani
-      if automaton_type == :vpa
-        Algorithm::KearnsVaziraniVPA.learn(alphabet, call_alphabet, return_alphabet, sul, oracle, **params)
-      else
-        Algorithm::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type:, **params)
-      end
+      Algorithm::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type:, **params)
+    in :kearns_vazirani_vpa
+      Algorithm::KearnsVaziraniVPA.learn(alphabet, call_alphabet, return_alphabet, sul, oracle, **params)
     in :lsharp
       Algorithm::LSharp.learn(alphabet, sul, oracle, automaton_type:, **params)
+    in :procedural
+      Algorithm::Procedural.learn(alphabet, call_alphabet, return_input, sul, oracle, **params)
     end
   end
 end

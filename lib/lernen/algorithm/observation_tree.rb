@@ -90,9 +90,13 @@ module Lernen
         outputs = observed_query(word)
         return outputs if outputs
 
-        outputs = @sul.query(word)
         node = @root
-        word.zip(outputs) do |input, output|
+        inprogress_word = []
+        outputs = []
+        word.each do |input|
+          inprogress_word << input
+          output = @sul.query_last(inprogress_word)
+          outputs << output
           node.branch[input] ||= Node[output, {}] # steep:ignore
           node = node.branch[input]
         end

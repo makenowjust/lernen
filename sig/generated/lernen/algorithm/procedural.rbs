@@ -11,9 +11,25 @@ module Lernen
     # @rbs generic Call   -- Type for call alphabet
     # @rbs generic Return -- Type for return alphabet
     class Procedural[In, Call, Return] < Learner[In | Call | Return, bool]
+      # Runs the procedural algorithm and returns an inferred automaton.
+      #
+      # : [In, Call, Return] (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet,
+      #    Return return_input,
+      #    System::SUL[In | Call | Return, bool] sul,
+      #    Equiv::Oracle[In | Call | Return, bool] oracle,
+      #    ?algorithm: :lstar | :kearns_vazirani | :lsharp,
+      #    ?algorithm_params: Hash[Symbol, untyped],
+      #    ?cex_processing: cex_processing_method,
+      #    ?scan_procs: bool,
+      #    ?max_learning_rounds: Integer | nil
+      #  ) -> void
+      def self.learn: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Return return_input, System::SUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle, ?algorithm: :lstar | :kearns_vazirani | :lsharp, ?algorithm_params: Hash[Symbol, untyped], ?cex_processing: cex_processing_method, ?scan_procs: bool, ?max_learning_rounds: Integer | nil) -> void
+
       @cex_processing: cex_processing_method
 
-      @algorithm_params: Hash[untyped, untyped]
+      @algorithm_params: Hash[Symbol, untyped]
 
       @algorithm: :lstar | :kearns_vazirani | :lsharp
 
@@ -39,11 +55,11 @@ module Lernen
       #     Return return_input,
       #     System::SUL[In | Call | Return, bool] sul,
       #     ?algorithm: :lstar | :kearns_vazirani | :lsharp,
-      #     ?algorithm_params: Hash[untyped, untyped],
+      #     ?algorithm_params: Hash[Symbol, untyped],
       #     ?cex_processing: cex_processing_method,
       #     ?scan_procs: bool
       #   ) -> void
-      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Return return_input, System::SUL[In | Call | Return, bool] sul, ?algorithm: :lstar | :kearns_vazirani | :lsharp, ?algorithm_params: Hash[untyped, untyped], ?cex_processing: cex_processing_method, ?scan_procs: bool) -> void
+      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Return return_input, System::SUL[In | Call | Return, bool] sul, ?algorithm: :lstar | :kearns_vazirani | :lsharp, ?algorithm_params: Hash[Symbol, untyped], ?cex_processing: cex_processing_method, ?scan_procs: bool) -> void
 
       # : () -> [Automaton::SPA[In, Call, Return], Hash[Call, Hash[Integer, Array[In | Call]]]]
       def build_hypothesis: () -> [ Automaton::SPA[In, Call, Return], Hash[Call, Hash[Integer, Array[In | Call]]] ]

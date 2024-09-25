@@ -11,7 +11,7 @@ module Lernen
     # @rbs generic In  -- Type for input alphabet
     # @rbs generic Out -- Type for output values
     class LSharp < Learner #[In, Out]
-      # Runs the L# algoritghm and returns an inferred automaton.
+      # Runs the L# algorithm and returns an inferred automaton.
       #
       #: [In] (
       #    Array[In] alphabet,
@@ -112,6 +112,12 @@ module Lernen
         end
 
         process_cex(cex, hypothesis, state_to_prefix)
+      end
+
+      # @rbs override
+      def add_alphabet(input)
+        @alphabet << input
+        @incomplete_basis = @basis.dup
       end
 
       private

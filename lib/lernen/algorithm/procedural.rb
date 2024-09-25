@@ -12,12 +12,43 @@ module Lernen
     # @rbs generic Call   -- Type for call alphabet
     # @rbs generic Return -- Type for return alphabet
     class Procedural < Learner #[In | Call | Return, bool]
+      # Runs the procedural algorithm and returns an inferred automaton.
+      #
+      #: [In, Call, Return] (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet,
+      #    Return return_input,
+      #    System::SUL[In | Call | Return, bool] sul,
+      #    Equiv::Oracle[In | Call | Return, bool] oracle,
+      #    ?algorithm: :lstar | :kearns_vazirani | :lsharp,
+      #    ?algorithm_params: Hash[Symbol, untyped],
+      #    ?cex_processing: cex_processing_method,
+      #    ?scan_procs: bool,
+      #    ?max_learning_rounds: Integer | nil
+      #  ) -> void
+      def self.learn(
+        alphabet,
+        call_alphabet,
+        return_input,
+        sul,
+        oracle,
+        algorithm: :kearns_vazirani,
+        algorithm_params: {},
+        cex_processing: :binary,
+        scan_procs: true,
+        max_learning_rounds: nil
+      )
+        learner =
+          new(alphabet, call_alphabet, return_input, sul, algorithm:, algorithm_params:, cex_processing:, scan_procs:)
+        learner.learn(oracle, max_learning_rounds:)
+      end
+
       # @rbs @alphabet: Array[In]
       # @rbs @call_alphabet: Array[Call]
       # @rbs @return_input: Return
       # @rbs @sul: System::SUL[In | Call | Return, bool]
       # @rbs @algorithm: :lstar | :kearns_vazirani | :lsharp
-      # @rbs @algorithm_params: Hash[untyped, untyped]
+      # @rbs @algorithm_params: Hash[Symbol, untyped]
       # @rbs @cex_processing: cex_processing_method
 
       # @rbs @initial_proc: Call | nil
@@ -31,7 +62,7 @@ module Lernen
       #    Return return_input,
       #    System::SUL[In | Call | Return, bool] sul,
       #    ?algorithm: :lstar | :kearns_vazirani | :lsharp,
-      #    ?algorithm_params: Hash[untyped, untyped],
+      #    ?algorithm_params: Hash[Symbol, untyped],
       #    ?cex_processing: cex_processing_method,
       #    ?scan_procs: bool
       #  ) -> void

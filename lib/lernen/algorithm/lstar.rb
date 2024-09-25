@@ -11,7 +11,7 @@ module Lernen
     # @rbs generic In  -- Type for input alphabet
     # @rbs generic Out -- Type for output values
     class LStar < Learner #[In, Out]
-      # Runs Angluin's L* algoritghm and returns an inferred automaton.
+      # Runs Angluin's L* algorithm and returns an inferred automaton.
       #
       # `cex_processing` is used for determining a method of counterexample processing.
       # In additional to predefined `cex_processing_method`, we can specify `nil` as `cex_processing`.
@@ -70,6 +70,11 @@ module Lernen
       # @rbs override
       def refine_hypothesis(cex, hypothesis, state_to_prefix)
         @table.refine_hypothesis(cex, hypothesis, state_to_prefix)
+      end
+
+      # @rbs override
+      def add_alphabet(input)
+        @alphabet << input
       end
     end
   end

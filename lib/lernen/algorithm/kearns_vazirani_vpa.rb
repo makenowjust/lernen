@@ -12,7 +12,7 @@ module Lernen
     # @rbs generic Call   -- Type for call alphabet
     # @rbs generic Return -- Type for return alphabet
     class KearnsVaziraniVPA < Learner #[In | Call | Return, bool]
-      # Runs Kearns-Vazirani algoritghm for VPA and returns an inferred VPA.
+      # Runs Kearns-Vazirani algorithm for VPA and returns an inferred VPA.
       #
       #: [In, Call, Return] (
       #    Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,

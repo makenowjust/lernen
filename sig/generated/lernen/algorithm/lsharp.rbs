@@ -10,7 +10,7 @@ module Lernen
     # @rbs generic In  -- Type for input alphabet
     # @rbs generic Out -- Type for output values
     class LSharp[In, Out] < Learner[In, Out]
-      # Runs the L# algoritghm and returns an inferred automaton.
+      # Runs the L# algorithm and returns an inferred automaton.
       #
       # : [In] (
       #    Array[In] alphabet,
@@ -67,6 +67,9 @@ module Lernen
 
       # @rbs override
       def refine_hypothesis: ...
+
+      # @rbs override
+      def add_alphabet: ...
 
       private
 

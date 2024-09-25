@@ -121,7 +121,7 @@ class LernenTest < Minitest::Test
             automaton_type: :vpa,
             oracle: ORACLE,
             oracle_params: VPA_ORACLE_PARAMS,
-            algorithm:, #: :kearns_vazirani
+            algorithm: :kearns_vazirani_vpa,
             params:,
             random:
           )
