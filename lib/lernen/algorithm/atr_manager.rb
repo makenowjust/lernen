@@ -35,6 +35,10 @@ module Lernen
         @proc_to_return_sequence = {}
       end
 
+      attr_reader :proc_to_access_sequence #: Hash[Call, Array[In | Call | Return]]
+      attr_reader :proc_to_terminating_sequence #: Hash[Call, Array[In | Call | Return]]
+      attr_reader :proc_to_return_sequence #: Hash[Call, Array[In | Call | Return]]
+
       #: (Array[In | Call | Return] cex) -> Array[Call]
       def scan_positive_cex(cex)
         new_procs = extract_potential_terminating_sequences(cex)
@@ -46,14 +50,14 @@ module Lernen
       #    Hash[Call, Automaton::DFA[In | Call]] procs,
       #    Hash[Call, Hash[Integer, Array[In | Call]]] proc_to_state_to_prefix
       #  ) -> void
-      def scan_procs(procs, proc_to_state_to_prefix)
+      def scan_procs(proc_to_dfa, proc_to_state_to_prefix)
         return unless @scan_procs
 
         updated = false
-        stable = true
-        while stable
+        stable = false
+        until stable
           stable = true
-          procs.each do |proc, dfa|
+          proc_to_dfa.each do |proc, dfa|
             current_terminating_sequence = @proc_to_terminating_sequence[proc]
             state_to_prefix = proc_to_state_to_prefix[proc]
             hypothesis_terminating_sequence =
@@ -73,6 +77,34 @@ module Lernen
         optimize_sequences(@proc_to_terminating_sequence)
         optimize_sequences(@proc_to_access_sequence)
         optimize_sequences(@proc_to_return_sequence)
+      end
+
+      #: (Call proc, Array[In | Call] word) -> Array[In | Call | Return]
+      def embed(proc, word)
+        access_sequence = @proc_to_access_sequence[proc]
+        expanded_word = expand(word)
+        return_sequence = @proc_to_return_sequence[proc]
+        [*access_sequence, *expanded_word, *return_sequence]
+      end
+
+      #: [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
+      def expand(word)
+        Automaton::ProcUtil.expand(@return_input, word, @proc_to_terminating_sequence)
+      end
+
+      #: [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
+      def project(word)
+        Automaton::ProcUtil.project(@call_alphabet_set, @return_input, word)
+      end
+
+      #: (Array[In | Call | Return] word, Integer index) -> Integer
+      def find_call_index(word, index) # steep:ignore
+        Automaton::ProcUtil.find_call_index(@call_alphabet_set, @return_input, word, index)
+      end
+
+      #: (Array[In | Call | Return] word, Integer index) -> Integer
+      def find_return_index(word, index) # steep:ignore
+        Automaton::ProcUtil.find_return_index(@call_alphabet_set, @return_input, word, index)
       end
 
       private
@@ -142,9 +174,12 @@ module Lernen
           input = word[index]
           minified_word << input
           if @call_alphabet_set.include?(input) # steep:ignore
-            index = find_return_index(word, index + 1)
-            minified_word.concat(@proc_to_terminating_sequence[input]) # steep:ignore
-            minified_word << @return_input
+            return_index = find_return_index(word, index + 1)
+            if return_index
+              minified_word.concat(@proc_to_terminating_sequence[input]) # steep:ignore
+              minified_word << @return_input
+              index = return_index
+            end
           end
           index += 1
         end
@@ -157,21 +192,6 @@ module Lernen
           minified_sequence = minify_well_matched(sequence)
           proc_to_sequence[proc] = minified_sequence if minified_sequence.size < sequence.size
         end
-      end
-
-      #: [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
-      def expand(word)
-        Automaton::ProcUtil.expand(@return_input, word, @proc_to_terminating_sequence)
-      end
-
-      #: (Array[In | Call | Return] word, Integer index) -> Integer
-      def find_call_index(word, index) # steep:ignore
-        Automaton::ProcUtil.find_call_index(@call_alphabet_set, @return_input, word, index)
-      end
-
-      #: (Array[In | Call | Return] word, Integer index) -> Integer
-      def find_return_index(word, index) # steep:ignore
-        Automaton::ProcUtil.find_return_index(@call_alphabet_set, @return_input, word, index)
       end
     end
   end

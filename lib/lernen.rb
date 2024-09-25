@@ -3,12 +3,12 @@
 
 require "set"
 
-require "lernen/algorithm"
-require "lernen/automaton"
-require "lernen/equiv"
-require "lernen/graph"
-require "lernen/system"
 require "lernen/version"
+require "lernen/graph"
+require "lernen/automaton"
+require "lernen/system"
+require "lernen/equiv"
+require "lernen/algorithm"
 
 # Lernen is an automata learning library written in Ruby.
 #

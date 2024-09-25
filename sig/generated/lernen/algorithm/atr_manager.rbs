@@ -30,6 +30,12 @@ module Lernen
       #   ) -> void
       def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Return return_input, ?scan_procs: bool) -> void
 
+      attr_reader proc_to_access_sequence: Hash[Call, Array[In | Call | Return]]
+
+      attr_reader proc_to_terminating_sequence: Hash[Call, Array[In | Call | Return]]
+
+      attr_reader proc_to_return_sequence: Hash[Call, Array[In | Call | Return]]
+
       # : (Array[In | Call | Return] cex) -> Array[Call]
       def scan_positive_cex: (Array[In | Call | Return] cex) -> Array[Call]
 
@@ -38,6 +44,21 @@ module Lernen
       #     Hash[Call, Hash[Integer, Array[In | Call]]] proc_to_state_to_prefix
       #   ) -> void
       def scan_procs: (Hash[Call, Automaton::DFA[In | Call]] procs, Hash[Call, Hash[Integer, Array[In | Call]]] proc_to_state_to_prefix) -> void
+
+      # : (Call proc, Array[In | Call] word) -> Array[In | Call | Return]
+      def embed: (Call proc, Array[In | Call] word) -> Array[In | Call | Return]
+
+      # : [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
+      def expand: [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
+
+      # : [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
+      def project: [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
+
+      # : (Array[In | Call | Return] word, Integer index) -> Integer
+      def find_call_index: (Array[In | Call | Return] word, Integer index) -> Integer
+
+      # : (Array[In | Call | Return] word, Integer index) -> Integer
+      def find_return_index: (Array[In | Call | Return] word, Integer index) -> Integer
 
       private
 
@@ -52,15 +73,6 @@ module Lernen
 
       # : (Hash[Call, Array[In | Call | Return]]) -> void
       def optimize_sequences: (Hash[Call, Array[In | Call | Return]]) -> void
-
-      # : [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
-      def expand: [In, Call, Return] (Array[In | Call] word) -> Array[In | Call | Return]
-
-      # : (Array[In | Call | Return] word, Integer index) -> Integer
-      def find_call_index: (Array[In | Call | Return] word, Integer index) -> Integer
-
-      # : (Array[In | Call | Return] word, Integer index) -> Integer
-      def find_return_index: (Array[In | Call | Return] word, Integer index) -> Integer
     end
   end
 end

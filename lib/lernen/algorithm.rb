@@ -29,3 +29,6 @@ require "lernen/algorithm/observation_tree"
 require "lernen/algorithm/lsharp"
 
 require "lernen/algorithm/atr_manager"
+require "lernen/algorithm/procedural_sul"
+require "lernen/algorithm/return_indices_acex"
+require "lernen/algorithm/procedural"

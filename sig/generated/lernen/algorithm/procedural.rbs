@@ -2,7 +2,7 @@
 
 module Lernen
   module Algorithm
-    # ProceduralSPA is an implementation of the learning algorithm for SPA.
+    # Procedural is an implementation of the learning algorithm for SPA.
     #
     # This algorithm is described in [Frohme & Seffen (2021) "Compositional
     # Learning of Mutually Recursive Procedural Systems"](https://link.springer.com/article/10.1007/s10009-021-00634-y).
@@ -24,6 +24,8 @@ module Lernen
       @call_alphabet: Array[Call]
 
       @alphabet: Array[In]
+
+      @active_call_alphabet_set: Set[Call]
 
       @manager: ATRManager[In, Call, Return]
 
@@ -63,6 +65,13 @@ module Lernen
 
       # : (Array[In | Call | Return] cex) -> bool
       def refine_hypothesis_internal: (Array[In | Call | Return] cex) -> bool
+
+      # : () -> bool
+      def update_atr_and_check_ts_conformance: () -> bool
+
+      def check_and_ensure_ts_conformance: (untyped hypothesis, untyped proc_to_state_to_prefix) -> untyped
+
+      def check_and_ensure_single_ts_conformance: (untyped ts, untyped hypothesis, untyped proc_to_state_to_prefix) -> untyped
     end
   end
 end
