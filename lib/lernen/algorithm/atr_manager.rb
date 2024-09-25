@@ -5,9 +5,9 @@ module Lernen
   module Algorithm
     # ATRManager is a collection to manage access, terminating, and return sequences.
     #
-    # @rbs generic In -- Type for input alphabet
-    # @rbs generic Call - Type for call alphabet
-    # @rbs generic Return - Type for return alphabet
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
     class ATRManager
       # @rbs @alphabet: Array[In]
       # @rbs @call_alphabet_set: Set[Call]

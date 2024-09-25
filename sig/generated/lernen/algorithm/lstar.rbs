@@ -43,19 +43,11 @@ module Lernen
       @table: ObservationTable[In, Out]
 
       # : (
-      #     Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #     Array[In] alphabet, System::SUL[In, Out] sul,
       #     automaton_type: :dfa | :moore | :mealy,
       #     ?cex_processing: cex_processing_method | nil
       #   ) -> void
-      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :dfa | :moore | :mealy, ?cex_processing: cex_processing_method | nil) -> void
-
-      # @rbs override
-      def add_alphabet: ...
-
-      private
-
-      # @rbs override
-      attr_reader oracle: untyped
+      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :moore | :mealy, ?cex_processing: cex_processing_method | nil) -> void
 
       # @rbs override
       def build_hypothesis: ...

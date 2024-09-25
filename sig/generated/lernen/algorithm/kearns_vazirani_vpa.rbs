@@ -36,26 +36,23 @@ module Lernen
 
       # : (
       #     Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
-      #     System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle,
+      #     System::MooreLikeSUL[In | Call | Return, bool] sul,
       #     ?cex_processing: cex_processing_method
       #   ) -> void
-      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle, ?cex_processing: cex_processing_method) -> void
-
-      private
-
-      # @rbs override
-      attr_reader oracle: untyped
+      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In | Call | Return, bool] sul, ?cex_processing: cex_processing_method) -> void
 
       # @rbs override
       def build_hypothesis: ...
+
+      # @rbs override
+      def refine_hypothesis: ...
+
+      private
 
       # Constructs the first hypothesis VPA.
       #
       # : () -> Automaton::VPA[In, Call, Return]
       def build_first_hypothesis: () -> Automaton::VPA[In, Call, Return]
-
-      # @rbs override
-      def refine_hypothesis: ...
     end
   end
 end

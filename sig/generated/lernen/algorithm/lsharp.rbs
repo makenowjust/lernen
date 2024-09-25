@@ -58,10 +58,9 @@ module Lernen
       # : (
       #     Array[In] alphabet,
       #     System::SUL[In, Out] sul,
-      #     Equiv::Oracle[In, Out] oracle,
       #     automaton_type: :dfa | :mealy | :moore,
       #   ) -> void
-      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :dfa | :mealy | :moore) -> void
+      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :mealy | :moore) -> void
 
       # @rbs override
       def build_hypothesis: ...
@@ -69,12 +68,7 @@ module Lernen
       # @rbs override
       def refine_hypothesis: ...
 
-      # @rbs override
-      def add_alphabet: ...
-
       private
-
-      attr_reader oracle: untyped
 
       # Checks apartness on the current observation tree between the given two nodes.
       # It returns the witness suffix if they are apart. If it is not, it returns `nil`.

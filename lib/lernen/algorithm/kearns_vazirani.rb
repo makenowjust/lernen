@@ -36,8 +36,8 @@ module Lernen
         cex_processing: :binary,
         max_learning_rounds: nil
       )
-        learner = new(alphabet, sul, oracle, automaton_type:, cex_processing:)
-        learner.learn(max_learning_rounds:)
+        learner = new(alphabet, sul, automaton_type:, cex_processing:)
+        learner.learn(oracle, max_learning_rounds:)
       end
 
       # @rbs @alphabet: Array[In]
@@ -48,16 +48,15 @@ module Lernen
       # @rbs @tree: DiscriminationTree[In, Out] | nil
 
       #: (
-      #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #    Array[In] alphabet, System::SUL[In, Out] sul,
       #    automaton_type: :dfa | :moore | :mealy,
       #    ?cex_processing: cex_processing_method
       #  ) -> void
-      def initialize(alphabet, sul, oracle, automaton_type:, cex_processing: :binary)
+      def initialize(alphabet, sul, automaton_type:, cex_processing: :binary)
         super()
 
         @alphabet = alphabet.dup
         @sul = sul
-        @oracle = oracle
         @automaton_type = automaton_type
         @cex_processing = cex_processing
 
@@ -69,18 +68,33 @@ module Lernen
         @alphabet << input
       end
 
-      private
-
-      # @rbs override
-      attr_reader :oracle
-
       # @rbs override
       def build_hypothesis
         tree = @tree
         return tree.build_hypothesis if tree
 
-        [build_first_hypothesis, {}]
+        [build_first_hypothesis, { 0 => [] }]
       end
+
+      # @rbs override
+      def refine_hypothesis(cex, hypothesis, state_to_prefix)
+        tree = @tree
+        if tree
+          tree.refine_hypothesis(cex, hypothesis, state_to_prefix)
+          return
+        end
+
+        @tree =
+          DiscriminationTree.new(
+            @alphabet,
+            @sul,
+            cex:,
+            automaton_type: @automaton_type,
+            cex_processing: @cex_processing
+          )
+      end
+
+      private
 
       # Constructs the first hypothesis automaton.
       #
@@ -107,24 +121,6 @@ module Lernen
         in :mealy
           Automaton::Mealy.new(0, transition_function)
         end
-      end
-
-      # @rbs override
-      def refine_hypothesis(cex, hypothesis, state_to_prefix)
-        tree = @tree
-        if tree
-          tree.refine_hypothesis(cex, hypothesis, state_to_prefix)
-          return
-        end
-
-        @tree =
-          DiscriminationTree.new(
-            @alphabet,
-            @sul,
-            cex:,
-            automaton_type: @automaton_type,
-            cex_processing: @cex_processing
-          )
       end
     end
   end

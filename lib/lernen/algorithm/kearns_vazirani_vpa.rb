@@ -28,8 +28,8 @@ module Lernen
         cex_processing: :binary,
         max_learning_rounds: nil
       )
-        learner = new(alphabet, call_alphabet, return_alphabet, sul, oracle, cex_processing:)
-        learner.learn(max_learning_rounds:)
+        learner = new(alphabet, call_alphabet, return_alphabet, sul, cex_processing:)
+        learner.learn(oracle, max_learning_rounds:)
       end
 
       # @rbs @alphabet: Array[In]
@@ -42,50 +42,27 @@ module Lernen
 
       #: (
       #    Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
-      #    System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle,
+      #    System::MooreLikeSUL[In | Call | Return, bool] sul,
       #    ?cex_processing: cex_processing_method
       #  ) -> void
-      def initialize(alphabet, call_alphabet, return_alphabet, sul, oracle, cex_processing: :binary)
+      def initialize(alphabet, call_alphabet, return_alphabet, sul, cex_processing: :binary)
         super()
 
         @alphabet = alphabet.dup
-        @call_alphabet = call_alphabet
-        @return_alphabet = return_alphabet
+        @call_alphabet = call_alphabet.dup
+        @return_alphabet = return_alphabet.dup
         @sul = sul
-        @oracle = oracle
         @cex_processing = cex_processing
 
         @tree = nil
       end
-
-      private
-
-      # @rbs override
-      attr_reader :oracle
 
       # @rbs override
       def build_hypothesis
         tree = @tree
         return tree.build_hypothesis if tree
 
-        [build_first_hypothesis, {}]
-      end
-
-      # Constructs the first hypothesis VPA.
-      #
-      #: () -> Automaton::VPA[In, Call, Return]
-      def build_first_hypothesis
-        transition_function = {}
-        @alphabet.each { |input| transition_function[[0, input]] = 0 }
-
-        return_transition_function = {}
-        @return_alphabet.each do |return_input|
-          return_transition_guard = return_transition_function[[0, return_input]] = {}
-          @call_alphabet.each { |call_input| return_transition_guard[[0, call_input]] = 0 }
-        end
-
-        accept_state_set = @sul.query_empty ? Set[0] : Set.new
-        Automaton::VPA.new(0, accept_state_set, transition_function, return_transition_function)
+        [build_first_hypothesis, { 0 => [] }]
       end
 
       # @rbs override
@@ -105,6 +82,25 @@ module Lernen
             cex:,
             cex_processing: @cex_processing
           )
+      end
+
+      private
+
+      # Constructs the first hypothesis VPA.
+      #
+      #: () -> Automaton::VPA[In, Call, Return]
+      def build_first_hypothesis
+        transition_function = {}
+        @alphabet.each { |input| transition_function[[0, input]] = 0 }
+
+        return_transition_function = {}
+        @return_alphabet.each do |return_input|
+          return_transition_guard = return_transition_function[[0, return_input]] = {}
+          @call_alphabet.each { |call_input| return_transition_guard[[0, call_input]] = 0 }
+        end
+
+        accept_state_set = @sul.query_empty ? Set[0] : Set.new
+        Automaton::VPA.new(0, accept_state_set, transition_function, return_transition_function)
       end
     end
   end

@@ -35,8 +35,8 @@ module Lernen
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::Moore[In, Out]
       def self.learn(alphabet, sul, oracle, automaton_type:, max_learning_rounds: nil) # steep:ignore
-        learner = LSharp.new(alphabet, sul, oracle, automaton_type:)
-        learner.learn(max_learning_rounds:)
+        learner = LSharp.new(alphabet, sul, automaton_type:)
+        learner.learn(oracle, max_learning_rounds:)
       end
 
       # @rbs @alphabet: Array[In]
@@ -52,15 +52,13 @@ module Lernen
       #: (
       #    Array[In] alphabet,
       #    System::SUL[In, Out] sul,
-      #    Equiv::Oracle[In, Out] oracle,
       #    automaton_type: :dfa | :mealy | :moore,
       #  ) -> void
-      def initialize(alphabet, sul, oracle, automaton_type:)
+      def initialize(alphabet, sul, automaton_type:)
         super()
 
-        @alphabet = alphabet
+        @alphabet = alphabet.dup
         @sul = sul
-        @oracle = oracle
         @automaton_type = automaton_type
 
         @tree = ObservationTree.new(sul, automaton_type:)
@@ -116,14 +114,7 @@ module Lernen
         process_cex(cex, hypothesis, state_to_prefix)
       end
 
-      # @rbs override
-      def add_alphabet(input)
-        @alphabet << input
-      end
-
       private
-
-      attr_reader :oracle
 
       # Checks apartness on the current observation tree between the given two nodes.
       # It returns the witness suffix if they are apart. If it is not, it returns `nil`.

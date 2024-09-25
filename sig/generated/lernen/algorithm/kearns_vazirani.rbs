@@ -44,30 +44,27 @@ module Lernen
       @tree: DiscriminationTree[In, Out] | nil
 
       # : (
-      #     Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #     Array[In] alphabet, System::SUL[In, Out] sul,
       #     automaton_type: :dfa | :moore | :mealy,
       #     ?cex_processing: cex_processing_method
       #   ) -> void
-      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :dfa | :moore | :mealy, ?cex_processing: cex_processing_method) -> void
+      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :moore | :mealy, ?cex_processing: cex_processing_method) -> void
 
       # @rbs override
       def add_alphabet: ...
 
-      private
-
-      # @rbs override
-      attr_reader oracle: untyped
-
       # @rbs override
       def build_hypothesis: ...
+
+      # @rbs override
+      def refine_hypothesis: ...
+
+      private
 
       # Constructs the first hypothesis automaton.
       #
       # : () -> Automaton::TransitionSystem[Integer, In, Out]
       def build_first_hypothesis: () -> Automaton::TransitionSystem[Integer, In, Out]
-
-      # @rbs override
-      def refine_hypothesis: ...
     end
   end
 end

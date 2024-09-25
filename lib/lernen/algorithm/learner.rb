@@ -20,8 +20,11 @@ module Lernen
       # When `max_learning_rounds: nil` is specified, it means the algorithm only stops if the equivalent
       # hypothesis is found.
       #
-      #: (?max_learning_rounds: Integer | nil) -> Automaton::TransitionSystem[untyped, In, Out]
-      def learn(max_learning_rounds: nil)
+      #: (
+      #    Equiv::Oracle[In, Out] oracle,
+      #    ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::TransitionSystem[untyped, In, Out]
+      def learn(oracle, max_learning_rounds: nil)
         hypothesis, state_to_prefix = build_hypothesis
         cex = oracle.find_cex(hypothesis)
         return hypothesis if cex.nil?
@@ -51,17 +54,6 @@ module Lernen
       #: (In input) -> void
       def add_alphabet(input)
         raise TypeError, "This learner does not support adding an input character to the alphabet"
-      end
-
-      private
-
-      # Returns the equivlence oracle for the SUL.
-      #
-      # This is an abstract method.
-      #
-      #: () -> Equiv::Oracle[In, Out]
-      def oracle
-        raise TypeError, "abstract method: `oracle`"
       end
 
       # Refine the learning hypothesis by the given counterexample.

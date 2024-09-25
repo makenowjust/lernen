@@ -6,8 +6,22 @@ module Lernen
     #
     # This algorithm is described in [Frohme & Seffen (2021) "Compositional
     # Learning of Mutually Recursive Procedural Systems"](https://link.springer.com/article/10.1007/s10009-021-00634-y).
-    module ProceduralSPA
-      def learn: (untyped alphabet, untyped call_alphabet, untyped return_input, untyped sul, untyped oracle, ?max_learning_rounds: untyped) -> untyped
+    #
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
+    class Procedural[In, Call, Return] < Learner[In | Call | Return, bool]
+      # : (
+      #     Array[In] alphabet,
+      #     Array[Call] call_alphabet,
+      #     Return return_input,
+      #     System::SUL[In | Call | Return, bool] sul,
+      #     ?algorithm: :lstar | :kearns_vazirani | :lsharp,
+      #     ?algorithm_params: Hash[untyped, untyped],
+      #     ?cex_processing: cex_processing_method,
+      #     ?scan_procs: bool
+      #   ) -> void
+      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Return return_input, System::SUL[In | Call | Return, bool] sul, ?algorithm: :lstar | :kearns_vazirani | :lsharp, ?algorithm_params: Hash[untyped, untyped], ?cex_processing: cex_processing_method, ?scan_procs: bool) -> void
     end
   end
 end

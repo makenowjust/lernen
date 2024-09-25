@@ -41,8 +41,8 @@ module Lernen
         cex_processing: :binary,
         max_learning_rounds: nil
       )
-        learner = new(alphabet, sul, oracle, automaton_type:, cex_processing:)
-        learner.learn(max_learning_rounds:)
+        learner = new(alphabet, sul, automaton_type:, cex_processing:)
+        learner.learn(oracle, max_learning_rounds:)
       end
 
       # @rbs @alphabet: Array[In]
@@ -50,28 +50,17 @@ module Lernen
       # @rbs @table: ObservationTable[In, Out]
 
       #: (
-      #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #    Array[In] alphabet, System::SUL[In, Out] sul,
       #    automaton_type: :dfa | :moore | :mealy,
       #    ?cex_processing: cex_processing_method | nil
       #  ) -> void
-      def initialize(alphabet, sul, oracle, automaton_type:, cex_processing: :binary)
+      def initialize(alphabet, sul, automaton_type:, cex_processing: :binary)
         super()
 
         @alphabet = alphabet.dup
-        @oracle = oracle
 
         @table = ObservationTable.new(@alphabet, sul, automaton_type:, cex_processing:)
       end
-
-      # @rbs override
-      def add_alphabet(input)
-        @alphabet << input
-      end
-
-      private
-
-      # @rbs override
-      attr_reader :oracle
 
       # @rbs override
       def build_hypothesis
