@@ -1,0 +1,68 @@
+# Generated from lib/lernen/algorithm/procedural.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    # ProceduralSPA is an implementation of the learning algorithm for SPA.
+    #
+    # This algorithm is described in [Frohme & Seffen (2021) "Compositional
+    # Learning of Mutually Recursive Procedural Systems"](https://link.springer.com/article/10.1007/s10009-021-00634-y).
+    #
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
+    class Procedural[In, Call, Return] < Learner[In | Call | Return, bool]
+      @cex_processing: cex_processing_method
+
+      @algorithm_params: Hash[untyped, untyped]
+
+      @algorithm: :lstar | :kearns_vazirani | :lsharp
+
+      @sul: System::SUL[In | Call | Return, bool]
+
+      @return_input: Return
+
+      @call_alphabet: Array[Call]
+
+      @alphabet: Array[In]
+
+      @manager: ATRManager[In, Call, Return]
+
+      @proc_to_learner: Hash[Call, Learner[In | Call, bool]]
+
+      @initial_proc: Call | nil
+
+      # : (
+      #     Array[In] alphabet,
+      #     Array[Call] call_alphabet,
+      #     Return return_input,
+      #     System::SUL[In | Call | Return, bool] sul,
+      #     ?algorithm: :lstar | :kearns_vazirani | :lsharp,
+      #     ?algorithm_params: Hash[untyped, untyped],
+      #     ?cex_processing: cex_processing_method,
+      #     ?scan_procs: bool
+      #   ) -> void
+      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Return return_input, System::SUL[In | Call | Return, bool] sul, ?algorithm: :lstar | :kearns_vazirani | :lsharp, ?algorithm_params: Hash[untyped, untyped], ?cex_processing: cex_processing_method, ?scan_procs: bool) -> void
+
+      # : () -> [Automaton::SPA[In, Call, Return], Hash[Call, Hash[Integer, Array[In | Call]]]]
+      def build_hypothesis: () -> [ Automaton::SPA[In, Call, Return], Hash[Call, Hash[Integer, Array[In | Call]]] ]
+
+      # : (
+      #     Array[In | Call | Return] cex,
+      #     Automaton::SPA[In, Call, Return] _hypothesis,
+      #     Hash[Call, Hash[Integer, Array[In | Call]]] _proc_to_state_to_prefix
+      #   ) -> void
+      def refine_hypothesis: (Array[In | Call | Return] cex, Automaton::SPA[In, Call, Return] _hypothesis, Hash[Call, Hash[Integer, Array[In | Call]]] _proc_to_state_to_prefix) -> void
+
+      private
+
+      # : () -> Automaton::SPA[In, Call, Return]
+      def build_first_hypothesis: () -> Automaton::SPA[In, Call, Return]
+
+      # : (Array[In | Call | Return] cex) -> void
+      def extract_useful_information_from_cex: (Array[In | Call | Return] cex) -> void
+
+      # : (Array[In | Call | Return] cex) -> bool
+      def refine_hypothesis_internal: (Array[In | Call | Return] cex) -> bool
+    end
+  end
+end

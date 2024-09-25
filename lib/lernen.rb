@@ -235,7 +235,7 @@ module Lernen
         alphabet + call_alphabet + return_alphabet
       end
 
-    oracle ||= [:vpa, :spa].include?(automaton_type) ? :random_well_matched_word : :random_word
+    oracle ||= %i[vpa spa].include?(automaton_type) ? :random_well_matched_word : :random_word
 
     case oracle
     when Equiv::Oracle
@@ -247,14 +247,15 @@ module Lernen
     when :random_word
       oracle = Equiv::RandomWordOracle.new(merged_alphabet, sul, random:, **oracle_params)
     when :random_well_matched_word
-      oracle = Equiv::RandomWellMatchedWordOracle.new(
-        alphabet,
-        call_alphabet, # steep:ignore
-        return_alphabet, # steep:ignore
-        sul,
-        random:, 
-        **oracle_params
-      )
+      oracle =
+        Equiv::RandomWellMatchedWordOracle.new(
+          alphabet,
+          call_alphabet, # steep:ignore
+          return_alphabet, # steep:ignore
+          sul,
+          random:,
+          **oracle_params
+        )
     else
       raise ArgumentError, "Unsupported oracle: #{oracle}"
     end

@@ -35,9 +35,9 @@ module Lernen
 
       # : (
       #     Hash[Call, Automaton::DFA[In | Call]] procs,
-      #     Hash[Call, Hash[Integer, Array[In | Call]]] state_to_prefix_mapping
+      #     Hash[Call, Hash[Integer, Array[In | Call]]] proc_to_state_to_prefix
       #   ) -> void
-      def scan_procs: (Hash[Call, Automaton::DFA[In | Call]] procs, Hash[Call, Hash[Integer, Array[In | Call]]] state_to_prefix_mapping) -> void
+      def scan_procs: (Hash[Call, Automaton::DFA[In | Call]] procs, Hash[Call, Hash[Integer, Array[In | Call]]] proc_to_state_to_prefix) -> void
 
       private
 

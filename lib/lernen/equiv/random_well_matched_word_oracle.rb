@@ -71,7 +71,6 @@ module Lernen
         @random = random
       end
 
-
       # @rbs override
       def find_cex(hypothesis)
         super

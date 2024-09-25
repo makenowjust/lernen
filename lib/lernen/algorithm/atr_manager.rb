@@ -24,7 +24,7 @@ module Lernen
       #    Return return_input,
       #    ?scan_procs: bool
       #  ) -> void
-      def initialize(alphabet, call_alphabet, return_input, scan_procs: false)
+      def initialize(alphabet, call_alphabet, return_input, scan_procs: true)
         @alphabet = alphabet
         @call_alphabet_set = call_alphabet.to_set
         @return_input = return_input
@@ -44,9 +44,9 @@ module Lernen
 
       #: (
       #    Hash[Call, Automaton::DFA[In | Call]] procs,
-      #    Hash[Call, Hash[Integer, Array[In | Call]]] state_to_prefix_mapping
+      #    Hash[Call, Hash[Integer, Array[In | Call]]] proc_to_state_to_prefix
       #  ) -> void
-      def scan_procs(procs, state_to_prefix_mapping)
+      def scan_procs(procs, proc_to_state_to_prefix)
         return unless @scan_procs
 
         updated = false
@@ -55,12 +55,12 @@ module Lernen
           stable = true
           procs.each do |proc, dfa|
             current_terminating_sequence = @proc_to_terminating_sequence[proc]
-            state_to_prefix = state_to_prefix_mapping[proc]
+            state_to_prefix = proc_to_state_to_prefix[proc]
             hypothesis_terminating_sequence =
               dfa.accept_state_set.to_a.map { |accept_state| expand(state_to_prefix[accept_state]) }.min_by(&:size)
 
             next unless hypothesis_terminating_sequence
-            next unless current_terminating_sequence.size < hypothesis_terminating_sequence.size
+            next if current_terminating_sequence.size <= hypothesis_terminating_sequence.size
 
             updated = true
             stable = false
