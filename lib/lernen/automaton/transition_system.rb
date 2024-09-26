@@ -86,7 +86,7 @@ module Lernen
 
       # Returns a [Mermaid](https://mermaid.js.org) diagram of this transition system.
       #
-      #: (?direction: "TD" | "LR") -> String
+      #: (?direction: Graph::mermaid_direction) -> String
       def to_mermaid(direction: "TD") = to_graph.to_mermaid(direction:)
 
       # Returns a [GraphViz](https://graphviz.org) DOT diagram of this transition system.

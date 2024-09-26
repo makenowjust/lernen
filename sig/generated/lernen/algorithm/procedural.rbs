@@ -2,7 +2,7 @@
 
 module Lernen
   module Algorithm
-    # Procedural is an implementation of the learning algorithm for SPA.
+    # Procedural provides an implementation of the learning algorithm for SPA.
     #
     # This algorithm is described in [Frohme & Seffen (2021) "Compositional
     # Learning of Mutually Recursive Procedural Systems"](https://link.springer.com/article/10.1007/s10009-021-00634-y).

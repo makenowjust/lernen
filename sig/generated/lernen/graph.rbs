@@ -7,6 +7,8 @@ module Lernen
   class Graph
     type node_shape = :circle | :doublecircle
 
+    type mermaid_direction = "TD" | "DT" | "LR" | "RL"
+
     class Node < Data
       attr_reader label: String
       attr_reader shape: node_shape
@@ -18,6 +20,12 @@ module Lernen
       attr_reader label: String
       attr_reader to: Integer
       def self.[]: (Integer from, String label, Integer to) -> Edge
+    end
+
+    class SubGraph < Data
+      attr_reader label: String
+      attr_reader graph: Graph
+      def self.[]: (String label, Graph graph) -> SubGraph
     end
 
     # Returns the escaped string for Mermaid diagrams.
@@ -34,25 +42,39 @@ module Lernen
     # : (String label) -> String
     def self.dot_escape: (String label) -> String
 
+    @subgraphs: Array[SubGraph]
+
     @edges: Array[Edge]
 
     @nodes: Hash[Integer, Node]
 
-    # : (Hash[Integer, Node] nodes, Array[Edge] edges) -> void
-    def initialize: (Hash[Integer, Node] nodes, Array[Edge] edges) -> void
+    # : (
+    #     Hash[Integer, Node] nodes,
+    #     Array[Edge] edges,
+    #     ?Array[SubGraph] subgraphs
+    #   ) -> void
+    def initialize: (Hash[Integer, Node] nodes, Array[Edge] edges, ?Array[SubGraph] subgraphs) -> void
 
     attr_reader nodes: Hash[Integer, Node]
 
     attr_reader edges: Array[Edge]
 
+    attr_reader subgraphs: Array[SubGraph]
+
     # Returns a [Mermaid](https://mermaid.js.org) diagram of this graph.
     #
-    # : (?direction: "TD" | "LR") -> String
-    def to_mermaid: (?direction: "TD" | "LR") -> String
+    # : (?direction: mermaid_direction) -> String
+    def to_mermaid: (?direction: mermaid_direction) -> String
 
     # Returns a [GraphViz](https://graphviz.org) DOT diagram of this graph.
     #
     # : () -> String
     def to_dot: () -> String
+
+    # : (?String id_prefix) -> String
+    def to_mermaid_internal: (?String id_prefix) -> String
+
+    # : (?String id_prefix) -> String
+    def to_dot_internal: (?String id_prefix) -> String
   end
 end

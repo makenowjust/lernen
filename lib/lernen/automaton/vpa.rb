@@ -147,7 +147,7 @@ module Lernen
 
       # Returns a graph of this VPA.
       #
-      # (?shows_error_state: bool) -> String
+      # (?shows_error_state: bool) -> Graph
       def to_graph(shows_error_state: false)
         error_state = error_state() unless shows_error_state
 

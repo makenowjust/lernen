@@ -111,11 +111,16 @@ module Lernen
             new_learner =
               case @algorithm
               in :lstar
-                LStar.new(@alphabet, proc_sul, automaton_type: :dfa, **@algorithm_params)
+                LStar::LStarLearner.new(@alphabet, proc_sul, automaton_type: :dfa, **@algorithm_params)
               in :kearns_vazirani
-                KearnsVazirani.new(@alphabet, proc_sul, automaton_type: :dfa, **@algorithm_params)
+                KearnsVazirani::KearnsVaziraniLearner.new(
+                  @alphabet,
+                  proc_sul,
+                  automaton_type: :dfa,
+                  **@algorithm_params
+                )
               in :lsharp
-                LSharp.new(@alphabet, proc_sul, automaton_type: :dfa, **@algorithm_params)
+                LSharp::LSharpLearner.new(@alphabet, proc_sul, automaton_type: :dfa, **@algorithm_params)
               end
 
             @proc_to_learner.each_key { |proc| new_learner.add_alphabet(proc) }

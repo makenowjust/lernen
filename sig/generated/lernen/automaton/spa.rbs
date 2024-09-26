@@ -50,6 +50,9 @@ module Lernen
       #
       # : (untyped other) -> bool
       def ==: (untyped other) -> bool
+
+      # @rbs override
+      def to_graph: ...
     end
   end
 end

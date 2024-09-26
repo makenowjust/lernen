@@ -94,6 +94,16 @@ module Lernen
         other.is_a?(SPA) && initial_proc == other.initial_proc && return_input == other.return_input && # steep:ignore
           proc_to_dfa == other.proc_to_dfa
       end
+
+      # @rbs override
+      def to_graph
+        subgraphs =
+          proc_to_dfa.map do |proc, dfa|
+            Graph::SubGraph[proc.inspect, dfa.to_graph] # steep:ignore
+          end
+
+        Graph.new({}, [], subgraphs)
+      end
     end
   end
 end

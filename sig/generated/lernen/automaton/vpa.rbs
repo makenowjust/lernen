@@ -78,7 +78,7 @@ module Lernen
 
       # Returns a graph of this VPA.
       #
-      # (?shows_error_state: bool) -> String
+      # (?shows_error_state: bool) -> Graph
       def to_graph: (?shows_error_state: untyped) -> untyped
 
       # Finds a separating word between `vpa1` and `vpa2`.

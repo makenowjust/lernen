@@ -49,8 +49,22 @@ module Lernen
       # : () -> Array[Integer]
       def states: () -> Array[Integer]
 
-      # @rbs override
-      def to_graph: ...
+      # Returns the error state of this DFA.
+      #
+      # An error state is:
+      #
+      # - neither a initial state nor accepting states, and
+      # - only having self-loops for all `input`.
+      #
+      # If an error state is not found, it returns `nil`.
+      #
+      # : () -> (Integer | nil)
+      def error_state: () -> (Integer | nil)
+
+      # Returns a graph of this DFA.
+      #
+      # (?shows_error_state: bool) -> Graph
+      def to_graph: (?shows_error_state: untyped) -> untyped
 
       # Generates a DFA randomly.
       #
