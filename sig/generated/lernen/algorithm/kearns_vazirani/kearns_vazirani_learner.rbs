@@ -1,0 +1,51 @@
+# Generated from lib/lernen/algorithm/kearns_vazirani/kearns_vazirani_learner.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    module KearnsVazirani
+      # KearnzVaziraniLearner is an implementation of Kearnz-Vazirani algorithm.
+      #
+      # Kearns-Vazirani is introduced by [Kearns & Vazirani (1994) "An Introduction to
+      # Computational Learning Theory"](https://direct.mit.edu/books/monograph/2604/An-Introduction-to-Computational-Learning-Theory).
+      #
+      # @rbs generic In  -- Type for input alphabet
+      # @rbs generic Out -- Type for output values
+      class KearnsVaziraniLearner[In, Out] < Learner[In, Out]
+        @alphabet: Array[In]
+
+        @sul: System::SUL[In, Out]
+
+        @oracle: Equiv::Oracle[In, Out]
+
+        @automaton_type: :dfa | :moore | :mealy
+
+        @cex_processing: cex_processing_method
+
+        @tree: DiscriminationTree[In, Out] | nil
+
+        # : (
+        #     Array[In] alphabet, System::SUL[In, Out] sul,
+        #     automaton_type: :dfa | :moore | :mealy,
+        #     ?cex_processing: cex_processing_method
+        #   ) -> void
+        def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :moore | :mealy, ?cex_processing: cex_processing_method) -> void
+
+        # @rbs override
+        def add_alphabet: ...
+
+        # @rbs override
+        def build_hypothesis: ...
+
+        # @rbs override
+        def refine_hypothesis: ...
+
+        private
+
+        # Constructs the first hypothesis automaton.
+        #
+        # : () -> Automaton::TransitionSystem[Integer, In, Out]
+        def build_first_hypothesis: () -> Automaton::TransitionSystem[Integer, In, Out]
+      end
+    end
+  end
+end

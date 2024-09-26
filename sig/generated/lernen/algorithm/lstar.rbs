@@ -2,14 +2,11 @@
 
 module Lernen
   module Algorithm
-    # LStar is an implementation of Angluin's L* algorithm.
+    # LStar provides an implementation of Angluin's L* algorithm.
     #
     # Angluin's L* is introduced by [Angluin (1987) "Learning Regular Sets from
     # Queries and Counterexamples"](https://dl.acm.org/doi/10.1016/0890-5401%2887%2990052-6).
-    #
-    # @rbs generic In  -- Type for input alphabet
-    # @rbs generic Out -- Type for output values
-    class LStar[In, Out] < Learner[In, Out]
+    module LStar
       # Runs Angluin's L* algorithm and returns an inferred automaton.
       #
       # `cex_processing` is used for determining a method of counterexample processing.
@@ -35,28 +32,6 @@ module Lernen
       def self.learn: [In] (Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle, automaton_type: :dfa, ?cex_processing: cex_processing_method | nil, ?max_learning_rounds: Integer | nil) -> Automaton::DFA[In]
                     | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :mealy, ?cex_processing: cex_processing_method | nil, ?max_learning_rounds: Integer | nil) -> Automaton::Mealy[In, Out]
                     | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :moore, ?cex_processing: cex_processing_method | nil, ?max_learning_rounds: Integer | nil) -> Automaton::Moore[In, Out]
-
-      @alphabet: Array[In]
-
-      @oracle: Equiv::Oracle[In, Out]
-
-      @table: ObservationTable[In, Out]
-
-      # : (
-      #     Array[In] alphabet, System::SUL[In, Out] sul,
-      #     automaton_type: :dfa | :moore | :mealy,
-      #     ?cex_processing: cex_processing_method | nil
-      #   ) -> void
-      def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :moore | :mealy, ?cex_processing: cex_processing_method | nil) -> void
-
-      # @rbs override
-      def build_hypothesis: ...
-
-      # @rbs override
-      def refine_hypothesis: ...
-
-      # @rbs override
-      def add_alphabet: ...
     end
   end
 end

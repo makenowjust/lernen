@@ -2,15 +2,11 @@
 
 module Lernen
   module Algorithm
-    # KearnzVaziraniVPA is an implementation of Kearnz-Vazirani algorithm for VPA.
+    # KearnzVaziraniVPA provides an implementation of Kearnz-Vazirani algorithm for VPA.
     #
     # The idea behind this implementation is described by [Isberner (2015) "Foundations
     # of Active Automata Learning: An Algorithmic Overview"](https://eldorado.tu-dortmund.de/handle/2003/34282).
-    #
-    # @rbs generic In     -- Type for input alphabet
-    # @rbs generic Call   -- Type for call alphabet
-    # @rbs generic Return -- Type for return alphabet
-    class KearnsVaziraniVPA[In, Call, Return] < Learner[In | Call | Return, bool]
+    module KearnsVaziraniVPA
       # Runs Kearns-Vazirani algorithm for VPA and returns an inferred VPA.
       #
       # : [In, Call, Return] (
@@ -19,40 +15,6 @@ module Lernen
       #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::VPA[In, Call, Return]
       def self.learn: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::VPA[In, Call, Return]
-
-      @alphabet: Array[In]
-
-      @call_alphabet: Array[Call]
-
-      @return_alphabet: Array[Return]
-
-      @sul: System::MooreLikeSUL[In | Call | Return, bool]
-
-      @oracle: Equiv::Oracle[In | Call | Return, bool]
-
-      @cex_processing: cex_processing_method
-
-      @tree: DiscriminationTreeVPA[In, Call, Return] | nil
-
-      # : (
-      #     Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
-      #     System::MooreLikeSUL[In | Call | Return, bool] sul,
-      #     ?cex_processing: cex_processing_method
-      #   ) -> void
-      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In | Call | Return, bool] sul, ?cex_processing: cex_processing_method) -> void
-
-      # @rbs override
-      def build_hypothesis: ...
-
-      # @rbs override
-      def refine_hypothesis: ...
-
-      private
-
-      # Constructs the first hypothesis VPA.
-      #
-      # : () -> Automaton::VPA[In, Call, Return]
-      def build_first_hypothesis: () -> Automaton::VPA[In, Call, Return]
     end
   end
 end

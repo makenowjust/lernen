@@ -1,0 +1,103 @@
+# Generated from lib/lernen/algorithm/lsharp/lsharp_learner.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    module LSharp
+      # LSharpLearner is an implementation of L# algorithm.
+      #
+      # L# is introduced by [Vaandrager et al. (2022) "A New Approach for Active
+      # Automata Learning Based on Apartness"](https://link.springer.com/chapter/10.1007/978-3-030-99524-9_12).
+      #
+      # @rbs generic In  -- Type for input alphabet
+      # @rbs generic Out -- Type for output values
+      class LSharpLearner[In, Out] < Learner[In, Out]
+        @incomplete_basis: Array[Array[In]]
+
+        @frontier: Hash[Array[In], Array[Array[In]]]
+
+        @basis: Array[Array[In]]
+
+        @witness_cache: Hash[[ Array[In], Array[In] ], Array[In]]
+
+        @tree: ObservationTree[In, Out]
+
+        @automaton_type: :dfa | :mealy | :moore
+
+        @oracle: Equiv::Oracle[In, Out]
+
+        @sul: System::SUL[In, Out]
+
+        @alphabet: Array[In]
+
+        # : (
+        #     Array[In] alphabet,
+        #     System::SUL[In, Out] sul,
+        #     automaton_type: :dfa | :mealy | :moore,
+        #   ) -> void
+        def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :mealy | :moore) -> void
+
+        # @rbs override
+        def build_hypothesis: ...
+
+        # @rbs override
+        def refine_hypothesis: ...
+
+        # @rbs override
+        def add_alphabet: ...
+
+        private
+
+        # Checks apartness on the current observation tree between the given two nodes.
+        # It returns the witness suffix if they are apart. If it is not, it returns `nil`.
+        #
+        # : (
+        #    ObservationTree::Node[In, Out] node1,
+        #    ObservationTree::Node[In, Out] node2
+        #  ) -> (Array[In] | nil)
+        def check_apartness: (ObservationTree::Node[In, Out] node1, ObservationTree::Node[In, Out] node2) -> (Array[In] | nil)
+
+        # Computes the witness suffix of apartness between the given two basis prefixes.
+        #
+        # : (
+        #    Array[In] prefix1,
+        #    Array[In] prefix2
+        #  ) -> Array[In]
+        def compute_witness: (Array[In] prefix1, Array[In] prefix2) -> Array[In]
+
+        # : (Array[In] prefix) -> void
+        def add_basis: (Array[In] prefix) -> void
+
+        # : (Array[In] border) -> void
+        def add_frontier: (Array[In] border) -> void
+
+        # : () -> void
+        def update_frontier: () -> void
+
+        # : () -> [Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]]]
+        def build_hypothesis_internal: () -> [ Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]] ]
+
+        # : (
+        #     Automaton::TransitionSystem[Integer, In, Out] hypothesis,
+        #     Hash[Integer, Array[In]] state_to_prefix
+        #   ) -> (Array[In] | nil)
+        def check_consistency: (Automaton::TransitionSystem[Integer, In, Out] hypothesis, Hash[Integer, Array[In]] state_to_prefix) -> (Array[In] | nil)
+
+        # : () -> bool
+        def promotion: () -> bool
+
+        # : () -> bool
+        def completion: () -> bool
+
+        # : () -> bool
+        def identification: () -> bool
+
+        # : (
+        #     Array[In] cex,
+        #     Automaton::TransitionSystem[Integer, In, Out] hypothesis,
+        #     Hash[Integer, Array[In]] state_to_prefix,
+        #   ) -> void
+        def process_cex: (Array[In] cex, Automaton::TransitionSystem[Integer, In, Out] hypothesis, Hash[Integer, Array[In]] state_to_prefix) -> void
+      end
+    end
+  end
+end

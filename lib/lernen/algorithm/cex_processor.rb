@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 # rbs_inline: enabled
 
+require "lernen/algorithm/cex_processor/acex"
+require "lernen/algorithm/cex_processor/prefix_transformer_acex"
+
 module Lernen
   module Algorithm
     # @rbs!

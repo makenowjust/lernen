@@ -1,0 +1,33 @@
+# Generated from lib/lernen/algorithm/procedural/return_indices_acex.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    module Procedural
+      # ReturnIndicesAcex is an acex implementation for finding the return index in procedural learning.
+      #
+      # @rbs generic In     -- Type for input alphabet
+      # @rbs generic Call   -- Type for call alphabet
+      # @rbs generic Return -- Type for return alphabet
+      class ReturnIndicesAcex[In, Call, Return] < CexProcessor::Acex
+        @cex: Array[In | Call | Return]
+
+        @return_indices: Array[Integer]
+
+        @query: ^(Array[In | Call | Return]) -> bool
+
+        @manager: ATRManager[In, Call, Return]
+
+        # : (
+        #     Array[In | Call | Return] cex,
+        #     Array[Integer] return_indices,
+        #     ^(Array[In | Call | Return]) -> bool query,
+        #     ATRManager[In, Call, Return] manager
+        #   ) -> void
+        def initialize: (Array[In | Call | Return] cex, Array[Integer] return_indices, ^(Array[In | Call | Return]) -> bool query, ATRManager[In, Call, Return] manager) -> void
+
+        # @rbs override
+        def compute_effect: ...
+      end
+    end
+  end
+end
