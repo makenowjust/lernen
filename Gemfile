@@ -5,7 +5,7 @@ source "https://rubygems.org"
 gemspec
 
 group :test do
-  gem "prism", "~> 0.30", require: false
+  gem "prism", "~> 1.0", require: false
 end
 
 group :development do
