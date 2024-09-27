@@ -29,6 +29,7 @@ GEM
     docile (1.4.1)
     drb (2.2.1)
     ffi (1.17.0)
+    ffi (1.17.0-arm64-darwin)
     fileutils (1.7.2)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
@@ -49,7 +50,7 @@ GEM
       ast (~> 2.4.1)
       racc
     prettier_print (1.2.1)
-    prism (0.30.0)
+    prism (1.0.0)
     racc (1.8.1)
     rainbow (3.1.1)
     rake (13.2.1)
@@ -58,8 +59,8 @@ GEM
       ffi (~> 1.0)
     rbs (3.5.3)
       logger
-    rbs-inline (0.7.0)
-      prism (>= 0.29, < 0.31)
+    rbs-inline (0.8.0)
+      prism (>= 0.29, < 1.1)
       rbs (~> 3.5.0)
     regexp_parser (2.9.2)
     rexml (3.3.6)
@@ -123,7 +124,7 @@ DEPENDENCIES
   lernen!
   minitest (~> 5.16)
   minitest-reporters (~> 1.6)
-  prism (~> 0.30)
+  prism (~> 1.0)
   rake (~> 13.0)
   rbs-inline (~> 0.7)
   rubocop (~> 1.63)
@@ -134,4 +135,4 @@ DEPENDENCIES
   syntax_tree (~> 6.2)
 
 BUNDLED WITH
-   2.6.0.dev
+   2.5.11
