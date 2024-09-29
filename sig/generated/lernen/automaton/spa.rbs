@@ -17,9 +17,9 @@ module Lernen
 
       type conf[Call] = Conf[Call] | :init | :term | :sink
 
-      @initial_proc: Call
-
       @proc_to_dfa: Hash[Call, DFA[In | Call]]
+
+      @initial_proc: Call
 
       # : (
       #     Call initial_proc,
@@ -53,6 +53,42 @@ module Lernen
 
       # @rbs override
       def to_graph: ...
+
+      # Returns the mapping from procedure names to access/terminating/return sequences.
+      #
+      # : (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet
+      #  ) -> [
+      #    Hash[Call, Array[In | Call | Return]],
+      #    Hash[Call, Array[In | Call | Return]],
+      #    Hash[Call, Array[In | Call | Return]]
+      #  ]
+      def proc_to_atr_sequence: (Array[In] alphabet, Array[Call] call_alphabet) -> [ Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]] ]
+
+      private
+
+      # Returns the mapping from procedure names to terminating sequences.
+      #
+      # : (Array[In] alphabet, Array[Call] call_alphabet) -> Hash[Call, Array[In | Call | Return]]
+      def compute_proc_to_terminating_sequence: (Array[In] alphabet, Array[Call] call_alphabet) -> Hash[Call, Array[In | Call | Return]]
+
+      # Returns the mapping from procedure names to access and return sequences.
+      #
+      # : (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet,
+      #    Hash[Call, Array[In | Call | Return]] proc_to_terminating_sequence
+      #  ) -> [Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]]]
+      def compute_proc_to_access_and_return_sequences: (Array[In] alphabet, Array[Call] call_alphabet, Hash[Call, Array[In | Call | Return]] proc_to_terminating_sequence) -> [ Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]] ]
+
+      # : (
+      #     DFA[In | Call] dfa,
+      #     Array[In] alphabet,
+      #     Array[Call] found_call_alphabet,
+      #     Set[Call] unfound_call_alphabet_set
+      #   ) -> Hash[Call, [Array[In | Call], Array[In | Call]]]
+      def explore_proc_to_access_and_return_word: (DFA[In | Call] dfa, Array[In] alphabet, Array[Call] found_call_alphabet, Set[Call] unfound_call_alphabet_set) -> Hash[Call, [ Array[In | Call], Array[In | Call] ]]
     end
   end
 end

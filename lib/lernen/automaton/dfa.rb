@@ -91,6 +91,68 @@ module Lernen
         nil
       end
 
+      # Returns the shortest word accepted by this DFA.
+      #
+      # If it is not found, it returns `nil`.
+      #
+      # (Array[In] alphabet) -> Array[In] | nil
+      def shortest_accept_word(alphabet)
+        return [] if accept_state_set.include?(initial_state)
+
+        visited = Set.new
+        queue = []
+
+        visited << initial_state
+        queue << [initial_state, []]
+
+        until queue.empty?
+          state, word = queue.shift
+          alphabet.each do |input|
+            next_state = transition_function[[state, input]]
+            return word + [input] if accept_state_set.include?(next_state)
+            unless visited.include?(next_state)
+              visited << next_state
+              queue << [next_state, word + [input]]
+            end
+          end
+        end
+
+        nil
+      end
+
+      # Computes the shortest paths between states.
+      #
+      #: (Array[In] alphabet) -> Hash[[Integer, Integer], Array[In]]
+      def compute_shortest_words(alphabet)
+        states = states()
+
+        shortest_words = {}
+
+        states.each do |state|
+          alphabet.each do |input|
+            next_state = transition_function[[state, input]]
+            shortest_words[[state, next_state]] = [input]
+          end
+
+          shortest_words[[state, state]] = []
+        end
+
+        states.each do |state2|
+          states.each do |state1|
+            states.each do |state3|
+              word12 = shortest_words[[state1, state2]]
+              word23 = shortest_words[[state2, state3]]
+              word13 = shortest_words[[state1, state3]]
+              next unless word12 && word23
+
+              shortest_words[[state1, state3]] = word12 + word23 if !word13 || word12.size + word23.size < word13.size
+            end
+          end
+        end
+
+        shortest_words
+      end
+
       # Returns a graph of this DFA.
       #
       # (?shows_error_state: bool) -> Graph

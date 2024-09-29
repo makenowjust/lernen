@@ -61,6 +61,18 @@ module Lernen
       # : () -> (Integer | nil)
       def error_state: () -> (Integer | nil)
 
+      # Returns the shortest word accepted by this DFA.
+      #
+      # If it is not found, it returns `nil`.
+      #
+      # (Array[In] alphabet) -> Array[In] | nil
+      def shortest_accept_word: (untyped alphabet) -> untyped
+
+      # Computes the shortest paths between states.
+      #
+      # : (Array[In] alphabet) -> Hash[[Integer, Integer], Array[In]]
+      def compute_shortest_words: (Array[In] alphabet) -> Hash[[ Integer, Integer ], Array[In]]
+
       # Returns a graph of this DFA.
       #
       # (?shows_error_state: bool) -> Graph

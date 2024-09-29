@@ -42,6 +42,9 @@ Style/NumericPredicate:
 Style/AccessorGrouping:
   Enabled: false
 
+Style/CombinableLoops:
+  Enabled: false
+
 Style/CommentedKeyword:
   Enabled: false
 
