@@ -1,0 +1,79 @@
+# Generated from lib/lernen/algorithm/lstar/observation_table.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    module LStar
+      # ObservationTable is an implementation of observation tabel data structure.
+      #
+      # This data structure is used for Angluin's L* algorithm.
+      #
+      # @rbs generic In  -- Type for input alphabet
+      # @rbs generic Out -- Type for output values
+      class ObservationTable[In, Out]
+        @table: Hash[Array[In], Array[Out]]
+
+        @suffixes: Array[Array[In]]
+
+        @prefixes: Array[Array[In]]
+
+        @cex_processing: cex_processing_method | nil
+
+        @automaton_type: Automaton::transition_system_type
+
+        @sul: System::SUL[In, Out]
+
+        @alphabet: Array[In]
+
+        # : (
+        #     Array[In] alphabet,
+        #     System::SUL[In, Out] sul,
+        #     automaton_type: :dfa | :moore | :mealy,
+        #     cex_processing: cex_processing_method | nil
+        #   ) -> void
+        def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :moore | :mealy, cex_processing: cex_processing_method | nil) -> void
+
+        # Constructs a hypothesis automaton from this observation table.
+        #
+        # : () -> [Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]]]
+        def build_hypothesis: () -> [ Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]] ]
+
+        # Updates this observation table by the given `cex`.
+        #
+        # : (
+        #    Array[In] cex,
+        #    Automaton::TransitionSystem[Integer, In, Out] hypothesis,
+        #    Hash[Integer, Array[In]] state_to_prefix
+        #  ) -> void
+        def refine_hypothesis: (Array[In] cex, Automaton::TransitionSystem[Integer, In, Out] hypothesis, Hash[Integer, Array[In]] state_to_prefix) -> void
+
+        private
+
+        # Finds new prefixes to close.
+        #
+        # : () -> (Array[Array[In]] | nil)
+        def find_prefixes_to_close: () -> (Array[Array[In]] | nil)
+
+        # Checks consistency and returns a new suffix to add if this observation table
+        # is inconsistent.
+        #
+        # : () -> (Array[In] | nil)
+        def check_consistency: () -> (Array[In] | nil)
+
+        # Updates rows of this observation table.
+        #
+        # : () -> void
+        def update_table: () -> void
+
+        # Updates the row for the given `prefix` of this observation table.
+        #
+        # : (Array[In] prefix) -> void
+        def update_table_row: (Array[In] prefix) -> void
+
+        # Update this table to be consistent and closed.
+        #
+        # : () -> void
+        def make_consistent_and_closed: () -> void
+      end
+    end
+  end
+end

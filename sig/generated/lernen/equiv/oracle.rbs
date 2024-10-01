@@ -27,6 +27,8 @@ module Lernen
       # : (System::SUL[In, Out] sul) -> void
       def initialize: (System::SUL[In, Out] sul) -> void
 
+      attr_reader sul: System::SUL[In, Out]
+
       # Finds a conterexample against the given `hypothesis` automaton.
       # If it is found, it returns the counterexample word, or it returns `nil` otherwise.
       #
@@ -48,6 +50,11 @@ module Lernen
       #
       # : () -> Hash[Symbol, Integer]
       def stats: () -> Hash[Symbol, Integer]
+
+      # Combines two oracles.
+      #
+      # : (Oracle[In, Out] other) -> CombinedOracle[In, Out]
+      def +: (Oracle[In, Out] other) -> CombinedOracle[In, Out]
 
       private
 

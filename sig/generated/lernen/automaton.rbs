@@ -10,6 +10,6 @@ module Lernen
   # - `Moore` machine ([Wikipedia](https://en.wikipedia.org/wiki/Moore_machine))
   # - `VPA` (visibly pushdown automaton) ([Wikipedia](https://en.wikipedia.org/wiki/Nested_word#Visibly_pushdown_automaton))
   module Automaton
-    type transition_system_type = :dfa | :moore | :mealy | :vpa
+    type transition_system_type = :dfa | :moore | :mealy | :vpa | :spa
   end
 end

@@ -52,9 +52,11 @@ module Lernen
     # : [In, Out] (Automaton::Mealy[In, Out] automaton, ?cache: bool) -> SUL[In, Out]
     # : [In, Out] (Automaton::Moore[In, Out] automaton, ?cache: bool) -> SUL[In, Out]
     # : [In, Call, Return] (Automaton::VPA[In, Call, Return] automaton, ?cache: bool) -> SUL[In | Call | Return, bool]
+    # : [In, Call, Return] (Automaton::SPA[In, Call, Return] automaton, ?cache: bool) -> SUL[In | Call | Return, bool]
     def self.from_automaton: [In] (Automaton::DFA[In] automaton, ?cache: bool) -> SUL[In, bool]
                            | [In, Out] (Automaton::Mealy[In, Out] automaton, ?cache: bool) -> SUL[In, Out]
                            | [In, Out] (Automaton::Moore[In, Out] automaton, ?cache: bool) -> SUL[In, Out]
                            | [In, Call, Return] (Automaton::VPA[In, Call, Return] automaton, ?cache: bool) -> SUL[In | Call | Return, bool]
+                           | [In, Call, Return] (Automaton::SPA[In, Call, Return] automaton, ?cache: bool) -> SUL[In | Call | Return, bool]
   end
 end

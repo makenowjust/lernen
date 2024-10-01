@@ -1,0 +1,27 @@
+# Generated from lib/lernen/algorithm/procedural.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    # Procedural provides an implementation of the learning algorithm for SPA.
+    #
+    # This algorithm is described in [Frohme & Seffen (2021) "Compositional
+    # Learning of Mutually Recursive Procedural Systems"](https://link.springer.com/article/10.1007/s10009-021-00634-y).
+    module Procedural
+      # Runs the procedural algorithm and returns an inferred SPA.
+      #
+      # : [In, Call, Return] (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet,
+      #    Return return_input,
+      #    System::SUL[In | Call | Return, bool] sul,
+      #    Equiv::Oracle[In | Call | Return, bool] oracle,
+      #    ?algorithm: :lstar | :kearns_vazirani | :lsharp,
+      #    ?algorithm_params: Hash[Symbol, untyped],
+      #    ?cex_processing: cex_processing_method,
+      #    ?scan_procs: bool,
+      #    ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::SPA[In, Call, Return]
+      def self.learn: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Return return_input, System::SUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle, ?algorithm: :lstar | :kearns_vazirani | :lsharp, ?algorithm_params: Hash[Symbol, untyped], ?cex_processing: cex_processing_method, ?scan_procs: bool, ?max_learning_rounds: Integer | nil) -> Automaton::SPA[In, Call, Return]
+    end
+  end
+end

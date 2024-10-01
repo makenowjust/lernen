@@ -64,16 +64,113 @@ module Lernen
         state_set.to_a.sort!
       end
 
-      # @rbs override
-      def to_graph
-        nodes =
-          states.to_h do |state|
-            shape = accept_state_set.include?(state) ? :doublecircle : :circle #: Graph::node_shape
-            [state, Graph::Node[state.to_s, shape]]
+      # Returns the error state of this DFA.
+      #
+      # An error state is:
+      #
+      # - neither a initial state nor accepting states, and
+      # - only having self-loops for all `input`.
+      #
+      # If an error state is not found, it returns `nil`.
+      #
+      #: () -> (Integer | nil)
+      def error_state
+        transition_function
+          .group_by { |(state, _), _| state }
+          .transform_values { _1.to_h { |(_, input), next_state| [input, next_state] } }
+          .each do |state, transition_hash|
+            # The initial state and accepting states are not an error state.
+            next if state == initial_state || accept_state_set.include?(state)
+
+            # An error state should only have self-loops.
+            next unless transition_hash.all? { |_, next_state| state == next_state }
+
+            return state
           end
 
+        nil
+      end
+
+      # Returns the shortest word accepted by this DFA.
+      #
+      # If it is not found, it returns `nil`.
+      #
+      #: (Array[In] alphabet) -> (Array[In] | nil)
+      def shortest_accept_word(alphabet)
+        return [] if accept_state_set.include?(initial_state)
+
+        visited = Set.new
+        queue = []
+
+        visited << initial_state
+        queue << [initial_state, []]
+
+        until queue.empty?
+          state, word = queue.shift
+          alphabet.each do |input|
+            next_state = transition_function[[state, input]]
+            return word + [input] if accept_state_set.include?(next_state)
+            unless visited.include?(next_state)
+              visited << next_state
+              queue << [next_state, word + [input]]
+            end
+          end
+        end
+
+        nil
+      end
+
+      # Computes the shortest paths between states.
+      #
+      #: (Array[In] alphabet) -> Hash[[Integer, Integer], Array[In]]
+      def compute_shortest_words(alphabet)
+        states = states()
+
+        shortest_words = {}
+
+        states.each do |state|
+          alphabet.each do |input|
+            next_state = transition_function[[state, input]]
+            shortest_words[[state, next_state]] = [input]
+          end
+
+          shortest_words[[state, state]] = []
+        end
+
+        states.each do |state2|
+          states.each do |state1|
+            states.each do |state3|
+              word12 = shortest_words[[state1, state2]]
+              word23 = shortest_words[[state2, state3]]
+              word13 = shortest_words[[state1, state3]]
+              next unless word12 && word23
+
+              shortest_words[[state1, state3]] = word12 + word23 if !word13 || word12.size + word23.size < word13.size
+            end
+          end
+        end
+
+        shortest_words
+      end
+
+      # Returns a graph of this DFA.
+      #
+      # (?shows_error_state: bool) -> Graph
+      def to_graph(shows_error_state: false)
+        error_state = error_state() unless shows_error_state
+
+        nodes =
+          states
+            .filter_map do |state|
+              next if state == error_state
+              shape = accept_state_set.include?(state) ? :doublecircle : :circle #: Graph::node_shape
+              [state, Graph::Node[state.to_s, shape]]
+            end
+            .to_h
+
         edges =
-          transition_function.map do |(state, input), next_state|
+          transition_function.filter_map do |(state, input), next_state|
+            next if state == error_state || next_state == error_state
             Graph::Edge[state, input.inspect, next_state] # steep:ignore
           end
 

@@ -13,6 +13,13 @@ end
 
 require "lernen/equiv/oracle"
 
+require "lernen/equiv/combined_oracle"
 require "lernen/equiv/exhaustive_search_oracle"
+require "lernen/equiv/test_words_oracle"
 require "lernen/equiv/random_walk_oracle"
 require "lernen/equiv/random_word_oracle"
+require "lernen/equiv/random_well_matched_word_oracle"
+require "lernen/equiv/transition_system_simulator_oracle"
+require "lernen/equiv/moore_like_simulator_oracle"
+require "lernen/equiv/vpa_simulator_oracle"
+require "lernen/equiv/spa_simulator_oracle"

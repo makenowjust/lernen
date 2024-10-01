@@ -1,0 +1,125 @@
+# Generated from lib/lernen/automaton/spa.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    # SPA represents a system of procedural automata.
+    #
+    # Note that this class takes `return_input` as the return symbol because
+    # this value is necessary to run this kind of automata correctly.
+    #
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
+    class SPA[In, Call, Return] < MooreLike[SPA::conf[Call], In | Call | Return, bool]
+      class Conf[Call] < Data
+        attr_reader prev: conf[Call]
+        attr_reader proc: Call
+        attr_reader state: Integer
+        def self.[]: [Call] (conf[Call] prev, Call proc, Integer state) -> Conf[Call]
+      end
+
+      type conf[Call] = Conf[Call] | :init | :term | :sink
+
+      @proc_to_dfa: Hash[Call, DFA[In | Call]]
+
+      @initial_proc: Call
+
+      # : (
+      #     Call initial_proc,
+      #     Return return_input,
+      #     Hash[Call, DFA[In | Call]] proc_to_dfa
+      #   ) -> void
+      def initialize: (Call initial_proc, Return return_input, Hash[Call, DFA[In | Call]] proc_to_dfa) -> void
+
+      attr_reader initial_proc: Call
+
+      attr_reader return_input: Return
+
+      attr_reader proc_to_dfa: Hash[Call, DFA[In | Call]]
+
+      # : () -> :spa
+      def type: () -> :spa
+
+      # @rbs override
+      def initial_conf: ...
+
+      # @rbs override
+      def step_conf: ...
+
+      # @rbs override
+      def output: ...
+
+      # Checks the structural equality between `self` and `other`.
+      #
+      # : (untyped other) -> bool
+      def ==: (untyped other) -> bool
+
+      # @rbs override
+      def to_graph: ...
+
+      # Returns the mapping from procedure names to access/terminating/return sequences.
+      #
+      # : (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet
+      #  ) -> [
+      #    Hash[Call, Array[In | Call | Return]],
+      #    Hash[Call, Array[In | Call | Return]],
+      #    Hash[Call, Array[In | Call | Return]]
+      #  ]
+      def proc_to_atr_sequence: (Array[In] alphabet, Array[Call] call_alphabet) -> [ Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]] ]
+
+      # Finds a separating word between `spa1` and `spa2`.
+      #
+      # This method assume return symbols for two SPAs are the same.
+      # If they are not, this raises `ArgumentError`.
+      #
+      # : [In, Call, Return] (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet,
+      #    SPA[In, Call, Return] spa1,
+      #    SPA[In, Call, Return] spa2
+      #  ) -> (Array[In | Call | Return] | nil)
+      def self.find_separating_word: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, SPA[In, Call, Return] spa1, SPA[In, Call, Return] spa2) -> (Array[In | Call | Return] | nil)
+
+      # Generates a SPA randomly.
+      #
+      # : [In, Call, Return] (
+      #    alphabet: Array[In],
+      #    call_alphabet: Array[Call],
+      #    return_input: Return,
+      #    ?min_proc_size: Integer,
+      #    ?max_proc_size: Integer,
+      #    ?dfa_min_state_size: Integer,
+      #    ?dfa_max_state_size: Integer,
+      #    ?dfa_accept_state_size: Integer,
+      #    ?random: Random,
+      #  ) -> SPA[In, Call, Return]
+      def self.random: [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_input: Return, ?min_proc_size: Integer, ?max_proc_size: Integer, ?dfa_min_state_size: Integer, ?dfa_max_state_size: Integer, ?dfa_accept_state_size: Integer, ?random: Random) -> SPA[In, Call, Return]
+
+      private
+
+      # Returns the mapping from procedure names to terminating sequences.
+      #
+      # : (Array[In] alphabet, Array[Call] call_alphabet) -> Hash[Call, Array[In | Call | Return]]
+      def compute_proc_to_terminating_sequence: (Array[In] alphabet, Array[Call] call_alphabet) -> Hash[Call, Array[In | Call | Return]]
+
+      # Returns the mapping from procedure names to access and return sequences.
+      #
+      # : (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet,
+      #    Hash[Call, Array[In | Call | Return]] proc_to_terminating_sequence
+      #  ) -> [Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]]]
+      def compute_proc_to_access_and_return_sequences: (Array[In] alphabet, Array[Call] call_alphabet, Hash[Call, Array[In | Call | Return]] proc_to_terminating_sequence) -> [ Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]] ]
+
+      # : (
+      #     DFA[In | Call] dfa,
+      #     Array[In] alphabet,
+      #     Array[Call] found_call_alphabet,
+      #     Set[Call] unfound_call_alphabet_set
+      #   ) -> Hash[Call, [Array[In | Call], Array[In | Call]]]
+      def explore_proc_to_access_and_return_word: (DFA[In | Call] dfa, Array[In] alphabet, Array[Call] found_call_alphabet, Set[Call] unfound_call_alphabet_set) -> Hash[Call, [ Array[In | Call], Array[In | Call] ]]
+    end
+  end
+end

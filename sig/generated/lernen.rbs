@@ -64,14 +64,14 @@
 # Of course, we can specify more parameters to `Lernen.learn` for learning other kinds of automata
 # such as Moore or Mealy machines. Please refer the `Lernen.learn` doc.
 module Lernen
-  type oracle_type = :exhaustive_search | :random_walk | :random_word
+  type oracle_type = :exhaustive_search | :random_walk | :random_word | :random_well_matched_word | :simulator
 
   type algorithm_name = :lstar | :kearns_vazirani | :lsharp
 
   # Learn an automaton by using the given parameters.
   #
   # This method is a frontend of the learning algorithms. Actual implementations are placed under
-  # the `Lernen::Learner` namespace.
+  # the `Lernen::Algorithm` namespace.
   #
   # ## Parameters
   #
@@ -86,12 +86,15 @@ module Lernen
   #   and use it as a SUL. Or, if it is not specified, we use a block as a SUL.
   # - `oracle`: An equivalence oracle. It is one of `:exhaustive_search`, `:random_walk`, `:random_word`, or
   #   an actual instance of `Equiv::Oracle`. If the value is a symbol, an `Equiv::Oracle` instance of the specified
-  #   kind is created with `oracle_params`. The default value is `:random_word`.
+  #   kind is created with `oracle_params`. The default value is `:random_word` if `automaton_type` is one of `:dfa`,
+  #   `:moore`, and `:mealy`, or the default value is `:random_well_matched_word` if `automaton_type` is either `:spa`
+  #   or `:vpa`.
   # - `oracle_params`: A hash of parameters for equivalence oracle. The default value is `{}`.
   # - `algorithm`: An algorithm name to use. It is one of `:lstar`, `:kearns_vazirani`, or `:lsharp`. The default value
-  #   is `:kearns_vazirani`.
-  # - `automaton_type`: A type of automaton to infer. It is one of `:dfa`, `:mealy`, `:moore`, or `:vpa`. The default
-  #   value is `:dfa`, but it becomes `:vpa` if `call_alphabet` is specified.
+  #   is `:kearns_vazirani` (if `automaton_type` is one of `:dfa`, `:moore`, and `:mealy`), or `:kearns_vazirani_vpa`
+  #   (if `automaton_type` is `vpa`), or `:procedural` (if `automaton_type` is `spa`).
+  # - `automaton_type`: A type of automaton to infer. It is one of `:dfa`, `:mealy`, `:moore`, `:vpa`, and `:spa`.
+  #   The default value is `:dfa`, but it becomes `:vpa` or `:spa` if `call_alphabet` or `return_input` is specified.
   # - `params`: A hash of parameter to pass a learning algorithm. The default value is `{}`.
   # - `random`: A PRNG instance. It is used by an equivalence oracle.
   #
@@ -159,7 +162,7 @@ module Lernen
   #    sul: Automaton::VPA[In, Call, Return] | System::MooreLikeSUL[In | Call | Return, bool],
   #    ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool],
   #    ?oracle_params: Hash[Symbol, untyped],
-  #    ?algorithm: :kearns_vazirani,
+  #    ?algorithm: :kearns_vazirani_vpa,
   #    ?automaton_type: :vpa,
   #    ?params: Hash[Symbol, untyped],
   #    ?random: Random
@@ -170,17 +173,42 @@ module Lernen
   #    return_alphabet: Array[Return],
   #    ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool],
   #    ?oracle_params: Hash[Symbol, untyped],
-  #    ?algorithm: :kearns_vazirani,
+  #    ?algorithm: :kearns_vazirani_vpa,
   #    ?automaton_type: :vpa,
   #    ?params: Hash[Symbol, untyped],
   #    ?random: Random
   #  ) { (Array[In | Call | Return]) -> bool } -> Automaton::VPA[In, Call, Return]
+  # : [In, Call, Return] (
+  #    alphabet: Array[In],
+  #    call_alphabet: Array[Call],
+  #    return_input: Return,
+  #    sul: Automaton::SPA[In, Call, Return] | System::MooreLikeSUL[In | Call | Return, bool],
+  #    ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool],
+  #    ?oracle_params: Hash[Symbol, untyped],
+  #    ?algorithm: :procedural,
+  #    ?automaton_type: :spa,
+  #    ?params: Hash[Symbol, untyped],
+  #    ?random: Random
+  #  ) -> Automaton::SPA[In, Call, Return]
+  # : [In, Call, Return] (
+  #    alphabet: Array[In],
+  #    call_alphabet: Array[Call],
+  #    return_input: Return,
+  #    ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool],
+  #    ?oracle_params: Hash[Symbol, untyped],
+  #    ?algorithm: :procedural,
+  #    ?automaton_type: :spa,
+  #    ?params: Hash[Symbol, untyped],
+  #    ?random: Random
+  #  ) { (Array[In | Call | Return]) -> bool } -> Automaton::SPA[In, Call, Return]
   def self.learn: [In] (alphabet: Array[In], sul: Automaton::DFA[In] | System::MooreLikeSUL[In, bool], ?oracle: oracle_type | Equiv::Oracle[In, bool], ?oracle_params: Hash[Symbol, untyped], ?algorithm: algorithm_name, ?automaton_type: :dfa, ?params: Hash[Symbol, untyped], ?random: Random) -> Automaton::DFA[In]
                 | [In] (alphabet: Array[In], ?oracle: oracle_type | Equiv::Oracle[In, bool], ?oracle_params: Hash[Symbol, untyped], ?algorithm: algorithm_name, ?automaton_type: :dfa, ?params: Hash[Symbol, untyped], ?random: Random) { (Array[In]) -> bool } -> Automaton::DFA[In]
                 | [In, Out] (alphabet: Array[In], sul: Automaton::Mealy[In, Out] | System::SUL[In, Out], automaton_type: :mealy, ?oracle: oracle_type | Equiv::Oracle[In, Out], ?oracle_params: Hash[Symbol, untyped], ?algorithm: algorithm_name, ?params: Hash[Symbol, untyped], ?random: Random) -> Automaton::Mealy[In, Out]
                 | [In, Out] (alphabet: Array[In], automaton_type: :mealy, ?oracle: oracle_type | Equiv::Oracle[In, Out], ?oracle_params: Hash[Symbol, untyped], ?algorithm: algorithm_name, ?params: Hash[Symbol, untyped], ?random: Random) { (Array[In]) -> Out } -> Automaton::Mealy[In, Out]
                 | [In, Out] (alphabet: Array[In], sul: Automaton::Moore[In, Out] | System::MooreLikeSUL[In, Out], automaton_type: :moore, ?oracle: oracle_type | Equiv::Oracle[In, Out], ?oracle_params: Hash[Symbol, untyped], ?algorithm: algorithm_name, ?params: Hash[Symbol, untyped], ?random: Random) -> Automaton::Moore[In, Out]
                 | [In, Out] (alphabet: Array[In], automaton_type: :moore, ?oracle: oracle_type | Equiv::Oracle[In, Out], ?oracle_params: Hash[Symbol, untyped], ?algorithm: algorithm_name, ?params: Hash[Symbol, untyped], ?random: Random) { (Array[In]) -> Out } -> Automaton::Moore[In, Out]
-                | [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_alphabet: Array[Return], sul: Automaton::VPA[In, Call, Return] | System::MooreLikeSUL[In | Call | Return, bool], ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool], ?oracle_params: Hash[Symbol, untyped], ?algorithm: :kearns_vazirani, ?automaton_type: :vpa, ?params: Hash[Symbol, untyped], ?random: Random) -> Automaton::VPA[In, Call, Return]
-                | [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_alphabet: Array[Return], ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool], ?oracle_params: Hash[Symbol, untyped], ?algorithm: :kearns_vazirani, ?automaton_type: :vpa, ?params: Hash[Symbol, untyped], ?random: Random) { (Array[In | Call | Return]) -> bool } -> Automaton::VPA[In, Call, Return]
+                | [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_alphabet: Array[Return], sul: Automaton::VPA[In, Call, Return] | System::MooreLikeSUL[In | Call | Return, bool], ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool], ?oracle_params: Hash[Symbol, untyped], ?algorithm: :kearns_vazirani_vpa, ?automaton_type: :vpa, ?params: Hash[Symbol, untyped], ?random: Random) -> Automaton::VPA[In, Call, Return]
+                | [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_alphabet: Array[Return], ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool], ?oracle_params: Hash[Symbol, untyped], ?algorithm: :kearns_vazirani_vpa, ?automaton_type: :vpa, ?params: Hash[Symbol, untyped], ?random: Random) { (Array[In | Call | Return]) -> bool } -> Automaton::VPA[In, Call, Return]
+                | [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_input: Return, sul: Automaton::SPA[In, Call, Return] | System::MooreLikeSUL[In | Call | Return, bool], ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool], ?oracle_params: Hash[Symbol, untyped], ?algorithm: :procedural, ?automaton_type: :spa, ?params: Hash[Symbol, untyped], ?random: Random) -> Automaton::SPA[In, Call, Return]
+                | [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_input: Return, ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool], ?oracle_params: Hash[Symbol, untyped], ?algorithm: :procedural, ?automaton_type: :spa, ?params: Hash[Symbol, untyped], ?random: Random) { (Array[In | Call | Return]) -> bool } -> Automaton::SPA[In, Call, Return]
 end

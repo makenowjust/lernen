@@ -8,6 +8,8 @@ module Lernen
   class Graph
     # @rbs!
     #   type node_shape = :circle | :doublecircle
+    #
+    #   type mermaid_direction = "TD" | "DT" | "LR" | "RL"
 
     # Node represents a node of graphs.
     #
@@ -32,6 +34,18 @@ module Lernen
     #     attr_reader label: String
     #     attr_reader to: Integer
     #     def self.[]: (Integer from, String label, Integer to) -> Edge
+    #   end
+
+    # SubGraph represents a sub-graph of graphs.
+    #
+    # @rbs skip
+    SubGraph = Data.define(:label, :graph)
+
+    # @rbs!
+    #   class SubGraph < Data
+    #     attr_reader label: String
+    #     attr_reader graph: Graph
+    #     def self.[]: (String label, Graph graph) -> SubGraph
     #   end
 
     # Returns the escaped string for Mermaid diagrams.
@@ -72,37 +86,31 @@ module Lernen
 
     # @rbs @nodes: Hash[Integer, Node]
     # @rbs @edges: Array[Edge]
+    # @rbs @subgraphs: Array[SubGraph]
 
-    #: (Hash[Integer, Node] nodes, Array[Edge] edges) -> void
-    def initialize(nodes, edges)
+    #: (
+    #    Hash[Integer, Node] nodes,
+    #    Array[Edge] edges,
+    #    ?Array[SubGraph] subgraphs
+    #  ) -> void
+    def initialize(nodes, edges, subgraphs = [])
       @nodes = nodes
       @edges = edges
+      @subgraphs = subgraphs
     end
 
     attr_reader :nodes #: Hash[Integer, Node]
     attr_reader :edges #: Array[Edge]
+    attr_reader :subgraphs #: Array[SubGraph]
 
     # Returns a [Mermaid](https://mermaid.js.org) diagram of this graph.
     #
-    #: (?direction: "TD" | "LR") -> String
+    #: (?direction: mermaid_direction) -> String
     def to_mermaid(direction: "TD")
       mmd = +""
 
       mmd << "flowchart #{direction}\n"
-
-      nodes.each do |index, node|
-        node_def =
-          case node.shape
-          in :circle
-            "((#{Graph.mermaid_escape(node.label)}))"
-          in :doublecircle
-            "(((#{Graph.mermaid_escape(node.label)})))"
-          end
-        mmd << "  #{index}#{node_def}\n"
-      end
-      mmd << "\n"
-
-      edges.each { |edge| mmd << "  #{edge.from} -- #{Graph.mermaid_escape(edge.label)} --> #{edge.to}\n" }
+      mmd << to_mermaid_internal
 
       mmd.freeze
     end
@@ -114,13 +122,92 @@ module Lernen
       dot = +""
 
       dot << "digraph {\n"
-
-      nodes.each { |index, node| dot << "  #{index} [label=#{Graph.dot_escape(node.label)}, shape=#{node.shape}];\n" }
-      dot << "\n"
-
-      edges.each { |edge| dot << "  #{edge.from} -> #{edge.to} [label=#{Graph.dot_escape(edge.label)}];\n" }
-
+      dot << to_dot_internal
       dot << "}\n"
+
+      dot.freeze
+    end
+
+    protected
+
+    #: (?String id_prefix) -> String
+    def to_mermaid_internal(id_prefix = "")
+      mmd = +""
+      needs_sep = false
+
+      nodes.each do |id, node|
+        needs_sep = true
+
+        node_def =
+          case node.shape
+          in :circle
+            "((#{Graph.mermaid_escape(node.label)}))"
+          in :doublecircle
+            "(((#{Graph.mermaid_escape(node.label)})))"
+          end
+        mmd << "  #{id_prefix}#{id}#{node_def}\n"
+      end
+      mmd << "\n" if needs_sep
+
+      edges.each do |edge|
+        needs_sep = true
+
+        from = "#{id_prefix}#{edge.from}"
+        to = "#{id_prefix}#{edge.to}"
+        mmd << "  #{from} -- #{Graph.mermaid_escape(edge.label)} --> #{to}\n"
+      end
+
+      subgraphs.each_with_index do |subgraph, index|
+        mmd << "\n" if needs_sep
+        needs_sep = true
+
+        subgraph_id = "#{id_prefix}g#{index}"
+        mmd << "  subgraph #{subgraph_id}[#{Graph.mermaid_escape(subgraph.label)}]\n"
+        subgraph
+          .graph
+          .to_mermaid_internal("#{subgraph_id}_")
+          .lines
+          .each { |line| mmd << (line == "\n" ? line : "  #{line}") }
+        mmd << "  end\n"
+      end
+
+      mmd.freeze
+    end
+
+    #: (?String id_prefix) -> String
+    def to_dot_internal(id_prefix = "")
+      dot = +""
+      needs_sep = false
+
+      nodes.each do |index, node|
+        needs_sep = true
+
+        dot << "  #{id_prefix}#{index} [label=#{Graph.dot_escape(node.label)}, shape=#{node.shape}];\n"
+      end
+      dot << "\n" if needs_sep
+
+      edges.each do |edge|
+        needs_sep = true
+
+        from = "#{id_prefix}#{edge.from}"
+        to = "#{id_prefix}#{edge.to}"
+        dot << "  #{from} -> #{to} [label=#{Graph.dot_escape(edge.label)}];\n"
+      end
+
+      subgraphs.each_with_index do |subgraph, index|
+        dot << "\n" if needs_sep
+        needs_sep = true
+
+        subgraph_id = "#{id_prefix}g#{index}"
+        dot << "  subgraph cluster_#{subgraph_id} {\n"
+        dot << "    label=#{Graph.dot_escape(subgraph.label)};\n"
+        subgraph
+          .graph
+          .to_dot_internal("#{subgraph_id}_")
+          .lines
+          .each { |line| dot << (line == "\n" ? line : "  #{line}") }
+        dot << "  }\n"
+      end
 
       dot.freeze
     end

@@ -1,0 +1,38 @@
+# Generated from lib/lernen/algorithm/lsharp.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    # LSharp provides an implementation of L# algorithm.
+    #
+    # L# is introduced by [Vaandrager et al. (2022) "A New Approach for Active
+    # Automata Learning Based on Apartness"](https://link.springer.com/chapter/10.1007/978-3-030-99524-9_12).
+    module LSharp
+      # Runs the L# algorithm and returns an inferred automaton.
+      #
+      # : [In] (
+      #    Array[In] alphabet,
+      #    System::SUL[In, bool] sul,
+      #    Equiv::Oracle[In, bool] oracle,
+      #    automaton_type: :dfa,
+      #    ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::DFA[In]
+      # : [In, Out] (
+      #    Array[In] alphabet,
+      #    System::SUL[In, Out] sul,
+      #    Equiv::Oracle[In, Out] oracle,
+      #    automaton_type: :mealy,
+      #    ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::Mealy[In, Out]
+      # : [In, Out] (
+      #    Array[In] alphabet,
+      #    System::SUL[In, Out] sul,
+      #    Equiv::Oracle[In, Out] oracle,
+      #    automaton_type: :moore,
+      #    ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::Moore[In, Out]
+      def self.learn: [In] (Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle, automaton_type: :dfa, ?max_learning_rounds: Integer | nil) -> Automaton::DFA[In]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :mealy, ?max_learning_rounds: Integer | nil) -> Automaton::Mealy[In, Out]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :moore, ?max_learning_rounds: Integer | nil) -> Automaton::Moore[In, Out]
+    end
+  end
+end

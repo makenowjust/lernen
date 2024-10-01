@@ -1,0 +1,10 @@
+# Generated from lib/lernen/algorithm.rb with RBS::Inline
+
+module Lernen
+  # This is a namespace for learning algorithm implementations.
+  #
+  # This namespace also contains data structures and utilities for
+  # learning algorithms.
+  module Algorithm
+  end
+end

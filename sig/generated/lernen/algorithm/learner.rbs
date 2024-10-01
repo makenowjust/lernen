@@ -1,0 +1,53 @@
+# Generated from lib/lernen/algorithm/learner.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    # Learner is an abstraction of implementations of learning algorithms.
+    #
+    # Note that this class is *abstract*. We should implement the following method:
+    #
+    # - `#oracle`
+    # - `#refine(cex, hypothesis, state_to_prefix)`
+    # - `#build_hypothesis`
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class Learner[In, Out]
+      # Runs the learning algorithm and returns an inferred automaton.
+      #
+      # `max_learning_rounds` is a parameter for specifying the maximum number of iterations for learning.
+      # When `max_learning_rounds: nil` is specified, it means the algorithm only stops if the equivalent
+      # hypothesis is found.
+      #
+      # : (
+      #    Equiv::Oracle[In, Out] oracle,
+      #    ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::TransitionSystem[untyped, In, Out]
+      def learn: (Equiv::Oracle[In, Out] oracle, ?max_learning_rounds: Integer | nil) -> Automaton::TransitionSystem[untyped, In, Out]
+
+      # Adds the given `input` to the alphabet.
+      #
+      # In the default, this method raises `TypeError` as the learner does not support
+      # adding an input character to the alphabet.
+      #
+      # : (In input) -> void
+      def add_alphabet: (In input) -> void
+
+      # Refine the learning hypothesis by the given counterexample.
+      #
+      # This is an abstract method.
+      #
+      # : (
+      #    Array[In] cex,
+      #    Automaton::TransitionSystem[untyped, In, Out] hypothesis,
+      #    Hash[Integer, Array[In]] state_to_prefix
+      #  ) -> void
+      def refine_hypothesis: (Array[In] cex, Automaton::TransitionSystem[untyped, In, Out] hypothesis, Hash[Integer, Array[In]] state_to_prefix) -> void
+
+      # This is an abstract method.
+      # r
+      # : () -> [Automaton::TransitionSystem[untyped, In, Out], Hash[Integer, Array[In]]]
+      def build_hypothesis: () -> [ Automaton::TransitionSystem[untyped, In, Out], Hash[Integer, Array[In]] ]
+    end
+  end
+end

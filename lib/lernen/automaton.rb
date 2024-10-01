@@ -12,7 +12,7 @@ module Lernen
   # - `VPA` (visibly pushdown automaton) ([Wikipedia](https://en.wikipedia.org/wiki/Nested_word#Visibly_pushdown_automaton))
   module Automaton
     # @rbs!
-    #   type transition_system_type = :dfa | :moore | :mealy | :vpa
+    #   type transition_system_type = :dfa | :moore | :mealy | :vpa | :spa
   end
 end
 
@@ -23,3 +23,6 @@ require "lernen/automaton/mealy"
 require "lernen/automaton/moore"
 require "lernen/automaton/dfa"
 require "lernen/automaton/vpa"
+require "lernen/automaton/spa"
+
+require "lernen/automaton/proc_util"

@@ -1,0 +1,27 @@
+# Generated from lib/lernen/equiv/transition_system_simulator_oracle.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    # TransitionSystemSimulatorOracle provides an implementation of equivalence query
+    # that finds a counterexample by simulating the transition system.
+    #
+    # @rbs generic Conf -- Type for a configuration of this automaton
+    # @rbs generic In   -- Type for input alphabet
+    # @rbs generic Out  -- Type for output values
+    class TransitionSystemSimulatorOracle[Conf, In, Out] < Oracle[In, Out]
+      @alphabet: Array[In]
+
+      @automaton: Automaton::TransitionSystem[Conf, In, Out]
+
+      # : (
+      #     Array[In] alphabet,
+      #     Automaton::TransitionSystem[Conf, In, Out] spa,
+      #     System::SUL[In, Out] sul
+      #   ) -> void
+      def initialize: (Array[In] alphabet, Automaton::TransitionSystem[Conf, In, Out] spa, System::SUL[In, Out] sul) -> void
+
+      # @rbs override
+      def find_cex: ...
+    end
+  end
+end

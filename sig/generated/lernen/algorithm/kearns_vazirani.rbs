@@ -1,0 +1,32 @@
+# Generated from lib/lernen/algorithm/kearns_vazirani.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    # KearnzVazirani provides an implementation of Kearnz-Vazirani algorithm.
+    #
+    # Kearns-Vazirani is introduced by [Kearns & Vazirani (1994) "An Introduction to
+    # Computational Learning Theory"](https://direct.mit.edu/books/monograph/2604/An-Introduction-to-Computational-Learning-Theory).
+    module KearnsVazirani
+      # Runs Kearns-Vazirani algorithm and returns an inferred automaton.
+      #
+      # : [In] (
+      #    Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle,
+      #    automaton_type: :dfa,
+      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::DFA[In]
+      # : [In, Out] (
+      #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #    automaton_type: :mealy,
+      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::Mealy[In, Out]
+      # : [In, Out] (
+      #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #    automaton_type: :moore,
+      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::Moore[In, Out]
+      def self.learn: [In] (Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle, automaton_type: :dfa, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::DFA[In]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :mealy, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::Mealy[In, Out]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :moore, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::Moore[In, Out]
+    end
+  end
+end

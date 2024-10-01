@@ -53,9 +53,10 @@ module Lernen
     #: [In, Out] (Automaton::Mealy[In, Out] automaton, ?cache: bool) -> SUL[In, Out]
     #: [In, Out] (Automaton::Moore[In, Out] automaton, ?cache: bool) -> SUL[In, Out]
     #: [In, Call, Return] (Automaton::VPA[In, Call, Return] automaton, ?cache: bool) -> SUL[In | Call | Return, bool]
+    #: [In, Call, Return] (Automaton::SPA[In, Call, Return] automaton, ?cache: bool) -> SUL[In | Call | Return, bool]
     def self.from_automaton(automaton, cache: true) =
       case automaton.type
-      in :dfa | :moore | :vpa
+      in :dfa | :moore | :vpa | :spa
         MooreLikeSimulator.new(automaton, cache:)
       in :mealy
         TransitionSystemSimulator.new(automaton, cache:)

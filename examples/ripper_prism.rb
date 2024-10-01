@@ -20,7 +20,7 @@ return_alphabet = %w[)]
 
 # `oracle` specifies a kind of an equivalence oracle using on learning,
 # and `oracle_params` is a paremeter object to it.
-oracle = :random_word
+oracle = :random_well_matched_word
 oracle_params = { max_words: 2000 }.freeze
 
 # When `call_alphabet` and `return_alphabet` are specified to `Lernen.learn`,
