@@ -31,7 +31,7 @@ GEM
     ffi (1.17.0)
     ffi (1.17.0-arm64-darwin)
     fileutils (1.7.2)
-    i18n (1.14.5)
+    i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     json (2.7.2)
     language_server-protocol (3.17.0.3)
