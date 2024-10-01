@@ -6,6 +6,7 @@ require_relative "../test_helper"
 require_relative "automaton/dfa_test"
 require_relative "automaton/mealy_test"
 require_relative "automaton/moore_test"
+require_relative "automaton/spa_test"
 require_relative "automaton/vpa_test"
 
 module Lernen
@@ -22,11 +23,13 @@ module Lernen
       dfa_sul = System.from_automaton(Automaton::DFATest.mod4_dfa)
       mealy_sul = System.from_automaton(Automaton::MealyTest.mod4_mealy)
       moore_sul = System.from_automaton(Automaton::MooreTest.mod4_moore)
+      spa_sul = System.from_automaton(Automaton::SPATest.palindrome_spa)
       vpa_sul = System.from_automaton(Automaton::VPATest.dyck_vpa)
 
       assert_equal [false, false, true, false], dfa_sul.query(%w[1 1 1 1])
       assert_equal [1, 2, 3, 0], mealy_sul.query(%w[1 1 1 1])
       assert_equal [1, 2, 3, 0], moore_sul.query(%w[1 1 1 1])
+      assert_equal [false, true], spa_sul.query(%i[F ↵])
       assert_equal [false, false, true], vpa_sul.query(%w[( 1 )])
     end
   end

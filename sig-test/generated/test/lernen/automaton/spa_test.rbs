@@ -1,0 +1,19 @@
+# Generated from test/lernen/automaton/spa_test.rb with RBS::Inline
+
+module Lernen
+  module Automaton
+    class SPATest < Minitest::Test
+      # : () -> Lernen::Automaton::SPA[String, Symbol, Symbol]
+      def self.palindrome_spa: () -> Lernen::Automaton::SPA[String, Symbol, Symbol]
+
+      # : () -> void
+      def test_run: () -> void
+
+      # : () -> void
+      def test_to_mermaid: () -> void
+
+      # : () -> void
+      def test_to_dot: () -> void
+    end
+  end
+end

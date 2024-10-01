@@ -79,6 +79,7 @@ module Lernen
   #                    | :random_walk
   #                    | :random_word
   #                    | :random_well_matched_word
+  #                    | :simulator
   #
   #   type algorithm_name = :lstar
   #                       | :kearns_vazirani
@@ -231,17 +232,14 @@ module Lernen
     random: Random,
     &sul_block
   )
-    automaton_type ||=
-      if call_alphabet
-        return_input ? :spa : :vpa
-      else
-        :dfa
-      end
+    automaton = nil
 
     case sul
     when System::SUL
       # Do nothing
     when Automaton::TransitionSystem
+      automaton = sul
+      oracle ||= :simulator
       automaton_type ||= sul.type
       sul = System.from_automaton(sul) # steep:ignore
     when nil
@@ -249,6 +247,13 @@ module Lernen
     else
       raise ArgumentError, "Unsupported SUL: #{sul}"
     end
+
+    automaton_type ||=
+      if call_alphabet
+        return_input ? :spa : :vpa
+      else
+        :dfa
+      end
 
     merged_alphabet =
       case automaton_type
@@ -280,6 +285,20 @@ module Lernen
           random:,
           **oracle_params
         )
+    when :simulator
+      oracle =
+        case automaton
+        when Automaton::Mealy
+          Equiv::TransitionSystemSimulatorOracle.new(alphabet, automaton, sul)
+        when Automaton::DFA, Automaton::Moore
+          Equiv::MooreLikeSimulatorOracle.new(alphabet, automaton, sul)
+        when Automaton::VPA
+          Equiv::VPASimulatorOracle.new(alphabet, call_alphabet, return_alphabet, automaton, sul) # steep:ignore
+        when Automaton::SPA
+          Equiv::SPASimulatorOracle.new(alphabet, call_alphabet, automaton, sul) # steep:ignore
+        else
+          raise ArgumentError, "Cannot simulate automaton: #{automaton}"
+        end
     else
       raise ArgumentError, "Unsupported oracle: #{oracle}"
     end

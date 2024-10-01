@@ -64,7 +64,7 @@
 # Of course, we can specify more parameters to `Lernen.learn` for learning other kinds of automata
 # such as Moore or Mealy machines. Please refer the `Lernen.learn` doc.
 module Lernen
-  type oracle_type = :exhaustive_search | :random_walk | :random_word | :random_well_matched_word
+  type oracle_type = :exhaustive_search | :random_walk | :random_word | :random_well_matched_word | :simulator
 
   type algorithm_name = :lstar | :kearns_vazirani | :lsharp
 

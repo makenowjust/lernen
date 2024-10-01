@@ -31,6 +31,8 @@ module Lernen
         @current_conf = nil
       end
 
+      attr_reader :sul #: System::SUL[In, Out]
+
       # rubocop:disable Lint/UnusedMethodArgument
 
       # Finds a conterexample against the given `hypothesis` automaton.
@@ -60,6 +62,18 @@ module Lernen
       #: () -> Hash[Symbol, Integer]
       def stats
         { num_calls: @num_calls, num_queries: @num_queries, num_steps: @num_steps }
+      end
+
+      # Combines two oracles.
+      #
+      #: (Oracle[In, Out] other) -> CombinedOracle[In, Out]
+      def +(other)
+        oracles = []
+
+        is_a?(CombinedOracle) ? oracles.concat(oracles) : oracles << self
+        other.is_a?(CombinedOracle) ? oracles.concat(other.oracles) : oracles << other
+
+        CombinedOracle.new(oracles)
       end
 
       private

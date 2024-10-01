@@ -1,0 +1,20 @@
+# Generated from lib/lernen/equiv/test_words_oracle.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    # TestWordsOracle provides an implementation of equivalence query
+    # that find a counterexample from the given words.
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class TestWordsOracle[In, Out] < Oracle[In, Out]
+      @words: Array[Array[In]]
+
+      # : (Array[Array[In]] words, System::SUL[In, Out] sul) -> void
+      def initialize: (Array[Array[In]] words, System::SUL[In, Out] sul) -> void
+
+      # @rbs override
+      def find_cex: ...
+    end
+  end
+end

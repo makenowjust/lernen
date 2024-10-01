@@ -16,7 +16,12 @@ module Lernen
         # `output` can take `nil` for the root node on learning Mealy machine.
         #
         # @rbs skip
-        Node = Data.define(:output, :branch)
+        Node =
+          Data.define(:output, :branch) do
+            def to_s
+              "#{output&.inspect}(#{branch.map { |c, n| "#{c.inspect} -> #{n}" }.join(", ")})" # steep:ignore
+            end
+          end
 
         # @rbs!
         #   class Node[In, Out] < Data

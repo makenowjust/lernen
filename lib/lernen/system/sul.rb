@@ -81,7 +81,7 @@ module Lernen
         @num_queries += 1
         @num_steps += word.size
 
-        cache[word] = outputs if cache
+        cache[word.dup] = outputs if cache
 
         outputs
       end

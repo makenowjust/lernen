@@ -163,7 +163,11 @@ module Lernen
 
         subgraph_id = "#{id_prefix}g#{index}"
         mmd << "  subgraph #{subgraph_id}[#{Graph.mermaid_escape(subgraph.label)}]\n"
-        subgraph.graph.to_mermaid_internal("#{subgraph_id}_").lines.each { |line| mmd << "  #{line}" }
+        subgraph
+          .graph
+          .to_mermaid_internal("#{subgraph_id}_")
+          .lines
+          .each { |line| mmd << (line == "\n" ? line : "  #{line}") }
         mmd << "  end\n"
       end
 
@@ -197,7 +201,11 @@ module Lernen
         subgraph_id = "#{id_prefix}g#{index}"
         dot << "  subgraph cluster_#{subgraph_id} {\n"
         dot << "    label=#{Graph.dot_escape(subgraph.label)};\n"
-        subgraph.graph.to_dot_internal("#{subgraph_id}_").lines.each { |line| dot << "  #{line}" }
+        subgraph
+          .graph
+          .to_dot_internal("#{subgraph_id}_")
+          .lines
+          .each { |line| dot << (line == "\n" ? line : "  #{line}") }
         dot << "  }\n"
       end
 

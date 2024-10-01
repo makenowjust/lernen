@@ -1,0 +1,10 @@
+# Generated from test/lernen/algorithm/procedural_test.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    class ProceduralTest < Minitest::Test
+      # : () -> void
+      def test_learn: () -> void
+    end
+  end
+end

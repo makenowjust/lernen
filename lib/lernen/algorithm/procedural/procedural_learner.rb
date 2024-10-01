@@ -188,7 +188,10 @@ module Lernen
             ts << proc
             ts.concat(@manager.proc_to_terminating_sequence[proc])
             ts << @return_input
-            updated = true if check_and_ensure_single_ts_conformance(ts, hypothesis, proc_to_state_to_prefix)
+            if check_and_ensure_single_ts_conformance(ts, hypothesis, proc_to_state_to_prefix)
+              updated = true
+              break
+            end
           end
 
           updated

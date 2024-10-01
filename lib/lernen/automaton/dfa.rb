@@ -95,7 +95,7 @@ module Lernen
       #
       # If it is not found, it returns `nil`.
       #
-      # (Array[In] alphabet) -> Array[In] | nil
+      #: (Array[In] alphabet) -> (Array[In] | nil)
       def shortest_accept_word(alphabet)
         return [] if accept_state_set.include?(initial_state)
 

@@ -4,6 +4,9 @@ module Lernen
   module Automaton
     # SPA represents a system of procedural automata.
     #
+    # Note that this class takes `return_input` as the return symbol because
+    # this value is necessary to run this kind of automata correctly.
+    #
     # @rbs generic In     -- Type for input alphabet
     # @rbs generic Call   -- Type for call alphabet
     # @rbs generic Return -- Type for return alphabet
@@ -65,6 +68,34 @@ module Lernen
       #    Hash[Call, Array[In | Call | Return]]
       #  ]
       def proc_to_atr_sequence: (Array[In] alphabet, Array[Call] call_alphabet) -> [ Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]] ]
+
+      # Finds a separating word between `spa1` and `spa2`.
+      #
+      # This method assume return symbols for two SPAs are the same.
+      # If they are not, this raises `ArgumentError`.
+      #
+      # : [In, Call, Return] (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet,
+      #    SPA[In, Call, Return] spa1,
+      #    SPA[In, Call, Return] spa2
+      #  ) -> (Array[In | Call | Return] | nil)
+      def self.find_separating_word: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, SPA[In, Call, Return] spa1, SPA[In, Call, Return] spa2) -> (Array[In | Call | Return] | nil)
+
+      # Generates a SPA randomly.
+      #
+      # : [In, Call, Return] (
+      #    alphabet: Array[In],
+      #    call_alphabet: Array[Call],
+      #    return_input: Return,
+      #    ?min_proc_size: Integer,
+      #    ?max_proc_size: Integer,
+      #    ?dfa_min_state_size: Integer,
+      #    ?dfa_max_state_size: Integer,
+      #    ?dfa_accept_state_size: Integer,
+      #    ?random: Random,
+      #  ) -> SPA[In, Call, Return]
+      def self.random: [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_input: Return, ?min_proc_size: Integer, ?max_proc_size: Integer, ?dfa_min_state_size: Integer, ?dfa_max_state_size: Integer, ?dfa_accept_state_size: Integer, ?random: Random) -> SPA[In, Call, Return]
 
       private
 

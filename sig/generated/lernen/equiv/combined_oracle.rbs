@@ -1,0 +1,27 @@
+# Generated from lib/lernen/equiv/combined_oracle.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    # CombinedOracle provides an implementation of equivalence query
+    # that find a counterexample by combining multiple oracles.
+    #
+    # This takes two oracle. If the first oracle finds a counterexample, then
+    # this oracle returns it. Otherwise, it tries the second and other oracles.
+    #
+    # @rbs generic In  -- Type for input alphabet
+    # @rbs generic Out -- Type for output values
+    class CombinedOracle[In, Out] < Oracle[In, Out]
+      @oracles: Array[Oracle[In, Out]]
+
+      def initialize: (untyped oracles) -> untyped
+
+      attr_reader oracles: Array[Oracle[In, Out]]
+
+      # @rbs override
+      def find_cex: ...
+
+      # @rbs override
+      def stats: ...
+    end
+  end
+end

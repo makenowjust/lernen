@@ -1,0 +1,30 @@
+# Generated from lib/lernen/equiv/spa_simulator_oracle.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    # SPASimulatorOracle provides an implementation of equivalence query
+    # that finds a counterexample by simulating the SPA.
+    #
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
+    class SPASimulatorOracle[In, Call, Return] < Oracle[In | Call | Return, bool]
+      @alphabet: Array[In]
+
+      @call_alphabet: Array[Call]
+
+      @spa: Automaton::SPA[In, Call, Return]
+
+      # : (
+      #     Array[In] alphabet,
+      #     Array[Call] call_alphabet,
+      #     Automaton::SPA[In, Call, Return] spa,
+      #     System::SUL[In | Call | Return, bool] sul
+      #   ) -> void
+      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Automaton::SPA[In, Call, Return] spa, System::SUL[In | Call | Return, bool] sul) -> void
+
+      # @rbs override
+      def find_cex: ...
+    end
+  end
+end

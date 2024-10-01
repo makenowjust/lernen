@@ -38,6 +38,7 @@ module Lernen
           @witness_cache = {}
 
           @basis = []
+          @basis_set = Set.new
           @frontier = {}
 
           @incomplete_basis = []

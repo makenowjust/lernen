@@ -65,8 +65,8 @@ module Lernen
       #
       # If it is not found, it returns `nil`.
       #
-      # (Array[In] alphabet) -> Array[In] | nil
-      def shortest_accept_word: (untyped alphabet) -> untyped
+      # : (Array[In] alphabet) -> (Array[In] | nil)
+      def shortest_accept_word: (Array[In] alphabet) -> (Array[In] | nil)
 
       # Computes the shortest paths between states.
       #

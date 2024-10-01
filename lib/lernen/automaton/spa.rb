@@ -5,6 +5,9 @@ module Lernen
   module Automaton
     # SPA represents a system of procedural automata.
     #
+    # Note that this class takes `return_input` as the return symbol because
+    # this value is necessary to run this kind of automata correctly.
+    #
     # @rbs generic In     -- Type for input alphabet
     # @rbs generic Call   -- Type for call alphabet
     # @rbs generic Return -- Type for return alphabet
@@ -119,7 +122,108 @@ module Lernen
         proc_to_terminating_sequence = compute_proc_to_terminating_sequence(alphabet, call_alphabet)
         proc_to_access_sequence, proc_to_return_sequence =
           compute_proc_to_access_and_return_sequences(alphabet, call_alphabet, proc_to_terminating_sequence)
-        [proc_to_terminating_sequence, proc_to_access_sequence, proc_to_return_sequence]
+        [proc_to_access_sequence, proc_to_terminating_sequence, proc_to_return_sequence]
+      end
+
+      # Finds a separating word between `spa1` and `spa2`.
+      #
+      # This method assume return symbols for two SPAs are the same.
+      # If they are not, this raises `ArgumentError`.
+      #
+      #: [In, Call, Return] (
+      #    Array[In] alphabet,
+      #    Array[Call] call_alphabet,
+      #    SPA[In, Call, Return] spa1,
+      #    SPA[In, Call, Return] spa2
+      #  ) -> (Array[In | Call | Return] | nil)
+      def self.find_separating_word(alphabet, call_alphabet, spa1, spa2)
+        raise ArgumentError, "Cannot find a separating word for different type automata" unless spa2.is_a?(spa1.class)
+        unless spa1.return_input == spa2.return_input # steep:ignore
+          raise ArgumentError, "Return symbols for two SPAs are different"
+        end
+
+        as1, ts1, rs1 = spa1.proc_to_atr_sequence(alphabet, call_alphabet)
+        as2, ts2, rs2 = spa2.proc_to_atr_sequence(alphabet, call_alphabet)
+
+        local_alphabet = alphabet.dup
+        local_alphabet.concat((ts1.keys.to_set & ts2.keys.to_set).to_a) # steep:ignore
+
+        call_alphabet.each do |proc|
+          dfa1 = spa1.proc_to_dfa[proc]
+          dfa2 = spa2.proc_to_dfa[proc]
+          next if !dfa1 && !dfa2
+
+          a1 = as1[proc]
+          t1 = ts1[proc]
+          r1 = rs1[proc]
+
+          a2 = as2[proc]
+          t2 = ts2[proc]
+          r2 = rs2[proc]
+
+          case
+          when dfa1 && !dfa2
+            return a1 + t1 + r1 if a1 && t1 && r1
+            next
+          when !dfa1 && dfa2
+            return a2 + t2 + r2 if a2 && t2 && r2
+            next
+          end
+
+          # Then, `dfa1 && dfa2` holds.
+          next unless a1 && t1 && r1 && a2 && t2 && r2
+
+          sep_word = DFA.find_separating_word(local_alphabet, dfa1, dfa2)
+          next unless sep_word
+
+          as, ts, rs = dfa1.output(dfa1.run(sep_word)[1]) ? [as1, ts1, rs1] : [as2, ts2, rs2]
+          sep_word = ProcUtil.expand(spa1.return_input, sep_word, ts)
+          return as[proc] + sep_word + rs[proc]
+        end
+
+        nil
+      end
+
+      # Generates a SPA randomly.
+      #
+      #: [In, Call, Return] (
+      #    alphabet: Array[In],
+      #    call_alphabet: Array[Call],
+      #    return_input: Return,
+      #    ?min_proc_size: Integer,
+      #    ?max_proc_size: Integer,
+      #    ?dfa_min_state_size: Integer,
+      #    ?dfa_max_state_size: Integer,
+      #    ?dfa_accept_state_size: Integer,
+      #    ?random: Random,
+      #  ) -> SPA[In, Call, Return]
+      def self.random(
+        alphabet:,
+        call_alphabet:,
+        return_input:,
+        min_proc_size: 1,
+        max_proc_size: call_alphabet.size,
+        dfa_min_state_size: 5,
+        dfa_max_state_size: 10,
+        dfa_accept_state_size: 2,
+        random: Random
+      )
+        proc_size = random.rand(min_proc_size..max_proc_size)
+        procs = call_alphabet.dup.shuffle!(random:)[0...proc_size]
+
+        initial_proc = procs[0] # steep:ignore
+        proc_to_dfa = {}
+        procs.each do |proc| # steep:ignore
+          proc_to_dfa[proc] = DFA.random(
+            alphabet: alphabet + procs, # steep:ignore
+            random:,
+            min_state_size: dfa_min_state_size,
+            max_state_size: dfa_max_state_size,
+            accept_state_size: dfa_accept_state_size
+          )
+        end
+
+        new(initial_proc, return_input, proc_to_dfa)
       end
 
       private
@@ -182,10 +286,10 @@ module Lernen
       #    Hash[Call, Array[In | Call | Return]] proc_to_terminating_sequence
       #  ) -> [Hash[Call, Array[In | Call | Return]], Hash[Call, Array[In | Call | Return]]]
       def compute_proc_to_access_and_return_sequences(alphabet, call_alphabet, proc_to_terminating_sequence)
+        return {}, {} unless proc_to_dfa[initial_proc]
+
         proc_to_access_sequence = {}
         proc_to_return_sequence = {}
-
-        return proc_to_access_sequence, proc_to_return_sequence unless proc_to_dfa[initial_proc]
 
         proc_to_access_sequence[initial_proc] = [initial_proc]
         proc_to_return_sequence[initial_proc] = [return_input]

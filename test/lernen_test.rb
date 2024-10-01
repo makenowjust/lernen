@@ -94,6 +94,45 @@ class LernenTest < Minitest::Test
       end
     end
 
+    define_method(:"test_learn_spa_#{algorithm}_#{params}") do
+      alphabet = %w[a b c d]
+      call_alphabet = %i[F G H]
+      return_input = :↵
+
+      N.times do |seed|
+        random = Random.new(seed * 41)
+        expected =
+          Lernen::Automaton::SPA.random(
+            alphabet:,
+            call_alphabet:,
+            return_input:,
+            random:,
+            min_proc_size: 1,
+            max_proc_size: 3,
+            dfa_min_state_size: 2,
+            dfa_max_state_size: 5,
+            dfa_accept_state_size: 1
+          )
+
+        result =
+          Lernen.learn(
+            alphabet:,
+            call_alphabet:,
+            return_input:,
+            sul: expected,
+            oracle: :simulator,
+            params: {
+              algorithm:,
+              algorithm_params: params
+            },
+            random:
+          )
+        cex = Lernen::Automaton::SPA.find_separating_word(alphabet, call_alphabet, expected, result)
+
+        assert_nil cex, "Equivalence check failed (seed: #{seed})"
+      end
+    end
+
     next unless algorithm == :kearns_vazirani
 
     define_method(:"test_learn_vpa_#{algorithm}_#{params}") do

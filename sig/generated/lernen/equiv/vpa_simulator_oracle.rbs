@@ -1,0 +1,33 @@
+# Generated from lib/lernen/equiv/vpa_simulator_oracle.rb with RBS::Inline
+
+module Lernen
+  module Equiv
+    # VPASimulatorOracle provides an implementation of equivalence query
+    # that finds a counterexample by simulating the VPA.
+    #
+    # @rbs generic In     -- Type for input alphabet
+    # @rbs generic Call   -- Type for call alphabet
+    # @rbs generic Return -- Type for return alphabet
+    class VPASimulatorOracle[In, Call, Return] < Oracle[In | Call | Return, bool]
+      @alphabet: Array[In]
+
+      @call_alphabet: Array[Call]
+
+      @return_alphabet: Array[Return]
+
+      @spa: Automaton::VPA[In, Call, Return]
+
+      # : (
+      #     Array[In] alphabet,
+      #     Array[Call] call_alphabet,
+      #     Array[Return] return_alphabet,
+      #     Automaton::VPA[In, Call, Return] vpa,
+      #     System::SUL[In | Call | Return, bool] sul
+      #   ) -> void
+      def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, Automaton::VPA[In, Call, Return] vpa, System::SUL[In | Call | Return, bool] sul) -> void
+
+      # @rbs override
+      def find_cex: ...
+    end
+  end
+end

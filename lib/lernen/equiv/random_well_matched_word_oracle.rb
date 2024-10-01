@@ -54,7 +54,7 @@ module Lernen
         max_words: 100,
         min_word_size: 2,
         max_word_size: 30,
-        call_prob: 0.1,
+        call_prob: 0.5,
         initial_proc: nil,
         random: Random
       )
