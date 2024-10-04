@@ -180,6 +180,10 @@ module Lernen
           updated
         end
 
+        #: (
+        #    Automaton::SPA[In, Call, Return] hypothesis,
+        #    Hash[Call, Hash[Integer, Array[In | Call]]] proc_to_state_to_prefix
+        #  ) -> bool
         def check_and_ensure_ts_conformance(hypothesis, proc_to_state_to_prefix)
           updated = false
 
@@ -197,20 +201,25 @@ module Lernen
           updated
         end
 
+        #: (
+        #    Array[In | Call | Return] ts,
+        #    Automaton::SPA[In, Call, Return] hypothesis,
+        #    Hash[Call, Hash[Integer, Array[In | Call]]] proc_to_state_to_prefix
+        #  ) -> bool
         def check_and_ensure_single_ts_conformance(ts, hypothesis, proc_to_state_to_prefix) # rubocop:disable Naming/MethodParameterName
           updated = false
 
           ts.each_with_index do |input, index|
-            next unless @active_call_alphabet_set.include?(input)
+            next unless @active_call_alphabet_set.include?(input) # steep:ignore
 
             return_index = @manager.find_return_index(ts, index + 1)
-            local_word = @manager.project(ts[index + 1...return_index])
+            local_word = @manager.project(ts[index + 1...return_index]) # steep:ignore
 
-            dfa = hypothesis.proc_to_dfa[input]
+            dfa = hypothesis.proc_to_dfa[input] # steep:ignore
             next if dfa.output(dfa.run(local_word)[1])
 
-            state_to_prefix = proc_to_state_to_prefix[input]
-            @proc_to_learner[input].refine_hypothesis(local_word, dfa, state_to_prefix)
+            state_to_prefix = proc_to_state_to_prefix[input] # steep:ignore
+            @proc_to_learner[input].refine_hypothesis(local_word, dfa, state_to_prefix) # steep:ignore
 
             updated = true
           end
