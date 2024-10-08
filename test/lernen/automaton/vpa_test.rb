@@ -67,6 +67,47 @@ module Lernen
         assert_equal expected, vpa.to_dot
         assert_predicate vpa.to_dot, :frozen?
       end
+
+      #: () -> void
+      def test_from_and_to_automata_wiki_dot
+        vpa, state_to_name = VPA.from_automata_wiki_dot(<<~DOT)
+          digraph g {
+            __start0 [label="" shape="none"]
+            __start0 -> s0
+
+            s0 [shape="circle" label="s0"]
+            s1 [shape="doublecircle" label="s1"]
+
+            s0 -> s0 [label="0"]
+            s0 -> s1 [label="1"]
+            s1 -> s1 [label="0"]
+            s1 -> s1 [label="1"]
+            s0 -> s0 [label=") / (s0, ()"]
+            s0 -> s1 [label=") / (s1, ()"]
+            s1 -> s1 [label=") / (s0, ()"]
+            s1 -> s1 [label=") / (s1, ()"]
+          }
+        DOT
+        source = vpa.to_automata_wiki_dot(state_to_name)
+
+        assert_equal <<~DOT, source
+          digraph {
+            __start0 [label="", shape=none];
+            s0 [label="s0", shape=circle];
+            s1 [label="s1", shape=doublecircle];
+
+            __start0 -> s0;
+            s0 -> s0 [label="0"];
+            s0 -> s1 [label="1"];
+            s1 -> s1 [label="0"];
+            s1 -> s1 [label="1"];
+            s0 -> s0 [label=") / (s0, ()"];
+            s0 -> s1 [label=") / (s1, ()"];
+            s1 -> s1 [label=") / (s0, ()"];
+            s1 -> s1 [label=") / (s1, ()"];
+          }
+        DOT
+      end
     end
   end
 end

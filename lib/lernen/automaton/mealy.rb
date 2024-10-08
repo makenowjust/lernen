@@ -103,6 +103,54 @@ module Lernen
 
         new(0, transition_function)
       end
+
+      RE_MEALY_LABEL = %r{\A\s*(?<input_value>[^\s/]+)\s*/\s*(?<output_value>[^\s]+)\s*\z}
+
+      # Constructs a Mealy machine from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      # See https://automata.cs.ru.nl/Syntax/Mealy.
+      #
+      # It returns a tuple with two elements:
+      #
+      # 1. A `Mealy` from the DOT source.
+      # 2. A `Hash` mapping from state IDs to names.
+      #
+      #: (String source) -> [Mealy[String, String], Hash[Integer, String]]
+      def self.from_automata_wiki_dot(source)
+        name_to_state, initial_state, _, transitions = TransitionSystem.parse_automata_wiki_dot(source)
+
+        transition_function = {}
+        transitions.each do |(from, to, label)|
+          match = label.match(RE_MEALY_LABEL)
+          raise ArgumentError, "Invalid DOT" unless match
+          transition_function[[from, match[:input_value]]] = [match[:output_value], to]
+        end
+
+        state_to_name = name_to_state.to_h { |name, state| [state, name] }
+
+        [new(initial_state, transition_function), state_to_name]
+      end
+
+      # Returns [Automata Wiki](https://automata.cs.ru.nl)'s DOT representation of this Mealy machine.
+      #
+      #: (?Hash[Integer, String] state_to_name) -> String
+      def to_automata_wiki_dot(state_to_name = {})
+        nodes = {}
+        nodes["__start0"] = Graph::Node["", :none]
+        states.each do |state|
+          name = state_to_name[state] || state
+          nodes[name] = Graph::Node[name.to_s, :circle]
+        end
+
+        edges =
+          [Graph::Edge["__start0", nil, state_to_name[initial_state] || initial_state]] +
+            transition_function.map do |(state, input), (output, next_state)|
+              name = state_to_name[state] || state
+              next_name = state_to_name[next_state] || next_state
+              Graph::Edge[name, "#{input} / #{output}", next_name] # steep:ignore
+            end
+
+        Graph.new(nodes, edges).to_dot
+      end
     end
   end
 end

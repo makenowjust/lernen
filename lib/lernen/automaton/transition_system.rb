@@ -204,6 +204,87 @@ module Lernen
 
         [transition_function, reachable_paths]
       end
+
+      RE_COMMENT = %r{/\*(?:(?!\*/).)*\*/|//.*|\A\s*#.*}
+      RE_INITIAL_STATE = /\b__start0(?:_\w+)?\s*->\s*(?<initial_state_name>\w+)/
+      RE_TRANSITION = /\b(?<from_name>\w+)\s*->\s*(?<to_name>\w+)\s*\[(?<params>(?:"[^"]*"|[^\]]+)*)\]/
+      RE_STATE = /\b(?<name>\w+)\s*\[(?<params>(?:"[^"]*"|[^\]]+)*)\]/
+      RE_LABEL = /\blabel=(?<content>"[^"]*"|[^\s\],]*)/
+      RE_SHAPE = /\bshape=(?<content>"[^"]*"|[^\s\],]*)/
+
+      # Parses the given [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      # See <https://automata.cs.ru.nl/Syntax/Overview>.
+      #
+      # It returns a tuple with four elements:
+      #
+      # 1. A `Hash` mapping from state names to state IDs.
+      # 2. An initial state ID.
+      # 3. An `Array` of state node information `[state, label, shape]`.
+      # 4. An `Array` of transition information `[from_state, to_state, label]`.
+      #
+      # Note that the implementation of this function is very cheap and does not parse the DOT format accurately.
+      #
+      #: (String source) -> [
+      #    Hash[String, Integer],
+      #    Integer,
+      #    Array[[Integer, String, String]],
+      #    Array[[Integer, Integer, String]]
+      #  ]
+      def self.parse_automata_wiki_dot(source)
+        initial_state = 0
+        name_to_state = {}
+        state_nodes = []
+        transitions = []
+
+        strip = ->(label) { label[0] == "\"" && label[-1] == "\"" ? label[1...-1] : label }
+
+        source.lines do |line|
+          line = line.gsub(RE_COMMENT, "")
+
+          match = line.match(RE_INITIAL_STATE)
+          if match
+            initial_state_name = match[:initial_state_name]
+            name_to_state[initial_state_name] ||= name_to_state.size
+            initial_state = name_to_state[initial_state_name]
+            next
+          end
+
+          match = line.match(RE_TRANSITION)
+          if match
+            from_name = match[:from_name]
+            name_to_state[from_name] ||= name_to_state.size
+            from = name_to_state[from_name]
+
+            to_name = match[:to_name]
+            name_to_state[to_name] ||= name_to_state.size
+            to = name_to_state[to_name]
+
+            params = match[:params] || ""
+            label = strip.call(params.match(RE_LABEL)&.[](:content) || "")
+
+            transitions << [from, to, label]
+            next
+          end
+
+          match = line.match(RE_STATE)
+          if match
+            name = match[:name]
+            next if name == "__start0"
+
+            name_to_state[name] ||= name_to_state.size
+            state = name_to_state[name]
+
+            params = match[:params] || ""
+            label = strip.call(params.match(RE_LABEL)&.[](:content) || "")
+            shape = strip.call(params.match(RE_SHAPE)&.[](:content) || "")
+
+            state_nodes << [state, label, shape]
+            next
+          end
+        end
+
+        [name_to_state, initial_state, state_nodes, transitions]
+      end
     end
   end
 end

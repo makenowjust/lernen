@@ -103,6 +103,38 @@ module Lernen
       #    ?random: Random,
       #  ) -> [Hash[[Integer, In], Integer], Array[Array[Integer]]]
       def self.random_transition_function: [In] (alphabet: Array[In], ?min_state_size: Integer, ?max_state_size: Integer, ?num_reachable_paths: Integer, ?random: Random) -> [ Hash[[ Integer, In ], Integer], Array[Array[Integer]] ]
+
+      RE_COMMENT: ::Regexp
+
+      RE_INITIAL_STATE: ::Regexp
+
+      RE_TRANSITION: ::Regexp
+
+      RE_STATE: ::Regexp
+
+      RE_LABEL: ::Regexp
+
+      RE_SHAPE: ::Regexp
+
+      # Parses the given [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      # See <https://automata.cs.ru.nl/Syntax/Overview>.
+      #
+      # It returns a tuple with four elements:
+      #
+      # 1. A `Hash` mapping from state names to state IDs.
+      # 2. An initial state ID.
+      # 3. An `Array` of state node information `[state, label, shape]`.
+      # 4. An `Array` of transition information `[from_state, to_state, label]`.
+      #
+      # Note that the implementation of this function is very cheap and does not parse the DOT format accurately.
+      #
+      # : (String source) -> [
+      #    Hash[String, Integer],
+      #    Integer,
+      #    Array[[Integer, String, String]],
+      #    Array[[Integer, Integer, String]]
+      #  ]
+      def self.parse_automata_wiki_dot: (String source) -> [ Hash[String, Integer], Integer, Array[[ Integer, String, String ]], Array[[ Integer, Integer, String ]] ]
     end
   end
 end

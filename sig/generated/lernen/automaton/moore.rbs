@@ -64,6 +64,24 @@ module Lernen
       #    ?random: Random,
       #  ) -> Moore[In, Out]
       def self.random: [In, Out] (alphabet: Array[In], output_alphabet: Array[Out], ?min_state_size: Integer, ?max_state_size: Integer, ?num_reachable_paths: Integer, ?random: Random) -> Moore[In, Out]
+
+      RE_MOORE_LABEL: ::Regexp
+
+      # Constructs a Moore machine from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      # See https://automata.cs.ru.nl/Syntax/Moore.
+      #
+      # It returns a tuple with two elements:
+      #
+      # 1. A `Moore` from the DOT source.
+      # 2. A `Hash` mapping from state IDs to names.
+      #
+      # : (String source) -> [Moore[String, String], Hash[Integer, String]]
+      def self.from_automata_wiki_dot: (String source) -> [ Moore[String, String], Hash[Integer, String] ]
+
+      # Returns [Automata Wiki](https://automata.cs.ru.nl)'s DOT representation of this Moore machine.
+      #
+      # : (?Hash[Integer, String] state_to_name) -> String
+      def to_automata_wiki_dot: (?Hash[Integer, String] state_to_name) -> String
     end
   end
 end

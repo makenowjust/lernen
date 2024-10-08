@@ -83,6 +83,38 @@ module Lernen
         assert_equal expected, dfa.to_dot
         assert_predicate dfa.to_dot, :frozen?
       end
+
+      #: () -> void
+      def test_from_and_to_automata_wiki_dot
+        # From https://automata.cs.ru.nl/Syntax/Acceptor?from=Syntax.DFA.
+        dfa, state_to_name = DFA.from_automata_wiki_dot(<<~DOT)
+          digraph g {
+            __start0 [label="" shape="none"]
+            s1 [shape="doublecircle" label="s1"]
+            s2 [shape="circle" label="s2"]
+            __start0 -> s1
+            s1 -> s2[label="0"]
+            s1 -> s1[label="1"]
+            s2 -> s1[label="0"]
+            s2 -> s2[label="1"]
+          }
+        DOT
+        source = dfa.to_automata_wiki_dot(state_to_name)
+
+        assert_equal <<~DOT, source
+          digraph {
+            __start0 [label="", shape=none];
+            s1 [label="s1", shape=doublecircle];
+            s2 [label="s2", shape=circle];
+
+            __start0 -> s1;
+            s1 -> s2 [label="0"];
+            s1 -> s1 [label="1"];
+            s2 -> s1 [label="0"];
+            s2 -> s2 [label="1"];
+          }
+        DOT
+      end
     end
   end
 end
