@@ -206,7 +206,7 @@ module Lernen
       end
 
       RE_COMMENT = %r{/\*(?:(?!\*/).)*\*/|//.*|\A\s*#.*}
-      RE_INITIAL_STATE = /\b__start0\s*->\s*(?<initial_state_name>\w+)/
+      RE_INITIAL_STATE = /\b__start0(?:_\w+)?\s*->\s*(?<initial_state_name>\w+)/
       RE_TRANSITION = /\b(?<from_name>\w+)\s*->\s*(?<to_name>\w+)\s*\[(?<params>(?:"[^"]*"|[^\]]+)*)\]/
       RE_STATE = /\b(?<name>\w+)\s*\[(?<params>(?:"[^"]*"|[^\]]+)*)\]/
       RE_LABEL = /\blabel=(?<content>"[^"]*"|[^\s\],]*)/

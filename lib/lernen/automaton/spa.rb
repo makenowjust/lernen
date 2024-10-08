@@ -226,6 +226,112 @@ module Lernen
         new(initial_proc, return_input, proc_to_dfa)
       end
 
+      RE_INITIAL_PROC = /\b__start0\s*->\s*__start0_(?<initial_proc>\w+)/
+      RE_RETURN_INPUT = /\A\s*__return\s*\[(?<params>(?:"[^"]*"|[^\]]+)*)\]/
+      RE_SUBGRAPH_BEGIN = /\A\s*subgraph\s+cluster_(\w+)\s*\{\s*/
+      RE_SUBGRAPH_LABEL = /\A\s*label=(?<content>"[^"]*"|[^\s\],]*)/
+      RE_SUBGRAPH_END = /\A\s*\}\s*\z/
+
+      # Constructs an SPA from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      #
+      # It returns a tuple with two elements:
+      #
+      # 1. A `SPA` from the DOT source.
+      # 2. A `Hash` mapping from procedure names to state-to-name mappings.
+      #
+      #: (String source) -> [SPA[String, Symbol, Symbol], Hash[Symbol, Hash[Integer, String]]]
+      def self.from_automata_wiki_dot(source) # steep:ignore
+        proc_to_dfa = {}
+        proc_to_state_to_name = {}
+        index_to_proc = {}
+
+        subgraph_source = nil
+        subgraph_label = nil
+        return_input = nil
+        initial_proc = nil
+
+        strip = ->(label) { label[0] == "\"" && label[-1] == "\"" ? label[1...-1] : label }
+
+        source.lines.each do |line|
+          line = line.gsub(TransitionSystem::RE_COMMENT, "")
+
+          unless subgraph_source
+            match = line.match(RE_INITIAL_PROC)
+            if match
+              initial_proc = match[:initial_proc]&.to_sym
+              next
+            end
+
+            match = line.match(RE_RETURN_INPUT)
+            if match
+              label_match = match[:params]&.match(TransitionSystem::RE_LABEL)
+              return_input = strip.call(label_match&.[](:content) || "").to_sym
+              next
+            end
+
+            match = line.match(RE_SUBGRAPH_BEGIN)
+            if match
+              subgraph_source = []
+              subgraph_label = nil
+              next
+            end
+            next
+          end
+
+          match = line.match(RE_SUBGRAPH_LABEL)
+          if match
+            subgraph_label = strip.call(match[:content]).to_sym
+            next
+          end
+
+          match = line.match(RE_SUBGRAPH_END)
+          if match
+            dfa, state_to_name = DFA.from_automata_wiki_dot("digraph{\n#{subgraph_source.join}\n}") # steep:ignore
+            proc_to_dfa[subgraph_label] = dfa
+            proc_to_state_to_name[subgraph_label] = state_to_name
+            index_to_proc[index_to_proc.size] = subgraph_label
+
+            subgraph_source = nil
+            subgraph_label = nil
+            next
+          end
+
+          subgraph_source << line # steep:ignore
+        end
+
+        call_alphabet_set = proc_to_dfa.keys.to_set.map(&:to_s)
+        proc_to_dfa.transform_values! do |dfa|
+          transition_function =
+            dfa.transition_function.transform_keys do |(state, input)|
+              input = input.to_sym if call_alphabet_set.include?(input)
+              [state, input]
+            end
+          DFA.new(dfa.initial_state, dfa.accept_state_set, transition_function)
+        end
+
+        [new(initial_proc, return_input, proc_to_dfa), proc_to_state_to_name]
+      end
+
+      # Returns [Automata Wiki](https://automata.cs.ru.nl)'s DOT representation of this DFA.
+      #
+      #: (?Hash[Call, Hash[Integer, String]] proc_to_state_to_name) -> String
+      def to_automata_wiki_dot(proc_to_state_to_name = {})
+        nodes = {
+          "__start0" => Graph::Node["", :none],
+          "__return" => Graph::Node[return_input.to_s, :circle] # steep:ignore
+        }
+
+        edges = [Graph::Edge["__start0", nil, "__start0_#{initial_proc}"]]
+
+        subgraphs =
+          proc_to_dfa.map do |proc, dfa|
+            graph = dfa.to_automata_wiki_dot_graph(proc_to_state_to_name[proc], "_#{proc}")
+            Graph::SubGraph[proc.to_s, graph] # steep:ignore
+          end
+
+        Graph.new(nodes, edges, subgraphs).to_dot
+      end
+
       private
 
       # Returns the mapping from procedure names to terminating sequences.

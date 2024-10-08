@@ -189,12 +189,13 @@ module Lernen
 
       nodes.each do |index, node|
         needs_sep = true
+        name = index.is_a?(String) ? index : "#{id_prefix}#{index}"
 
         if node.shape == :record
           label = Graph.dot_escape("{ #{node.label} }")
-          dot << "  #{id_prefix}#{index} [label=#{label}, shape=record, style=rounded];\n"
+          dot << "  #{name} [label=#{label}, shape=record, style=rounded];\n"
         else
-          dot << "  #{id_prefix}#{index} [label=#{Graph.dot_escape(node.label)}, shape=#{node.shape}];\n"
+          dot << "  #{name} [label=#{Graph.dot_escape(node.label)}, shape=#{node.shape}];\n"
         end
       end
       dot << "\n" if needs_sep
@@ -202,8 +203,8 @@ module Lernen
       edges.each do |edge|
         needs_sep = true
 
-        from = "#{id_prefix}#{edge.from}"
-        to = "#{id_prefix}#{edge.to}"
+        from = edge.from.is_a?(String) ? edge.from : "#{id_prefix}#{edge.from}"
+        to = edge.to.is_a?(String) ? edge.to : "#{id_prefix}#{edge.to}"
         if edge.label
           dot << "  #{from} -> #{to} [label=#{Graph.dot_escape(edge.label)}];\n"
         else

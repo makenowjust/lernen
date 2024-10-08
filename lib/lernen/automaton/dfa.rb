@@ -205,7 +205,7 @@ module Lernen
       #
       # It returns a tuple with two elements:
       #
-      # 1. A `DAF` from the DOT source.
+      # 1. A `DFA` from the DOT source.
       # 2. A `Hash` mapping from state IDs to names.
       #
       #: (String source) -> [DFA[String], Hash[Integer, String]]
@@ -230,8 +230,15 @@ module Lernen
       #
       #: (?Hash[Integer, String] state_to_name) -> String
       def to_automata_wiki_dot(state_to_name = {})
+        to_automata_wiki_dot_graph(state_to_name).to_dot
+      end
+
+      # Returns the `Graph` of [Automata Wiki](https://automata.cs.ru.nl)'s DOT representation of this DFA.
+      #
+      #: (?Hash[Integer, String] state_to_name, ?String initial_state_suffix) -> Graph
+      def to_automata_wiki_dot_graph(state_to_name = {}, initial_state_suffix = "")
         nodes = {}
-        nodes["__start0"] = Graph::Node["", :none]
+        nodes["__start0#{initial_state_suffix}"] = Graph::Node["", :none]
         states.each do |state|
           name = state_to_name[state] || state
           shape = accept_state_set.include?(state) ? :doublecircle : :circle #: Graph::node_shape
@@ -239,14 +246,14 @@ module Lernen
         end
 
         edges =
-          [Graph::Edge["__start0", nil, state_to_name[initial_state] || initial_state]] +
+          [Graph::Edge["__start0#{initial_state_suffix}", nil, state_to_name[initial_state] || initial_state]] +
             transition_function.map do |(state, input), next_state|
               name = state_to_name[state] || state
               next_name = state_to_name[next_state] || next_state
               Graph::Edge[name, input.to_s, next_name] # steep:ignore
             end
 
-        Graph.new(nodes, edges).to_dot
+        Graph.new(nodes, edges)
       end
     end
   end

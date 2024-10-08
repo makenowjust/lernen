@@ -97,6 +97,31 @@ module Lernen
       #  ) -> SPA[In, Call, Return]
       def self.random: [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_input: Return, ?min_proc_size: Integer, ?max_proc_size: Integer, ?dfa_min_state_size: Integer, ?dfa_max_state_size: Integer, ?dfa_accept_state_size: Integer, ?random: Random) -> SPA[In, Call, Return]
 
+      RE_INITIAL_PROC: ::Regexp
+
+      RE_RETURN_INPUT: ::Regexp
+
+      RE_SUBGRAPH_BEGIN: ::Regexp
+
+      RE_SUBGRAPH_LABEL: ::Regexp
+
+      RE_SUBGRAPH_END: ::Regexp
+
+      # Constructs an SPA from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      #
+      # It returns a tuple with two elements:
+      #
+      # 1. A `SPA` from the DOT source.
+      # 2. A `Hash` mapping from procedure names to state-to-name mappings.
+      #
+      # : (String source) -> [SPA[String, Symbol, Symbol], Hash[Symbol, Hash[Integer, String]]]
+      def self.from_automata_wiki_dot: (String source) -> [ SPA[String, Symbol, Symbol], Hash[Symbol, Hash[Integer, String]] ]
+
+      # Returns [Automata Wiki](https://automata.cs.ru.nl)'s DOT representation of this DFA.
+      #
+      # : (?Hash[Call, Hash[Integer, String]] proc_to_state_to_name) -> String
+      def to_automata_wiki_dot: (?Hash[Call, Hash[Integer, String]] proc_to_state_to_name) -> String
+
       private
 
       # Returns the mapping from procedure names to terminating sequences.

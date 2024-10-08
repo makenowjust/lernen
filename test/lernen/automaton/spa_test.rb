@@ -178,6 +178,101 @@ module Lernen
         assert_equal expected, spa.to_dot
         assert_predicate spa.to_dot, :frozen?
       end
+
+      #: () -> void
+      def test_from_and_to_automata_wiki_dot
+        spa, proc_to_state_to_name = SPA.from_automata_wiki_dot(<<~DOT)
+          digraph g {
+            __start0 [label="", shape=none];
+            __start0 -> __start0_F [lhead="cluster_g0"];
+            __return [label="↵"];
+
+            subgraph cluster_g0 {
+              label="F";
+
+              __start0_F [label="", shape=none];
+              __start0_F -> g0_0;
+
+              g0_0 [label="0", shape=doublecircle];
+              g0_1 [label="1", shape=doublecircle];
+              g0_2 [label="2", shape=circle];
+              g0_3 [label="3", shape=doublecircle];
+              g0_4 [label="4", shape=circle];
+              g0_5 [label="5", shape=doublecircle];
+
+              g0_0 -> g0_1 [label="a"];
+              g0_0 -> g0_3 [label="b"];
+              g0_0 -> g0_5 [label="G"];
+              g0_1 -> g0_2 [label="F"];
+              g0_2 -> g0_5 [label="a"];
+              g0_3 -> g0_4 [label="F"];
+              g0_4 -> g0_5 [label="b"];
+            }
+
+            subgraph cluster_g1 {
+              label="G";
+
+              __start0_G [label="", shape=none];
+              __start0_G -> g1_0;
+
+              g1_0 [label="0", shape=circle];
+              g1_1 [label="1", shape=doublecircle];
+              g1_2 [label="2", shape=circle];
+              g1_3 [label="3", shape=doublecircle];
+
+              g1_0 -> g1_1 [label="c"];
+              g1_0 -> g1_3 [label="F"];
+              g1_1 -> g1_2 [label="G"];
+              g1_2 -> g1_3 [label="c"];
+            }
+          }
+        DOT
+        source = spa.to_automata_wiki_dot(proc_to_state_to_name)
+
+        assert_equal <<~DOT, source
+          digraph {
+            __start0 [label="", shape=none];
+            __return [label="↵", shape=circle];
+
+            __start0 -> __start0_F;
+
+            subgraph cluster_g0 {
+              label="F";
+              __start0_F [label="", shape=none];
+              g0_0 [label="g0_0", shape=doublecircle];
+              g0_1 [label="g0_1", shape=doublecircle];
+              g0_2 [label="g0_2", shape=circle];
+              g0_3 [label="g0_3", shape=doublecircle];
+              g0_4 [label="g0_4", shape=circle];
+              g0_5 [label="g0_5", shape=doublecircle];
+
+              __start0_F -> g0_0;
+              g0_0 -> g0_1 [label="a"];
+              g0_0 -> g0_3 [label="b"];
+              g0_0 -> g0_5 [label="G"];
+              g0_1 -> g0_2 [label="F"];
+              g0_2 -> g0_5 [label="a"];
+              g0_3 -> g0_4 [label="F"];
+              g0_4 -> g0_5 [label="b"];
+            }
+
+            subgraph cluster_g1 {
+              label="G";
+              __start0_G [label="", shape=none];
+              g1_0 [label="g1_0", shape=circle];
+              g1_1 [label="g1_1", shape=doublecircle];
+              g1_2 [label="g1_2", shape=circle];
+              g1_3 [label="g1_3", shape=doublecircle];
+          
+              __start0_G -> g1_0;
+              g1_0 -> g1_1 [label="c"];
+              g1_0 -> g1_3 [label="F"];
+              g1_1 -> g1_2 [label="G"];
+              g1_2 -> g1_3 [label="c"];
+            }
+          }
+        DOT
+      end
     end
   end
 end

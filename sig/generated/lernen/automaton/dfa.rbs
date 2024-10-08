@@ -94,7 +94,7 @@ module Lernen
       #
       # It returns a tuple with two elements:
       #
-      # 1. A `DAF` from the DOT source.
+      # 1. A `DFA` from the DOT source.
       # 2. A `Hash` mapping from state IDs to names.
       #
       # : (String source) -> [DFA[String], Hash[Integer, String]]
@@ -104,6 +104,11 @@ module Lernen
       #
       # : (?Hash[Integer, String] state_to_name) -> String
       def to_automata_wiki_dot: (?Hash[Integer, String] state_to_name) -> String
+
+      # Returns the `Graph` of [Automata Wiki](https://automata.cs.ru.nl)'s DOT representation of this DFA.
+      #
+      # : (?Hash[Integer, String] state_to_name, ?String initial_state_suffix) -> Graph
+      def to_automata_wiki_dot_graph: (?Hash[Integer, String] state_to_name, ?String initial_state_suffix) -> Graph
     end
   end
 end
