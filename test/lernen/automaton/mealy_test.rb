@@ -85,7 +85,7 @@ module Lernen
 
       #: () -> void
       def test_from_and_to_automata_wiki_dot
-        # From https://automata.cs.ru.nl/Syntax/Moore.
+        # From https://automata.cs.ru.nl/Syntax/Mealy.
         mealy, state_to_name = Mealy.from_automata_wiki_dot(<<~DOT)
           digraph g {
             __start0 [label="" shape="none"];

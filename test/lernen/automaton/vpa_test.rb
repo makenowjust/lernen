@@ -70,11 +70,10 @@ module Lernen
 
       #: () -> void
       def test_from_and_to_automata_wiki_dot
-        # From https://automata.cs.ru.nl/Syntax/Moore.
         vpa, state_to_name = VPA.from_automata_wiki_dot(<<~DOT)
-            digraph g {
-              __start0 [label="" shape="none"]
-              __start0 -> s0
+          digraph g {
+            __start0 [label="" shape="none"]
+            __start0 -> s0
 
             s0 [shape="circle" label="s0"]
             s1 [shape="doublecircle" label="s1"]
