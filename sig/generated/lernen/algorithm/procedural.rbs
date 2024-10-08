@@ -19,9 +19,10 @@ module Lernen
       #    ?algorithm_params: Hash[Symbol, untyped],
       #    ?cex_processing: cex_processing_method,
       #    ?scan_procs: bool,
+      #    ?repeats_cex_evaluation: bool
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::SPA[In, Call, Return]
-      def self.learn: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Return return_input, System::SUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle, ?algorithm: :lstar | :kearns_vazirani | :lsharp, ?algorithm_params: Hash[Symbol, untyped], ?cex_processing: cex_processing_method, ?scan_procs: bool, ?max_learning_rounds: Integer | nil) -> Automaton::SPA[In, Call, Return]
+      def self.learn: (untyped alphabet, untyped call_alphabet, untyped return_input, untyped sul, untyped oracle, ?algorithm: untyped, ?algorithm_params: untyped, ?cex_processing: untyped, ?scan_procs: untyped, ?repeats_cex_evaluation: untyped, ?max_learning_rounds: untyped) -> untyped
     end
   end
 end

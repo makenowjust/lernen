@@ -14,6 +14,7 @@ module Lernen
       #    System::SUL[In, bool] sul,
       #    Equiv::Oracle[In, bool] oracle,
       #    automaton_type: :dfa,
+      #    ?repeats_cex_evaluation: bool,
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::DFA[In]
       # : [In, Out] (
@@ -21,6 +22,7 @@ module Lernen
       #    System::SUL[In, Out] sul,
       #    Equiv::Oracle[In, Out] oracle,
       #    automaton_type: :mealy,
+      #    ?repeats_cex_evaluation: bool,
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::Mealy[In, Out]
       # : [In, Out] (
@@ -28,11 +30,12 @@ module Lernen
       #    System::SUL[In, Out] sul,
       #    Equiv::Oracle[In, Out] oracle,
       #    automaton_type: :moore,
+      #    ?repeats_cex_evaluation: bool,
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::Moore[In, Out]
-      def self.learn: [In] (Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle, automaton_type: :dfa, ?max_learning_rounds: Integer | nil) -> Automaton::DFA[In]
-                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :mealy, ?max_learning_rounds: Integer | nil) -> Automaton::Mealy[In, Out]
-                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :moore, ?max_learning_rounds: Integer | nil) -> Automaton::Moore[In, Out]
+      def self.learn: [In] (Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle, automaton_type: :dfa, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::DFA[In]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :mealy, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::Mealy[In, Out]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :moore, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::Moore[In, Out]
     end
   end
 end

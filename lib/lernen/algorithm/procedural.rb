@@ -25,6 +25,7 @@ module Lernen
       #    ?algorithm_params: Hash[Symbol, untyped],
       #    ?cex_processing: cex_processing_method,
       #    ?scan_procs: bool,
+      #    ?repeats_cex_evaluation: bool
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::SPA[In, Call, Return]
       def self.learn( # steep:ignore
@@ -37,6 +38,7 @@ module Lernen
         algorithm_params: {},
         cex_processing: :binary,
         scan_procs: true,
+        repeats_cex_evaluation: true,
         max_learning_rounds: nil
       )
         learner =
@@ -50,7 +52,7 @@ module Lernen
             cex_processing:,
             scan_procs:
           )
-        learner.learn(oracle, max_learning_rounds:)
+        learner.learn(oracle, repeats_cex_evaluation:, max_learning_rounds:)
       end
     end
   end

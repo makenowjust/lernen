@@ -12,9 +12,9 @@ module Lernen
       # : [In, Call, Return] (
       #    Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
       #    System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle,
-      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::VPA[In, Call, Return]
-      def self.learn: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::VPA[In, Call, Return]
+      def self.learn: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle, ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::VPA[In, Call, Return]
     end
   end
 end

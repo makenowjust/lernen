@@ -16,15 +16,18 @@ module Lernen
     class Learner
       # Runs the learning algorithm and returns an inferred automaton.
       #
-      # `max_learning_rounds` is a parameter for specifying the maximum number of iterations for learning.
-      # When `max_learning_rounds: nil` is specified, it means the algorithm only stops if the equivalent
-      # hypothesis is found.
+      # - `repeats_cex_evaluation` is a parameter that determines whether the refinement of the hypothesis
+      #   is repeated until the counterexample returned by the oracle is no longer a counterexample.
+      # - `max_learning_rounds` is a parameter for specifying the maximum number of iterations for learning.
+      #   When `max_learning_rounds: nil` is specified, it means the algorithm only stops if the equivalent
+      #   hypothesis is found.
       #
       #: (
       #    Equiv::Oracle[In, Out] oracle,
+      #    ?repeats_cex_evaluation: bool,
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::TransitionSystem[untyped, In, Out]
-      def learn(oracle, max_learning_rounds: nil)
+      def learn(oracle, repeats_cex_evaluation: true, max_learning_rounds: nil)
         hypothesis, state_to_prefix = build_hypothesis
         cex = oracle.find_cex(hypothesis)
         return hypothesis if cex.nil?
@@ -35,8 +38,15 @@ module Lernen
           learning_rounds += 1
 
           refine_hypothesis(cex, hypothesis, state_to_prefix)
-
           hypothesis, state_to_prefix = build_hypothesis
+
+          if repeats_cex_evaluation
+            while hypothesis.run(cex)[0].last != oracle.sul.query_last(cex) # steep:ignore
+              refine_hypothesis(cex, hypothesis, state_to_prefix)
+              hypothesis, state_to_prefix = build_hypothesis
+            end
+          end
+
           cex = oracle.find_cex(hypothesis)
           break if cex.nil?
         end
