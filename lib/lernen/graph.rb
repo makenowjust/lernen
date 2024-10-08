@@ -7,7 +7,7 @@ module Lernen
   # This is an intermediate data structure for rendering Mermaid and Graphviz diagrams.
   class Graph
     # @rbs!
-    #   type node_shape = :circle | :doublecircle | :none
+    #   type node_shape = :circle | :doublecircle | :record | :none
     #
     #   type mermaid_direction = "TD" | "DT" | "LR" | "RL"
 
@@ -144,6 +144,8 @@ module Lernen
             "((#{Graph.mermaid_escape(node.label)}))"
           in :doublecircle
             "(((#{Graph.mermaid_escape(node.label)})))"
+          in :record
+            "(#{Graph.mermaid_escape(node.label)})"
           in :none
             "@{ shape: sm-circ }"
           end
@@ -188,7 +190,12 @@ module Lernen
       nodes.each do |index, node|
         needs_sep = true
 
-        dot << "  #{id_prefix}#{index} [label=#{Graph.dot_escape(node.label)}, shape=#{node.shape}];\n"
+        if node.shape == :record
+          label = Graph.dot_escape("{ #{node.label} }")
+          dot << "  #{id_prefix}#{index} [label=#{label}, shape=record, style=rounded];\n"
+        else
+          dot << "  #{id_prefix}#{index} [label=#{Graph.dot_escape(node.label)}, shape=#{node.shape}];\n"
+        end
       end
       dot << "\n" if needs_sep
 

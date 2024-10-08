@@ -212,13 +212,13 @@ module Lernen
         name_to_state, initial_state, state_nodes, transitions = TransitionSystem.parse_automata_wiki_dot(source)
 
         accept_state_set = Set.new
-        state_nodes.each do |state, _, shape|
+        state_nodes.each do |(state, _, shape)|
           next unless shape == "doublecircle"
           accept_state_set << state
         end
 
         transition_function = {}
-        transitions.each { |from, to, label| transition_function[[from, label]] = to }
+        transitions.each { |(from, to, label)| transition_function[[from, label]] = to }
 
         state_to_name = name_to_state.to_h { |name, state| [state, name] }
 

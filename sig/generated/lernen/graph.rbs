@@ -5,7 +5,7 @@ module Lernen
   #
   # This is an intermediate data structure for rendering Mermaid and Graphviz diagrams.
   class Graph
-    type node_shape = :circle | :doublecircle | :none
+    type node_shape = :circle | :doublecircle | :record | :none
 
     type mermaid_direction = "TD" | "DT" | "LR" | "RL"
 

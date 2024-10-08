@@ -14,6 +14,9 @@ module Lernen
 
       # : () -> void
       def test_to_dot: () -> void
+
+      # : () -> void
+      def test_from_and_to_automata_wiki_dot: () -> void
     end
   end
 end
