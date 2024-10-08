@@ -68,6 +68,7 @@ module Lernen
       RE_MOORE_LABEL: ::Regexp
 
       # Constructs a Moore machine from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      # See https://automata.cs.ru.nl/Syntax/Moore.
       #
       # It returns a tuple with two elements:
       #

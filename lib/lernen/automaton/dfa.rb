@@ -201,6 +201,7 @@ module Lernen
       end
 
       # Constructs DFA from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      # See https://automata.cs.ru.nl/Syntax/Acceptor?from=Syntax.DFA.
       #
       # It returns a tuple with two elements:
       #

@@ -82,6 +82,88 @@ module Lernen
         assert_equal expected, mealy.to_dot
         assert_predicate mealy.to_dot, :frozen?
       end
+
+      #: () -> void
+      def test_from_and_to_automata_wiki_dot
+        # From https://automata.cs.ru.nl/Syntax/Moore.
+        mealy, state_to_name = Mealy.from_automata_wiki_dot(<<~DOT)
+          digraph g {
+            __start0 [label="" shape="none"];
+            __start0 -> s0;
+
+            s0 [shape="circle" label="s0"];
+            s1 [shape="circle" label="s1"];
+            s2 [shape="circle" label="s2"];
+            s3 [shape="circle" label="s3"];
+            s4 [shape="circle" label="s4"];
+            s5 [shape="circle" label="s5"];
+
+            s0 -> s4 [label="WATER / ok"];
+            s0 -> s2 [label="POD / ok"];
+            s0 -> s1 [label="BUTTON / error"];
+            s0 -> s0 [label="CLEAN / ok"];
+            s1 -> s1 [label="WATER / error"];
+            s1 -> s1 [label="POD / error"];
+            s1 -> s1 [label="BUTTON / error"];
+            s1 -> s1 [label="CLEAN / error"];
+            s2 -> s3 [label="WATER / ok"];
+            s2 -> s2 [label="POD / ok"];
+            s2 -> s1 [label="BUTTON / error"];
+            s2 -> s0 [label="CLEAN / ok"];
+            s3 -> s3 [label="WATER / ok"];
+            s3 -> s3 [label="POD / ok"];
+            s3 -> s5 [label="BUTTON / coffee!"];
+            s3 -> s0 [label="CLEAN / ok"];
+            s4 -> s4 [label="WATER / ok"];
+            s4 -> s3 [label="POD / ok"];
+            s4 -> s1 [label="BUTTON / error"];
+            s4 -> s0 [label="CLEAN / ok"];
+            s5 -> s1 [label="WATER / error"];
+            s5 -> s1 [label="POD / error"];
+            s5 -> s1 [label="BUTTON / error"];
+            s5 -> s0 [label="CLEAN / ok"];
+          }
+        DOT
+        source = mealy.to_automata_wiki_dot(state_to_name)
+
+        assert_equal <<~DOT, source
+          digraph {
+            __start0 [label="", shape=none];
+            s0 [label="s0", shape=circle];
+            s1 [label="s1", shape=circle];
+            s2 [label="s2", shape=circle];
+            s3 [label="s3", shape=circle];
+            s4 [label="s4", shape=circle];
+            s5 [label="s5", shape=circle];
+
+            __start0 -> s0;
+            s0 -> s4 [label="WATER / ok"];
+            s0 -> s2 [label="POD / ok"];
+            s0 -> s1 [label="BUTTON / error"];
+            s0 -> s0 [label="CLEAN / ok"];
+            s1 -> s1 [label="WATER / error"];
+            s1 -> s1 [label="POD / error"];
+            s1 -> s1 [label="BUTTON / error"];
+            s1 -> s1 [label="CLEAN / error"];
+            s2 -> s3 [label="WATER / ok"];
+            s2 -> s2 [label="POD / ok"];
+            s2 -> s1 [label="BUTTON / error"];
+            s2 -> s0 [label="CLEAN / ok"];
+            s3 -> s3 [label="WATER / ok"];
+            s3 -> s3 [label="POD / ok"];
+            s3 -> s5 [label="BUTTON / coffee!"];
+            s3 -> s0 [label="CLEAN / ok"];
+            s4 -> s4 [label="WATER / ok"];
+            s4 -> s3 [label="POD / ok"];
+            s4 -> s1 [label="BUTTON / error"];
+            s4 -> s0 [label="CLEAN / ok"];
+            s5 -> s1 [label="WATER / error"];
+            s5 -> s1 [label="POD / error"];
+            s5 -> s1 [label="BUTTON / error"];
+            s5 -> s0 [label="CLEAN / ok"];
+          }
+        DOT
+      end
     end
   end
 end

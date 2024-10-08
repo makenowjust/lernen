@@ -7,9 +7,9 @@ module Lernen
     # @rbs generic In  -- Type for input alphabet
     # @rbs generic Out -- Type for output values
     class Mealy[In, Out] < TransitionSystem[Integer, In, Out]
-      @initial_state: Integer
-
       @transition_function: Hash[[ Integer, In ], [ Out, Integer ]]
+
+      @initial_state: Integer
 
       # : (
       #     Integer initial_state,
@@ -56,6 +56,24 @@ module Lernen
       #    ?random: Random,
       #  ) -> Mealy[In, Out]
       def self.random: [In, Out] (alphabet: Array[In], output_alphabet: Array[Out], ?min_state_size: Integer, ?max_state_size: Integer, ?num_reachable_paths: Integer, ?random: Random) -> Mealy[In, Out]
+
+      RE_MEALY_LABEL: ::Regexp
+
+      # Constructs a Mealy machine from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      # See https://automata.cs.ru.nl/Syntax/Mealy.
+      #
+      # It returns a tuple with two elements:
+      #
+      # 1. A `Mealy` from the DOT source.
+      # 2. A `Hash` mapping from state IDs to names.
+      #
+      # : (String source) -> [Mealy[String, String], Hash[Integer, String]]
+      def self.from_automata_wiki_dot: (String source) -> [ Mealy[String, String], Hash[Integer, String] ]
+
+      # Returns [Automata Wiki](https://automata.cs.ru.nl)'s DOT representation of this Mealy machine.
+      #
+      # : (?Hash[Integer, String] state_to_name) -> String
+      def to_automata_wiki_dot: (?Hash[Integer, String] state_to_name) -> String
     end
   end
 end
