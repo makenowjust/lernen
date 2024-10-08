@@ -104,6 +104,23 @@ module Lernen
       #    ?random: Random,
       #  ) -> VPA[In, Call, Return]
       def self.random: [In, Call, Return] (alphabet: Array[In], call_alphabet: Array[Call], return_alphabet: Array[Return], ?min_state_size: Integer, ?max_state_size: Integer, ?accept_state_size: Integer, ?random: Random) -> VPA[In, Call, Return]
+
+      RE_VPA_LABEL: ::Regexp
+
+      # Constructs a VPA from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      #
+      # It returns a tuple with two elements:
+      #
+      # 1. A `VPA` from the DOT source.
+      # 2. A `Hash` mapping from state IDs to names.
+      #
+      # : (String source) -> [VPA[String, String, String], Hash[Integer, String]]
+      def self.from_automata_wiki_dot: (String source) -> [ VPA[String, String, String], Hash[Integer, String] ]
+
+      # Returns [Automata Wiki](https://automata.cs.ru.nl)'s DOT representation of this VPA.
+      #
+      # : (?Hash[Integer, String] state_to_name) -> String
+      def to_automata_wiki_dot: (?Hash[Integer, String] state_to_name) -> String
     end
   end
 end

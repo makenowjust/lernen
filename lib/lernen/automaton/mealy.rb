@@ -104,7 +104,7 @@ module Lernen
         new(0, transition_function)
       end
 
-      RE_MEALY_LABEL = %r{\A\s*(?<input_value>[^\s/]+)\s*/\s*(?<output_value>[^\s/]+)\s*\z}
+      RE_MEALY_LABEL = %r{\A\s*(?<input_value>[^\s/]+)\s*/\s*(?<output_value>[^\s]+)\s*\z}
 
       # Constructs a Mealy machine from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
       # See https://automata.cs.ru.nl/Syntax/Mealy.

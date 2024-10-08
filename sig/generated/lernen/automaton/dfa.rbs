@@ -89,7 +89,7 @@ module Lernen
       #  ) -> DFA[In]
       def self.random: [In] (alphabet: Array[In], ?min_state_size: Integer, ?max_state_size: Integer, ?accept_state_size: Integer, ?random: Random) -> DFA[In]
 
-      # Constructs DFA from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      # Constructs a DFA from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
       # See https://automata.cs.ru.nl/Syntax/Acceptor?from=Syntax.DFA.
       #
       # It returns a tuple with two elements:
