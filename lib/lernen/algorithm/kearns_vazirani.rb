@@ -16,17 +16,17 @@ module Lernen
       #: [In] (
       #    Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle,
       #    automaton_type: :dfa,
-      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::DFA[In]
       #: [In, Out] (
       #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
       #    automaton_type: :mealy,
-      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::Mealy[In, Out]
       #: [In, Out] (
       #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
       #    automaton_type: :moore,
-      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::Moore[In, Out]
       def self.learn( # steep:ignore
         alphabet,
@@ -34,10 +34,11 @@ module Lernen
         oracle,
         automaton_type:,
         cex_processing: :binary,
+        repeats_cex_evaluation: true,
         max_learning_rounds: nil
       )
         learner = KearnsVaziraniLearner.new(alphabet, sul, automaton_type:, cex_processing:)
-        learner.learn(oracle, max_learning_rounds:)
+        learner.learn(oracle, repeats_cex_evaluation:, max_learning_rounds:)
       end
     end
   end

@@ -16,7 +16,7 @@ module Lernen
       #: [In, Call, Return] (
       #    Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
       #    System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle,
-      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::VPA[In, Call, Return]
       def self.learn( # steep:ignore
         alphabet,
@@ -25,10 +25,11 @@ module Lernen
         sul,
         oracle,
         cex_processing: :binary,
+        repeats_cex_evaluation: true,
         max_learning_rounds: nil
       )
         learner = KearnsVaziraniVPALearner.new(alphabet, call_alphabet, return_alphabet, sul, cex_processing:)
-        learner.learn(oracle, max_learning_rounds:)
+        learner.learn(oracle, repeats_cex_evaluation:, max_learning_rounds:)
       end
     end
   end

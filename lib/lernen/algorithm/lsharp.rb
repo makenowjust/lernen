@@ -18,6 +18,7 @@ module Lernen
       #    System::SUL[In, bool] sul,
       #    Equiv::Oracle[In, bool] oracle,
       #    automaton_type: :dfa,
+      #    ?repeats_cex_evaluation: bool,
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::DFA[In]
       #: [In, Out] (
@@ -25,6 +26,7 @@ module Lernen
       #    System::SUL[In, Out] sul,
       #    Equiv::Oracle[In, Out] oracle,
       #    automaton_type: :mealy,
+      #    ?repeats_cex_evaluation: bool,
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::Mealy[In, Out]
       #: [In, Out] (
@@ -32,11 +34,19 @@ module Lernen
       #    System::SUL[In, Out] sul,
       #    Equiv::Oracle[In, Out] oracle,
       #    automaton_type: :moore,
+      #    ?repeats_cex_evaluation: bool,
       #    ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::Moore[In, Out]
-      def self.learn(alphabet, sul, oracle, automaton_type:, max_learning_rounds: nil) # steep:ignore
+      def self.learn( # steep:ignore
+        alphabet,
+        sul,
+        oracle,
+        automaton_type:,
+        repeats_cex_evaluation: true,
+        max_learning_rounds: nil
+      )
         learner = LSharpLearner.new(alphabet, sul, automaton_type:)
-        learner.learn(oracle, max_learning_rounds:)
+        learner.learn(oracle, repeats_cex_evaluation:, max_learning_rounds:)
       end
     end
   end

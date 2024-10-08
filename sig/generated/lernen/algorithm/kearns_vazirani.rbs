@@ -12,21 +12,21 @@ module Lernen
       # : [In] (
       #    Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle,
       #    automaton_type: :dfa,
-      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::DFA[In]
       # : [In, Out] (
       #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
       #    automaton_type: :mealy,
-      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::Mealy[In, Out]
       # : [In, Out] (
       #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
       #    automaton_type: :moore,
-      #    ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
       #  ) -> Automaton::Moore[In, Out]
-      def self.learn: [In] (Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle, automaton_type: :dfa, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::DFA[In]
-                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :mealy, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::Mealy[In, Out]
-                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :moore, ?cex_processing: cex_processing_method, ?max_learning_rounds: Integer | nil) -> Automaton::Moore[In, Out]
+      def self.learn: [In] (Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle, automaton_type: :dfa, ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::DFA[In]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :mealy, ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::Mealy[In, Out]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :moore, ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::Moore[In, Out]
     end
   end
 end
