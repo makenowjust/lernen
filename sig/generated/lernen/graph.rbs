@@ -5,7 +5,7 @@ module Lernen
   #
   # This is an intermediate data structure for rendering Mermaid and Graphviz diagrams.
   class Graph
-    type node_shape = :circle | :doublecircle
+    type node_shape = :circle | :doublecircle | :none
 
     type mermaid_direction = "TD" | "DT" | "LR" | "RL"
 
@@ -16,10 +16,10 @@ module Lernen
     end
 
     class Edge < Data
-      attr_reader from: Integer
-      attr_reader label: String
-      attr_reader to: Integer
-      def self.[]: (Integer from, String label, Integer to) -> Edge
+      attr_reader from: Integer | String
+      attr_reader label: String | nil
+      attr_reader to: Integer | String
+      def self.[]: (Integer | String from, String | nil label, Integer | String to) -> Edge
     end
 
     class SubGraph < Data
@@ -46,16 +46,16 @@ module Lernen
 
     @edges: Array[Edge]
 
-    @nodes: Hash[Integer, Node]
+    @nodes: Hash[Integer | String, Node]
 
     # : (
-    #     Hash[Integer, Node] nodes,
+    #     Hash[Integer | String, Node] nodes,
     #     Array[Edge] edges,
     #     ?Array[SubGraph] subgraphs
     #   ) -> void
-    def initialize: (Hash[Integer, Node] nodes, Array[Edge] edges, ?Array[SubGraph] subgraphs) -> void
+    def initialize: (Hash[Integer | String, Node] nodes, Array[Edge] edges, ?Array[SubGraph] subgraphs) -> void
 
-    attr_reader nodes: Hash[Integer, Node]
+    attr_reader nodes: Hash[Integer | String, Node]
 
     attr_reader edges: Array[Edge]
 

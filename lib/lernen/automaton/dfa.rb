@@ -199,6 +199,54 @@ module Lernen
 
         new(0, accept_state_set, transition_function)
       end
+
+      # Constructs DFA from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      #
+      # It returns a tuple with two elements:
+      #
+      # 1. A `DAF` from the DOT source.
+      # 2. A `Hash` mapping from state IDs to names.
+      #
+      #: (String source) -> [DFA[String], Hash[Integer, String]]
+      def self.from_automata_wiki_dot(source)
+        name_to_state, initial_state, state_nodes, transitions = TransitionSystem.parse_automata_wiki_dot(source)
+
+        accept_state_set = Set.new
+        state_nodes.each do |state, _, shape|
+          next unless shape == "doublecircle"
+          accept_state_set << state
+        end
+
+        transition_function = {}
+        transitions.each { |from, to, label| transition_function[[from, label]] = to }
+
+        state_to_name = name_to_state.to_h { |name, state| [state, name] }
+
+        [new(initial_state, accept_state_set, transition_function), state_to_name]
+      end
+
+      # Returns [Automata Wiki](https://automata.cs.ru.nl)'s DOT representation of this DFA.
+      #
+      #: (?Hash[Integer, String] state_to_name) -> String
+      def to_automata_wiki_dot(state_to_name = {})
+        nodes = {}
+        nodes["__start0"] = Graph::Node["", :none]
+        states.each do |state|
+          name = state_to_name[state] || state
+          shape = accept_state_set.include?(state) ? :doublecircle : :circle #: Graph::node_shape
+          nodes[name] = Graph::Node[name.to_s, shape]
+        end
+
+        edges =
+          [Graph::Edge["__start0", nil, state_to_name[initial_state] || initial_state]] +
+            transition_function.map do |(state, input), next_state|
+              name = state_to_name[state] || state
+              next_name = state_to_name[next_state] || next_state
+              Graph::Edge[name, input.to_s, next_name] # steep:ignore
+            end
+
+        Graph.new(nodes, edges).to_dot
+      end
     end
   end
 end

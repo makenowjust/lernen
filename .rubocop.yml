@@ -48,5 +48,8 @@ Style/CombinableLoops:
 Style/CommentedKeyword:
   Enabled: false
 
+Style/ConditionalAssignment:
+  Enabled: false
+
 Minitest/MultipleAssertions:
   Enabled: false

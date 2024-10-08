@@ -88,6 +88,21 @@ module Lernen
       #    ?random: Random,
       #  ) -> DFA[In]
       def self.random: [In] (alphabet: Array[In], ?min_state_size: Integer, ?max_state_size: Integer, ?accept_state_size: Integer, ?random: Random) -> DFA[In]
+
+      # Constructs DFA from [Automata Wiki](https://automata.cs.ru.nl)'s DOT source.
+      #
+      # It returns a tuple with two elements:
+      #
+      # 1. A `DAF` from the DOT source.
+      # 2. A `Hash` mapping from state IDs to names.
+      #
+      # : (String source) -> [DFA[String], Hash[Integer, String]]
+      def self.from_automata_wiki_dot: (String source) -> [ DFA[String], Hash[Integer, String] ]
+
+      # Returns [Automata Wiki](https://automata.cs.ru.nl)'s DOT representation of this DFA.
+      #
+      # : (?Hash[Integer, String] state_to_name) -> String
+      def to_automata_wiki_dot: (?Hash[Integer, String] state_to_name) -> String
     end
   end
 end

@@ -7,7 +7,7 @@ module Lernen
   # This is an intermediate data structure for rendering Mermaid and Graphviz diagrams.
   class Graph
     # @rbs!
-    #   type node_shape = :circle | :doublecircle
+    #   type node_shape = :circle | :doublecircle | :none
     #
     #   type mermaid_direction = "TD" | "DT" | "LR" | "RL"
 
@@ -30,10 +30,10 @@ module Lernen
 
     # @rbs!
     #   class Edge < Data
-    #     attr_reader from: Integer
-    #     attr_reader label: String
-    #     attr_reader to: Integer
-    #     def self.[]: (Integer from, String label, Integer to) -> Edge
+    #     attr_reader from: Integer | String
+    #     attr_reader label: String | nil
+    #     attr_reader to: Integer | String
+    #     def self.[]: (Integer | String from, String | nil label, Integer | String to) -> Edge
     #   end
 
     # SubGraph represents a sub-graph of graphs.
@@ -84,12 +84,12 @@ module Lernen
       "\"#{label}\""
     end
 
-    # @rbs @nodes: Hash[Integer, Node]
+    # @rbs @nodes: Hash[Integer | String, Node]
     # @rbs @edges: Array[Edge]
     # @rbs @subgraphs: Array[SubGraph]
 
     #: (
-    #    Hash[Integer, Node] nodes,
+    #    Hash[Integer | String, Node] nodes,
     #    Array[Edge] edges,
     #    ?Array[SubGraph] subgraphs
     #  ) -> void
@@ -99,7 +99,7 @@ module Lernen
       @subgraphs = subgraphs
     end
 
-    attr_reader :nodes #: Hash[Integer, Node]
+    attr_reader :nodes #: Hash[Integer | String, Node]
     attr_reader :edges #: Array[Edge]
     attr_reader :subgraphs #: Array[SubGraph]
 
@@ -144,6 +144,8 @@ module Lernen
             "((#{Graph.mermaid_escape(node.label)}))"
           in :doublecircle
             "(((#{Graph.mermaid_escape(node.label)})))"
+          in :none
+            "@{ shape: sm-circ }"
           end
         mmd << "  #{id_prefix}#{id}#{node_def}\n"
       end
@@ -154,7 +156,11 @@ module Lernen
 
         from = "#{id_prefix}#{edge.from}"
         to = "#{id_prefix}#{edge.to}"
-        mmd << "  #{from} -- #{Graph.mermaid_escape(edge.label)} --> #{to}\n"
+        if edge.label
+          mmd << "  #{from} -- #{Graph.mermaid_escape(edge.label)} --> #{to}\n"
+        else
+          mmd << "  #{from} --> #{to}\n"
+        end
       end
 
       subgraphs.each_with_index do |subgraph, index|
@@ -191,7 +197,11 @@ module Lernen
 
         from = "#{id_prefix}#{edge.from}"
         to = "#{id_prefix}#{edge.to}"
-        dot << "  #{from} -> #{to} [label=#{Graph.dot_escape(edge.label)}];\n"
+        if edge.label
+          dot << "  #{from} -> #{to} [label=#{Graph.dot_escape(edge.label)}];\n"
+        else
+          dot << "  #{from} -> #{to};\n"
+        end
       end
 
       subgraphs.each_with_index do |subgraph, index|
