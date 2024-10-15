@@ -1,0 +1,44 @@
+# Generated from lib/lernen/algorithm/dhc/dhc_learner.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    module DHC
+      # DHCLearner is an implementation of DHC.
+      #
+      # DHC (Dynamic Hypothesis Construction) is introduced by [Merten et al. (2011)
+      # "Automata Learning with On-the-Fly Direct Hypothesis Construction"](https://link.springer.com/chapter/10.1007/978-3-642-34781-8_19).
+      #
+      # @rbs generic In
+      # @rbs generic Out
+      class DHCLearner[In, Out] < Learner[In, Out]
+        @alphabet: Array[In]
+
+        @sul: System::SUL[In, Out]
+
+        @automaton_type: :dfa | :moore | :mealy
+
+        @cex_processing: cex_processing_method
+
+        @build_hypothesis_cache: [ Automaton::TransitionSystem[Integer, In, Out], Hash[Integer, Array[In]] ] | nil
+
+        @splitters: Array[Array[In]]
+
+        # : (
+        #     Array[In] alphabet, System::SUL[In, Out] sul,
+        #     automaton_type: :dfa | :moore | :mealy,
+        #     ?cex_processing: cex_processing_method
+        #   ) -> void
+        def initialize: (Array[In] alphabet, System::SUL[In, Out] sul, automaton_type: :dfa | :moore | :mealy, ?cex_processing: cex_processing_method) -> void
+
+        # @rbs override
+        def add_alphabet: ...
+
+        # @rbs override
+        def build_hypothesis: ...
+
+        # @rbs override
+        def refine_hypothesis: ...
+      end
+    end
+  end
+end

@@ -23,8 +23,6 @@ module Lernen
 
         @automaton_type: :dfa | :mealy | :moore
 
-        @oracle: Equiv::Oracle[In, Out]
-
         @sul: System::SUL[In, Out]
 
         @alphabet: Array[In]

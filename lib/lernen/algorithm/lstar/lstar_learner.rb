@@ -13,7 +13,6 @@ module Lernen
       # @rbs generic Out -- Type for output values
       class LStarLearner < Learner #[In, Out]
         # @rbs @alphabet: Array[In]
-        # @rbs @oracle: Equiv::Oracle[In, Out]
         # @rbs @table: ObservationTable[In, Out]
 
         #: (

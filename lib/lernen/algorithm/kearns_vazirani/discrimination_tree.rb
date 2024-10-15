@@ -146,12 +146,12 @@ module Lernen
           automaton =
             case @automaton_type
             in :dfa
-              accept_states =
+              accept_state_set =
                 state_to_prefix.to_a.filter { |(_, prefix)| @path_hash[prefix][0] }.to_set { |(state, _)| state }
-              Automaton::DFA.new(0, accept_states, transition_function)
+              Automaton::DFA.new(0, accept_state_set, transition_function)
             in :moore
-              outputs = state_to_prefix.transform_values { |prefix| @path_hash[prefix][0] }
-              Automaton::Moore.new(0, outputs, transition_function)
+              output_function = state_to_prefix.transform_values { |prefix| @path_hash[prefix][0] }
+              Automaton::Moore.new(0, output_function, transition_function)
             in :mealy
               Automaton::Mealy.new(0, transition_function)
             end

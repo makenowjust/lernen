@@ -1,0 +1,32 @@
+# Generated from lib/lernen/algorithm/dhc.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    # DHC provides an implementation of DHC.
+    #
+    # DHC (Dynamic Hypothesis Construction) is introduced by [Merten et al. (2011)
+    # "Automata Learning with On-the-Fly Direct Hypothesis Construction"](https://link.springer.com/chapter/10.1007/978-3-642-34781-8_19).
+    module DHC
+      # Runs DHC algorithm and returns an inferred automaton.
+      #
+      # : [In] (
+      #    Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle,
+      #    automaton_type: :dfa,
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::DFA[In]
+      # : [In, Out] (
+      #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #    automaton_type: :mealy,
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::Mealy[In, Out]
+      # : [In, Out] (
+      #    Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle,
+      #    automaton_type: :moore,
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::Moore[In, Out]
+      def self.learn: [In] (Array[In] alphabet, System::SUL[In, bool] sul, Equiv::Oracle[In, bool] oracle, automaton_type: :dfa, ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::DFA[In]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :mealy, ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::Mealy[In, Out]
+                    | [In, Out] (Array[In] alphabet, System::SUL[In, Out] sul, Equiv::Oracle[In, Out] oracle, automaton_type: :moore, ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::Moore[In, Out]
+    end
+  end
+end

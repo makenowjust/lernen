@@ -15,8 +15,6 @@ module Lernen
 
         @sul: System::SUL[In, Out]
 
-        @oracle: Equiv::Oracle[In, Out]
-
         @automaton_type: :dfa | :moore | :mealy
 
         @cex_processing: cex_processing_method

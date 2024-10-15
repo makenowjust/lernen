@@ -11,4 +11,4 @@ require "minitest/autorun"
 require "minitest/reporters"
 
 Minitest::Test.make_my_diffs_pretty!
-Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(color: true, slow_count: 3)] # steep:ignore
+Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(color: true, slow_count: 10)] # steep:ignore

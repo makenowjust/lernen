@@ -18,6 +18,9 @@ class LernenTest < Minitest::Test
     [:kearns_vazirani, { cex_processing: :binary }],
     [:kearns_vazirani, { cex_processing: :linear }],
     [:kearns_vazirani, { cex_processing: :exponential }],
+    [:dhc, { cex_processing: :binary }],
+    [:dhc, { cex_processing: :linear }],
+    [:dhc, { cex_processing: :exponential }],
     [:lsharp, {}]
   ].freeze #: Array[[Lernen::algorithm_name, Hash[Symbol, Symbol]]]
 

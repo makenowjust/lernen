@@ -13,8 +13,6 @@ module Lernen
       class LStarLearner[In, Out] < Learner[In, Out]
         @alphabet: Array[In]
 
-        @oracle: Equiv::Oracle[In, Out]
-
         @table: ObservationTable[In, Out]
 
         # : (
