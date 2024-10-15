@@ -17,7 +17,6 @@ module Lernen
         # @rbs @call_alphabet: Array[Call]
         # @rbs @return_alphabet: Array[Return]
         # @rbs @sul: System::MooreLikeSUL[In | Call | Return, bool]
-        # @rbs @oracle: Equiv::Oracle[In | Call | Return, bool]
         # @rbs @cex_processing: cex_processing_method
         # @rbs @tree: DiscriminationTreeVPA[In, Call, Return] | nil
 

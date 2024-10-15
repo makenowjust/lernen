@@ -83,6 +83,7 @@ module Lernen
   #
   #   type algorithm_name = :lstar
   #                       | :kearns_vazirani
+  #                       | :dhc
   #                       | :lsharp
 
   # Learn an automaton by using the given parameters.
@@ -107,9 +108,9 @@ module Lernen
   #   `:moore`, and `:mealy`, or the default value is `:random_well_matched_word` if `automaton_type` is either `:spa`
   #   or `:vpa`.
   # - `oracle_params`: A hash of parameters for equivalence oracle. The default value is `{}`.
-  # - `algorithm`: An algorithm name to use. It is one of `:lstar`, `:kearns_vazirani`, or `:lsharp`. The default value
-  #   is `:kearns_vazirani` (if `automaton_type` is one of `:dfa`, `:moore`, and `:mealy`), or `:kearns_vazirani_vpa`
-  #   (if `automaton_type` is `vpa`), or `:procedural` (if `automaton_type` is `spa`).
+  # - `algorithm`: An algorithm name to use. It is one of `:lstar`, `:kearns_vazirani`, `:dhc`, or `:lsharp`.
+  #   The default value is `:kearns_vazirani` (if `automaton_type` is one of `:dfa`, `:moore`, and `:mealy`),
+  #   or `:kearns_vazirani_vpa` (if `automaton_type` is `vpa`), or `:procedural` (if `automaton_type` is `spa`).
   # - `automaton_type`: A type of automaton to infer. It is one of `:dfa`, `:mealy`, `:moore`, `:vpa`, and `:spa`.
   #   The default value is `:dfa`, but it becomes `:vpa` or `:spa` if `call_alphabet` or `return_input` is specified.
   # - `params`: A hash of parameter to pass a learning algorithm. The default value is `{}`.
@@ -318,6 +319,8 @@ module Lernen
       Algorithm::LStar.learn(alphabet, sul, oracle, automaton_type:, **params)
     in :kearns_vazirani
       Algorithm::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type:, **params)
+    in :dhc
+      Algorithm::DHC.learn(alphabet, sul, oracle, automaton_type:, **params)
     in :kearns_vazirani_vpa
       Algorithm::KearnsVaziraniVPA.learn(alphabet, call_alphabet, return_alphabet, sul, oracle, **params)
     in :lsharp

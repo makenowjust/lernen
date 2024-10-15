@@ -1,0 +1,16 @@
+# Generated from test/lernen/algorithm/dhc_test.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    class DHCTest < Minitest::Test
+      # : () -> void
+      def test_learn_dfa: () -> void
+
+      # : () -> void
+      def test_learn_moore: () -> void
+
+      # : () -> void
+      def test_learn_mealy: () -> void
+    end
+  end
+end

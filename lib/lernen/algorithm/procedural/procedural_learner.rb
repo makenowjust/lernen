@@ -17,7 +17,7 @@ module Lernen
         # @rbs @call_alphabet: Array[Call]
         # @rbs @return_input: Return
         # @rbs @sul: System::SUL[In | Call | Return, bool]
-        # @rbs @algorithm: :lstar | :kearns_vazirani | :lsharp
+        # @rbs @algorithm: :lstar | :kearns_vazirani | :dhc | :lsharp
         # @rbs @algorithm_params: Hash[Symbol, untyped]
         # @rbs @cex_processing: cex_processing_method
 
@@ -119,6 +119,8 @@ module Lernen
                   automaton_type: :dfa,
                   **@algorithm_params
                 )
+              in :dhc
+                DHC::DHCLearner.new(@alphabet, proc_sul, automaton_type: :dfa, **@algorithm_params)
               in :lsharp
                 LSharp::LSharpLearner.new(@alphabet, proc_sul, automaton_type: :dfa, **@algorithm_params)
               end

@@ -14,7 +14,6 @@ module Lernen
       class LSharpLearner < Learner #[In, Out]
         # @rbs @alphabet: Array[In]
         # @rbs @sul: System::SUL[In, Out]
-        # @rbs @oracle: Equiv::Oracle[In, Out]
         # @rbs @automaton_type: :dfa | :mealy | :moore
         # @rbs @tree: ObservationTree[In, Out]
         # @rbs @witness_cache: Hash[[Array[In], Array[In]], Array[In]]

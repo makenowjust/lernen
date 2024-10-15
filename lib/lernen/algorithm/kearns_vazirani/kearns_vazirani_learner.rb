@@ -14,7 +14,6 @@ module Lernen
       class KearnsVaziraniLearner < Learner #[In, Out]
         # @rbs @alphabet: Array[In]
         # @rbs @sul: System::SUL[In, Out]
-        # @rbs @oracle: Equiv::Oracle[In, Out]
         # @rbs @automaton_type: :dfa | :moore | :mealy
         # @rbs @cex_processing: cex_processing_method
         # @rbs @tree: DiscriminationTree[In, Out] | nil

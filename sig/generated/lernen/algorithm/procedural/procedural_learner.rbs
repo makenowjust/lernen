@@ -16,7 +16,7 @@ module Lernen
 
         @algorithm_params: Hash[Symbol, untyped]
 
-        @algorithm: :lstar | :kearns_vazirani | :lsharp
+        @algorithm: :lstar | :kearns_vazirani | :dhc | :lsharp
 
         @sul: System::SUL[In | Call | Return, bool]
 
