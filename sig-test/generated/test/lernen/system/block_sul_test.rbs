@@ -7,7 +7,7 @@ module Lernen
       def test_step: () -> void
 
       # : () -> void
-      def test_query_and_stats: () -> void
+      def test_query_last_and_stats: () -> void
 
       # : () -> void
       def test_query_empty: () -> void

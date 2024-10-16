@@ -20,6 +20,25 @@ module Lernen
         super
       end
 
+      # @rbs override
+      def query_last(word)
+        if word.empty?
+          cached = (cache = @cache) && cache[word]
+          unless cached.nil? # steep:ignore
+            @num_cached_queries += 1
+            return cached
+          end
+
+          output = query_empty
+          cache[word.dup] = output if cache
+          @num_queries += 1
+
+          output
+        end
+
+        super
+      end
+
       # Runs a membership query with the empty input.
       #
       # This is an abstract method.

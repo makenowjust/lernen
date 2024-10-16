@@ -79,7 +79,7 @@ module Lernen
             @call_alphabet.each { |call_input| return_transition_guard[[0, call_input]] = 0 }
           end
 
-          accept_state_set = @sul.query_empty ? Set[0] : Set.new
+          accept_state_set = @sul.query_last([]) ? Set[0] : Set.new
           Automaton::VPA.new(0, accept_state_set, transition_function, return_transition_function)
         end
       end

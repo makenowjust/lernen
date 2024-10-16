@@ -68,7 +68,7 @@ module Lernen
             end
             @splitters.each do |splitter|
               word = prefix + splitter
-              sig << (word.empty? ? @sul.query_empty : @sul.query_last(word)) # steep:ignore
+              sig << @sul.query_last(word) # steep:ignore
             end
 
             next_state = sig_to_state[sig]

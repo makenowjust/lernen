@@ -20,15 +20,15 @@ module Lernen
       end
 
       #: () -> void
-      def test_query_and_stats
+      def test_query_last_and_stats
         sul = BlockSUL.new { _1.count("1") % 4 == 3 }
 
-        assert_equal [false], sul.query(%w[0])
-        assert_equal [false, false, true], sul.query(%w[1 1 1])
-        assert_equal [false, false, true, false], sul.query(%w[1 1 1 1])
+        refute sul.query_last(%w[0])
+        assert sul.query_last(%w[1 1 1])
+        refute sul.query_last(%w[1 1 1 1])
 
         # This assertion is for cache testing.
-        assert_equal [false, false, true, false], sul.query(%w[1 1 1 1])
+        refute sul.query_last(%w[1 1 1 1])
 
         expected_stats = { num_cache: 3, num_cached_queries: 1, num_queries: 3, num_steps: 8 }
 
@@ -36,12 +36,12 @@ module Lernen
 
         sul_no_cache = BlockSUL.new(cache: false) { _1.count("1") % 4 == 3 }
 
-        assert_equal [false], sul_no_cache.query(%w[0])
-        assert_equal [false, false, true], sul_no_cache.query(%w[1 1 1])
-        assert_equal [false, false, true, false], sul_no_cache.query(%w[1 1 1 1])
+        refute sul_no_cache.query_last(%w[0])
+        assert sul_no_cache.query_last(%w[1 1 1])
+        refute sul_no_cache.query_last(%w[1 1 1 1])
 
         # This assertion is for cache testing.
-        assert_equal [false, false, true, false], sul_no_cache.query(%w[1 1 1 1])
+        refute sul_no_cache.query_last(%w[1 1 1 1])
 
         expected_stats = { num_cache: 0, num_cached_queries: 0, num_queries: 4, num_steps: 12 }
 

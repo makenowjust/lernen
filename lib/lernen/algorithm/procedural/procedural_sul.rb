@@ -33,8 +33,8 @@ module Lernen
         end
 
         # @rbs override
-        def query(word)
-          @sul.query(@manager.embed(@proc, word))
+        def query_last(word)
+          @sul.query_last(@manager.embed(@proc, word))
         end
 
         # @rbs override

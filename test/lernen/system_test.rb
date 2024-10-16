@@ -15,7 +15,7 @@ module Lernen
     def test_from_block
       sul = System.from_block { _1.count("1") % 4 == 3 }
 
-      assert_equal [false, false, true, false], sul.query(%w[1 1 1 1])
+      refute sul.query_last(%w[1 1 1 1])
     end
 
     #: () -> void
@@ -26,11 +26,11 @@ module Lernen
       spa_sul = System.from_automaton(Automaton::SPATest.palindrome_spa)
       vpa_sul = System.from_automaton(Automaton::VPATest.dyck_vpa)
 
-      assert_equal [false, false, true, false], dfa_sul.query(%w[1 1 1 1])
-      assert_equal [1, 2, 3, 0], mealy_sul.query(%w[1 1 1 1])
-      assert_equal [1, 2, 3, 0], moore_sul.query(%w[1 1 1 1])
-      assert_equal [false, true], spa_sul.query(%i[F ↵])
-      assert_equal [false, false, true], vpa_sul.query(%w[( 1 )])
+      refute dfa_sul.query_last(%w[1 1 1 1])
+      assert_equal 0, mealy_sul.query_last(%w[1 1 1 1])
+      assert_equal 0, moore_sul.query_last(%w[1 1 1 1])
+      assert spa_sul.query_last(%i[F ↵])
+      assert vpa_sul.query_last(%w[( 1 )])
     end
   end
 end

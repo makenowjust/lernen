@@ -17,6 +17,9 @@ module Lernen
       # : (?cache: bool) -> void
       def initialize: (?cache: bool) -> void
 
+      # @rbs override
+      def query_last: ...
+
       # Runs a membership query with the empty input.
       #
       # This is an abstract method.
