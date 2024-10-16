@@ -59,7 +59,7 @@ module Lernen
           in :dfa | :moore
             @root = Node[[], {}]
 
-            empty_out = sul.query_empty
+            empty_out = sul.query_last([])
             @root.branch[empty_out] = Leaf[[]]
             @path_hash[[]] = [empty_out]
 

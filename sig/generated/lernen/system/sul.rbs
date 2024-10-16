@@ -24,7 +24,7 @@ module Lernen
     # @rbs generic In  -- Type for input alphabet
     # @rbs generic Out -- Type for output values
     class SUL[In, Out]
-      @cache: Hash[Array[In], Array[Out]] | nil
+      @cache: Hash[Array[In], Out] | nil
 
       @num_cached_queries: Integer
 
@@ -51,13 +51,6 @@ module Lernen
       #
       # Note that this method does not accept the empty string due to no outpus.
       # If you need to call `query` with the empty string, you should use `MooreSUL#query_empty` instead.
-      #
-      # : (Array[In] word) -> Array[Out]
-      def query: (Array[In] word) -> Array[Out]
-
-      # Runs a membership query with the given word, and returns the last output.
-      #
-      # It is the same as `query(word).last`.
       #
       # : (Array[In] word) -> Out
       def query_last: (Array[In] word) -> Out

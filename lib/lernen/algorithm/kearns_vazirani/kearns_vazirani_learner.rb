@@ -84,10 +84,10 @@ module Lernen
 
           case @automaton_type
           in :dfa
-            accept_state_set = @sul.query_empty ? Set[0] : Set.new
+            accept_state_set = @sul.query_last([]) ? Set[0] : Set.new
             Automaton::DFA.new(0, accept_state_set, transition_function)
           in :moore
-            output_function = { 0 => @sul.query_empty }
+            output_function = { 0 => @sul.query_last([]) }
             Automaton::Moore.new(0, output_function, transition_function)
           in :mealy
             Automaton::Mealy.new(0, transition_function)

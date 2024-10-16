@@ -25,7 +25,7 @@ module Lernen
     # @rbs generic In  -- Type for input alphabet
     # @rbs generic Out -- Type for output values
     class SUL
-      # @rbs @cache: Hash[Array[In], Array[Out]] | nil
+      # @rbs @cache: Hash[Array[In], Out] | nil
       # @rbs @num_cached_queries: Integer
       # @rbs @num_queries: Integer
       # @rbs @num_steps: Integer
@@ -59,13 +59,10 @@ module Lernen
 
       # Runs a membership query with the given word.
       #
-      # Note that this method does not accept the empty string due to no outpus.
-      # If you need to call `query` with the empty string, you should use `MooreSUL#query_empty` instead.
-      #
-      #: (Array[In] word) -> Array[Out]
-      def query(word)
+      #: (Array[In] word) -> Out
+      def query_last(word)
         cached = (cache = @cache) && cache[word]
-        if cached
+        unless cached.nil? # steep:ignore
           @num_cached_queries += 1
           return cached
         end
@@ -75,23 +72,17 @@ module Lernen
         end
 
         setup
-        outputs = word.map { |input| step(input) }
+        output = step(word[0])
+        word[1..]&.each { |input| output = step(input) }
         shutdown
 
         @num_queries += 1
         @num_steps += word.size
 
-        cache[word.dup] = outputs if cache
+        cache[word.dup] = output if cache
 
-        outputs
+        output
       end
-
-      # Runs a membership query with the given word, and returns the last output.
-      #
-      # It is the same as `query(word).last`.
-      #
-      #: (Array[In] word) -> Out
-      def query_last(word) = query(word).last # steep:ignore
 
       # rubocop:disable Lint/UnusedMethodArgument
 

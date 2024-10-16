@@ -48,7 +48,7 @@ module Lernen
           case automaton_type
           in :dfa | :moore
             raise "MooreLikeSUL is required to learn DFA or Moore" unless sul.is_a?(System::MooreLikeSUL)
-            @root = Node[sul.query_empty, {}]
+            @root = Node[sul.query_last([]), {}]
           in :mealy
             @root = Node[nil, {}]
           end
