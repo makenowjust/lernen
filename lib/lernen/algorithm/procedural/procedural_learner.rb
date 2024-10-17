@@ -140,16 +140,16 @@ module Lernen
           sul_out = @sul.query_last(cex)
 
           hypothesis = build_hypothesis[0]
-          return false if hypothesis.run(cex)[0].last == sul_out
+          return false if hypothesis.run_last(cex) == sul_out
 
           update_atr_and_check_ts_conformance
           hypothesis, proc_to_state_to_prefix = build_hypothesis
-          return false if hypothesis.run(cex)[0].last == sul_out
+          return false if hypothesis.run_last(cex) == sul_out
 
           return_indices = (0...cex.size).filter { |index| cex[index] == @return_input } # steep:ignore
           global_query =
             if sul_out
-              ->(word) { hypothesis.run(word)[0].last }
+              ->(word) { hypothesis.run_last(word) }
             else
               ->(word) { @sul.query_last(word) }
             end
@@ -218,7 +218,7 @@ module Lernen
             local_word = @manager.project(ts[index + 1...return_index]) # steep:ignore
 
             dfa = hypothesis.proc_to_dfa[input] # steep:ignore
-            next if dfa.output(dfa.run(local_word)[1])
+            next if dfa.run_last(local_word)
 
             state_to_prefix = proc_to_state_to_prefix[input] # steep:ignore
             @proc_to_learner[input].refine_hypothesis(local_word, dfa, state_to_prefix) # steep:ignore

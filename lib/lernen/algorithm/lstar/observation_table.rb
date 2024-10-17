@@ -98,7 +98,7 @@ module Lernen
             new_input = cex[n]
             new_suffix = cex[n + 1...]
 
-            _, old_state = hypothesis.run(old_prefix) # steep:ignore
+            old_state = hypothesis.run_conf(old_prefix) # steep:ignore
             new_prefix = state_to_prefix[old_state] + [new_input]
             @prefixes << new_prefix unless @prefixes.include?(new_prefix)
             @suffixes << new_suffix unless @suffixes.include?(new_suffix) # steep:ignore

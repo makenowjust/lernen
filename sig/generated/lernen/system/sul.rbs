@@ -49,9 +49,6 @@ module Lernen
 
       # Runs a membership query with the given word.
       #
-      # Note that this method does not accept the empty string due to no outpus.
-      # If you need to call `query` with the empty string, you should use `MooreSUL#query_empty` instead.
-      #
       # : (Array[In] word) -> Out
       def query_last: (Array[In] word) -> Out
 

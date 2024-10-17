@@ -27,11 +27,10 @@ module Lernen
       def test_run
         mealy = MealyTest.mod4_mealy
 
-        assert_equal [[], 0], mealy.run([])
-        assert_equal [[0], 0], mealy.run(%w[0])
-        assert_equal [[1], 1], mealy.run(%w[1])
-        assert_equal [[1, 2, 3], 3], mealy.run(%w[1 1 1])
-        assert_equal [[1, 2, 3, 0], 0], mealy.run(%w[1 1 1 1])
+        assert_equal [0, 0], mealy.run(%w[0])
+        assert_equal [1, 1], mealy.run(%w[1])
+        assert_equal [3, 3], mealy.run(%w[1 1 1])
+        assert_equal [0, 0], mealy.run(%w[1 1 1 1])
       end
 
       #: () -> void

@@ -94,8 +94,8 @@ module Lernen
       def test_run
         spa = SPATest.palindrome_spa
 
-        assert_equal [[], :init], spa.run([])
-        assert_equal [[false, true], :term], spa.run(%i[F ↵])
+        assert_equal [false, :init], spa.run([])
+        assert_equal [true, :term], spa.run(%i[F ↵])
       end
 
       #: () -> void

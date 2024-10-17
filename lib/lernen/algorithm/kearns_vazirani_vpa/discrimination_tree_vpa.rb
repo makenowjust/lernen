@@ -178,7 +178,7 @@ module Lernen
           new_input = cex[n]
           new_suffix = cex[n + 1...]
 
-          _, old_conf = hypothesis.run(old_prefix) # steep:ignore
+          old_conf = hypothesis.run_conf(old_prefix) # steep:ignore
           _, replace_conf = hypothesis.step(old_conf, new_input)
 
           new_access_conf = Automaton::VPA::Conf[hypothesis.initial_state, replace_conf.stack] # steep:ignore

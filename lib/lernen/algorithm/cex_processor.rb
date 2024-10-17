@@ -12,12 +12,12 @@ module Lernen
     # CexProcessor contains implementations of counterexample processing functions.
     #
     # A counterexample is a word that leads to the different result between
-    # a hypothesis automaton and a SUL (i.e., `hypothesis.run(cex)[0].last != sul.query_last(cex)`).
-    # Where `h[n] = conf_to_prefix[hypothesis.run(cex[0...n])[1]]`, there
+    # a hypothesis automaton and a SUL (i.e., `hypothesis.run_last(cex) != sul.query_last(cex)`).
+    # Where `h[n] = conf_to_prefix[hypothesis.run_conf(cex[0...n])]`, there
     # are some `n` (where `0 <= n < cex.size`) such that
     # `sul.query_last(h[n] + cex[n...]) != sul.query_last(h[n + 1] + cex[n + 1...])`
     # because `sul.query_last(cex) == sul.query_last(h[0] + cex[n...])` and
-    # `sul.query_last(h[cex.size] + cex[cex.size...]) == hypothesis.run(cex)[0].last`.
+    # `sul.query_last(h[cex.size] + cex[cex.size...]) == hypothesis.run_last(cex)`.
     # Finding such a position `n` from `cex` is called "counterexample processing".
     #
     # The result `n` of counterexample processing has a good property for automata

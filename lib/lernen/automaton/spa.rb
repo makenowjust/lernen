@@ -176,7 +176,7 @@ module Lernen
           sep_word = DFA.find_separating_word(local_alphabet, dfa1, dfa2)
           next unless sep_word
 
-          as, ts, rs = dfa1.output(dfa1.run(sep_word)[1]) ? [as1, ts1, rs1] : [as2, ts2, rs2]
+          as, ts, rs = dfa1.run_last(sep_word) ? [as1, ts1, rs1] : [as2, ts2, rs2]
           sep_word = ProcUtil.expand(spa1.return_input, sep_word, ts)
           return as[proc] + sep_word + rs[proc]
         end

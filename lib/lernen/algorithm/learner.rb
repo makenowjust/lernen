@@ -41,7 +41,7 @@ module Lernen
           hypothesis, state_to_prefix = build_hypothesis
 
           if repeats_cex_evaluation
-            while hypothesis.run(cex)[0].last != oracle.sul.query_last(cex) # steep:ignore
+            while hypothesis.run_last(cex) != oracle.sul.query_last(cex) # steep:ignore
               refine_hypothesis(cex, hypothesis, state_to_prefix)
               hypothesis, state_to_prefix = build_hypothesis
             end

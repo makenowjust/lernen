@@ -24,7 +24,7 @@ module Lernen
           @hypothesis = hypothesis
           @conf_to_prefix = conf_to_prefix
 
-          @hypothesis_output = @hypothesis.run(cex)[0].last
+          @hypothesis_output = @hypothesis.run_last(cex)
         end
 
         private
@@ -34,7 +34,7 @@ module Lernen
           prefix = @cex[0...index]
           suffix = @cex[index...]
 
-          _, prefix_conf = @hypothesis.run(prefix)
+          prefix_conf = @hypothesis.run_conf(prefix)
           @sul.query_last(@conf_to_prefix.call(prefix_conf) + suffix) == @hypothesis_output
         end
       end
