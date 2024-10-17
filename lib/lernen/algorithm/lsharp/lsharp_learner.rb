@@ -331,7 +331,7 @@ module Lernen
           raise ArgumentError, "A border must exist" unless border
 
           while border.size < cex.size
-            _, state = hypothesis.run(cex)
+            state = hypothesis.run_conf(cex)
             state_node = @tree[state_to_prefix[state]]
             node = @tree[cex]
             raise "BUG: Nodes for the basis prefix and `cex` must exist" unless state_node && node
@@ -343,7 +343,7 @@ module Lernen
             cex1 = cex[0...mid]
             cex2 = cex[mid...]
 
-            _, state1 = hypothesis.run(cex1) # steep:ignore
+            state1 = hypothesis.run_conf(cex1) # steep:ignore
             state1_prefix = state_to_prefix[state1]
             @tree.query(state1_prefix + cex2 + witness) # steep:ignore
 

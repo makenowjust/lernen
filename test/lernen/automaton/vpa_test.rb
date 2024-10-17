@@ -20,7 +20,7 @@ module Lernen
       def test_run
         vpa = VPATest.dyck_vpa
 
-        assert_equal [[], VPA::Conf[0, []]], vpa.run([])
+        assert_equal [false, VPA::Conf[0, []]], vpa.run([])
       end
 
       #: () -> void

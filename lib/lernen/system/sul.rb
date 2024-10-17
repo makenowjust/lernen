@@ -67,9 +67,7 @@ module Lernen
           return cached
         end
 
-        if word.empty?
-          raise ArgumentError, "`query` does not accept the empty string. Please use `query_empty` instead."
-        end
+        raise ArgumentError, "This SUL does not accept the empty string." if word.empty?
 
         setup
         output = step(word[0])

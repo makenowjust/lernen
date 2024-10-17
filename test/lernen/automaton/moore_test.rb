@@ -28,11 +28,11 @@ module Lernen
       def test_run
         moore = MooreTest.mod4_moore
 
-        assert_equal [[], 0], moore.run([])
-        assert_equal [[0], 0], moore.run(%w[0])
-        assert_equal [[1], 1], moore.run(%w[1])
-        assert_equal [[1, 2, 3], 3], moore.run(%w[1 1 1])
-        assert_equal [[1, 2, 3, 0], 0], moore.run(%w[1 1 1 1])
+        assert_equal [0, 0], moore.run([])
+        assert_equal [0, 0], moore.run(%w[0])
+        assert_equal [1, 1], moore.run(%w[1])
+        assert_equal [3, 3], moore.run(%w[1 1 1])
+        assert_equal [0, 0], moore.run(%w[1 1 1 1])
       end
 
       #: () -> void

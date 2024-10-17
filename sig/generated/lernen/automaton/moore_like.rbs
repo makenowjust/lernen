@@ -12,9 +12,6 @@ module Lernen
     # step_output == self.output(next_conf)
     # ```
     #
-    # Note that in this class, the initial output of the `#run` method is lost.
-    # If it is needed, we can use `#run_empty` instead.
-    #
     # Note that this class is *abstract*. We should implement the following method:
     #
     # - `#type`
@@ -45,10 +42,8 @@ module Lernen
       # @rbs override
       def step: ...
 
-      # Runs and returns the output value of the transitions for the empty string.
-      #
-      # : () -> Out
-      def run_empty: () -> Out
+      # @rbs override
+      def run: ...
 
       # Finds a separating word between `automaton1` and `automaton2`.
       #

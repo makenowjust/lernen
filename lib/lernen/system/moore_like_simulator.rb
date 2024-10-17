@@ -38,7 +38,7 @@ module Lernen
 
       # @rbs override
       def query_empty
-        @automaton.run_empty
+        @automaton.run_last([])
       end
     end
   end

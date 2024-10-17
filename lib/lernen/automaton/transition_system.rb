@@ -70,19 +70,28 @@ module Lernen
 
       # Runs transitions from the initial configuration with the given word.
       #
-      # It returns a pair of the output values and the final configuration of
+      # It returns a pair of the last output value and the final configuration of
       # the transitions.
       #
-      #: (Array[In] word) -> [Array[Out], Conf]
+      #: (Array[In] word) -> [Out, Conf]
       def run(word)
+        raise ArgumentError, "This transition system does not accept the empty string." if word.empty?
+
         conf = initial_conf
-        outputs = []
-        word.each do |input|
-          output, conf = step(conf, input)
-          outputs << output
-        end
-        [outputs, conf]
+        output, conf = step(conf, word[0])
+        word[1..]&.each { |input| output, conf = step(conf, input) }
+        [output, conf]
       end
+
+      # Runs transitions from the initial configuration and returns the last output value.
+      #
+      #: (Array[In] word) -> Out
+      def run_last(word) = run(word)[0]
+
+      # Runs transitions from the initial configuration and returns the final configuration.
+      #
+      #: (Array[In] word) -> Conf
+      def run_conf(word) = word.empty? ? initial_conf : run(word)[1]
 
       # Returns a [Mermaid](https://mermaid.js.org) diagram of this transition system.
       #

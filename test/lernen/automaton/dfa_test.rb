@@ -28,11 +28,11 @@ module Lernen
       def test_run
         dfa = DFATest.mod4_dfa
 
-        assert_equal [[], 0], dfa.run([])
-        assert_equal [[false], 0], dfa.run(%w[0])
-        assert_equal [[false], 1], dfa.run(%w[1])
-        assert_equal [[false, false, true], 3], dfa.run(%w[1 1 1])
-        assert_equal [[false, false, true, false], 0], dfa.run(%w[1 1 1 1])
+        assert_equal [false, 0], dfa.run([])
+        assert_equal [false, 0], dfa.run(%w[0])
+        assert_equal [false, 1], dfa.run(%w[1])
+        assert_equal [true, 3], dfa.run(%w[1 1 1])
+        assert_equal [false, 0], dfa.run(%w[1 1 1 1])
       end
 
       #: () -> void

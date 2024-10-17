@@ -13,9 +13,6 @@ module Lernen
     # step_output == self.output(next_conf)
     # ```
     #
-    # Note that in this class, the initial output of the `#run` method is lost.
-    # If it is needed, we can use `#run_empty` instead.
-    #
     # Note that this class is *abstract*. We should implement the following method:
     #
     # - `#type`
@@ -57,10 +54,12 @@ module Lernen
         [output(next_conf), next_conf]
       end
 
-      # Runs and returns the output value of the transitions for the empty string.
-      #
-      #: () -> Out
-      def run_empty = output(initial_conf)
+      # @rbs override
+      def run(word)
+        return output(initial_conf), initial_conf if word.empty?
+
+        super
+      end
 
       # Finds a separating word between `automaton1` and `automaton2`.
       #
@@ -74,7 +73,7 @@ module Lernen
           raise ArgumentError, "Cannot find a separating word for different type automata"
         end
 
-        return [] if automaton1.run_empty != automaton2.run_empty # steep:ignore
+        return [] if automaton1.run_last([]) != automaton2.run_last([]) # steep:ignore
 
         super
       end
