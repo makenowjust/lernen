@@ -136,40 +136,75 @@ class LernenTest < Minitest::Test
       end
     end
 
-    next unless algorithm == :kearns_vazirani
+    if algorithm == :lstar && !params[:cex_processing].nil?
+      define_method(:"test_learn_vpa_#{algorithm}_#{params}") do
+        alphabet = %w[0 1 2]
+        call_alphabet = %w[(]
+        return_alphabet = %w[)]
+        N.times do |seed|
+          random = Random.new(seed * 41)
+          expected =
+            Lernen::Automaton::VPA.random(
+              alphabet:,
+              call_alphabet:,
+              return_alphabet:,
+              random:,
+              min_state_size: 8,
+              max_state_size: 10
+            )
 
-    define_method(:"test_learn_vpa_#{algorithm}_#{params}") do
-      alphabet = %w[0 1 2]
-      call_alphabet = %w[(]
-      return_alphabet = %w[)]
-      N.times do |seed|
-        random = Random.new(seed * 41)
-        expected =
-          Lernen::Automaton::VPA.random(
-            alphabet:,
-            call_alphabet:,
-            return_alphabet:,
-            random:,
-            min_state_size: 8,
-            max_state_size: 10
-          )
+          result =
+            Lernen.learn(
+              alphabet:,
+              call_alphabet:,
+              return_alphabet:,
+              sul: expected,
+              automaton_type: :vpa,
+              oracle: ORACLE,
+              oracle_params: VPA_ORACLE_PARAMS,
+              algorithm: :lstar_vpa,
+              params:,
+              random:
+            )
+          cex = Lernen::Automaton::VPA.find_separating_word(alphabet, call_alphabet, return_alphabet, expected, result)
 
-        result =
-          Lernen.learn(
-            alphabet:,
-            call_alphabet:,
-            return_alphabet:,
-            sul: expected,
-            automaton_type: :vpa,
-            oracle: ORACLE,
-            oracle_params: VPA_ORACLE_PARAMS,
-            algorithm: :kearns_vazirani_vpa,
-            params:,
-            random:
-          )
-        cex = Lernen::Automaton::VPA.find_separating_word(alphabet, call_alphabet, return_alphabet, expected, result)
+          assert_nil cex, "Equivalence check failed (seed: #{seed})"
+        end
+      end
+    elsif algorithm == :kearns_vazirani
+      define_method(:"test_learn_vpa_#{algorithm}_#{params}") do
+        alphabet = %w[0 1 2]
+        call_alphabet = %w[(]
+        return_alphabet = %w[)]
+        N.times do |seed|
+          random = Random.new(seed * 41)
+          expected =
+            Lernen::Automaton::VPA.random(
+              alphabet:,
+              call_alphabet:,
+              return_alphabet:,
+              random:,
+              min_state_size: 8,
+              max_state_size: 10
+            )
 
-        assert_nil cex, "Equivalence check failed (seed: #{seed})"
+          result =
+            Lernen.learn(
+              alphabet:,
+              call_alphabet:,
+              return_alphabet:,
+              sul: expected,
+              automaton_type: :vpa,
+              oracle: ORACLE,
+              oracle_params: VPA_ORACLE_PARAMS,
+              algorithm: :kearns_vazirani_vpa,
+              params:,
+              random:
+            )
+          cex = Lernen::Automaton::VPA.find_separating_word(alphabet, call_alphabet, return_alphabet, expected, result)
+
+          assert_nil cex, "Equivalence check failed (seed: #{seed})"
+        end
       end
     end
   end

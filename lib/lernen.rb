@@ -180,7 +180,7 @@ module Lernen
   #    sul: Automaton::VPA[In, Call, Return] | System::MooreLikeSUL[In | Call | Return, bool],
   #    ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool],
   #    ?oracle_params: Hash[Symbol, untyped],
-  #    ?algorithm: :kearns_vazirani_vpa,
+  #    ?algorithm: :lstar_vpa | :kearns_vazirani_vpa,
   #    ?automaton_type: :vpa,
   #    ?params: Hash[Symbol, untyped],
   #    ?random: Random
@@ -191,7 +191,7 @@ module Lernen
   #    return_alphabet: Array[Return],
   #    ?oracle: oracle_type | Equiv::Oracle[In | Call | Return, bool],
   #    ?oracle_params: Hash[Symbol, untyped],
-  #    ?algorithm: :kearns_vazirani_vpa,
+  #    ?algorithm: :lstar_vpa | :kearns_vazirani_vpa,
   #    ?automaton_type: :vpa,
   #    ?params: Hash[Symbol, untyped],
   #    ?random: Random
@@ -321,6 +321,8 @@ module Lernen
       Algorithm::KearnsVazirani.learn(alphabet, sul, oracle, automaton_type:, **params)
     in :dhc
       Algorithm::DHC.learn(alphabet, sul, oracle, automaton_type:, **params)
+    in :lstar_vpa
+      Algorithm::LStarVPA.learn(alphabet, call_alphabet, return_alphabet, sul, oracle, **params)
     in :kearns_vazirani_vpa
       Algorithm::KearnsVaziraniVPA.learn(alphabet, call_alphabet, return_alphabet, sul, oracle, **params)
     in :lsharp
