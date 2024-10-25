@@ -1,0 +1,73 @@
+# Generated from lib/lernen/algorithm/lstar_vpa/observation_table_vpa.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    module LStarVPA
+      # ObservationTableVPA is an implementation of observation tabel data structure for VPA.
+      #
+      # @rbs generic In     -- Type for input alphabet
+      # @rbs generic Call   -- Type for call alphabet
+      # @rbs generic Return -- Type for return alphabet
+      class ObservationTableVPA[In, Call, Return]
+        @table: Hash[Array[In | Call | Return], Array[bool]]
+
+        @separators: Array[[ Array[In | Call | Return], Array[In | Call | Return] ]]
+
+        @prefixes: Array[Array[In | Call | Return]]
+
+        @cex_processing: cex_processing_method
+
+        @sul: System::SUL[In | Call | Return, bool]
+
+        @return_alphabet: Array[Return]
+
+        @call_alphabet: Array[Call]
+
+        @alphabet: Array[In]
+
+        # : (
+        #     Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
+        #     System::SUL[In | Call | Return, bool] sul,
+        #     cex_processing: cex_processing_method
+        #   ) -> void
+        def initialize: (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::SUL[In | Call | Return, bool] sul, cex_processing: cex_processing_method) -> void
+
+        # Constructs a hypothesis automaton from this observation table.
+        #
+        # : () -> [Automaton::VPA[In, Call, Return], Hash[Integer, Array[In | Call | Return]]]
+        def build_hypothesis: () -> [ Automaton::VPA[In, Call, Return], Hash[Integer, Array[In | Call | Return]] ]
+
+        # Updates this observation table by the given `cex`.
+        #
+        # : (
+        #    Array[In | Call | Return] cex,
+        #    Automaton::VPA[In, Call, Return] hypothesis,
+        #    Hash[Integer, Array[In | Call | Return]] state_to_prefix
+        #  ) -> void
+        def refine_hypothesis: (Array[In | Call | Return] cex, Automaton::VPA[In, Call, Return] hypothesis, Hash[Integer, Array[In | Call | Return]] state_to_prefix) -> void
+
+        private
+
+        # Finds new prefixes to close.
+        #
+        # : () -> (Array[Array[In | Call | Return]] | nil)
+        def find_prefixes_to_close: () -> (Array[Array[In | Call | Return]] | nil)
+
+        # Updates rows of this observation table.
+        #
+        # : () -> void
+        def update_table: () -> void
+
+        # Updates the row for the given `prefix` of this observation table.
+        #
+        # : (Array[In | Call | Return] prefix) -> void
+        def update_table_row: (Array[In | Call | Return] prefix) -> void
+
+        # Update this table to be consistent and closed.
+        #
+        # : () -> void
+        def make_consistent_and_closed: () -> void
+      end
+    end
+  end
+end

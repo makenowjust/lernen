@@ -18,6 +18,9 @@ alphabet = %w["a" :] # rubocop:disable Lint/PercentStringArray
 call_alphabet = %w[(]
 return_alphabet = %w[)]
 
+# `algorithm` specifies an algorithm for inferring VPAs.
+algorithm = :kearns_vazirani_vpa
+
 # `oracle` specifies a kind of an equivalence oracle using on learning,
 # and `oracle_params` is a paremeter object to it.
 oracle = :random_well_matched_word
@@ -28,13 +31,15 @@ oracle_params = { max_words: 2000 }.freeze
 
 # Ripper VPA:
 puts "Infer Ripper VPA..."
-ripper_vpa = Lernen.learn(alphabet:, call_alphabet:, return_alphabet:, oracle:, oracle_params:, random:) do |word|
+ripper_vpa = Lernen.learn(alphabet:, algorithm:, call_alphabet:, return_alphabet:, oracle:, oracle_params:, 
+random:) do |word|
   !Ripper.sexp(word.join).nil?
 end
 
 # Prism VPA:
 puts "Infer Prism VPA..."
-prism_vpa = Lernen.learn(alphabet:, call_alphabet:, return_alphabet:, oracle:, oracle_params:, random:) do |word|
+prism_vpa = Lernen.learn(alphabet:, algorithm:, call_alphabet:, return_alphabet:, oracle:, oracle_params:, 
+random:) do |word|
   Prism.parse(word.join).success?
 end
 

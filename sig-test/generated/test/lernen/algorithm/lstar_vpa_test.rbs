@@ -1,0 +1,10 @@
+# Generated from test/lernen/algorithm/lstar_vpa_test.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    class LStarVPATest < Minitest::Test
+      # : () -> void
+      def test_learn: () -> void
+    end
+  end
+end

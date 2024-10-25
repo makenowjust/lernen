@@ -1,0 +1,20 @@
+# Generated from lib/lernen/algorithm/lstar_vpa.rb with RBS::Inline
+
+module Lernen
+  module Algorithm
+    # LStarVPA provides an implementation of L* algorithm for VPA.
+    #
+    # The idea behind this implementation is described by [Isberner (2015) "Foundations
+    # of Active Automata Learning: An Algorithmic Overview"](https://eldorado.tu-dortmund.de/handle/2003/34282).
+    module LStarVPA
+      # Runs L* algorithm for VPA and returns an inferred VPA.
+      #
+      # : [In, Call, Return] (
+      #    Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,
+      #    System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle,
+      #    ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil
+      #  ) -> Automaton::VPA[In, Call, Return]
+      def self.learn: [In, Call, Return] (Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet, System::MooreLikeSUL[In | Call | Return, bool] sul, Equiv::Oracle[In | Call | Return, bool] oracle, ?cex_processing: cex_processing_method, ?repeats_cex_evaluation: bool, ?max_learning_rounds: Integer | nil) -> Automaton::VPA[In, Call, Return]
+    end
+  end
+end
