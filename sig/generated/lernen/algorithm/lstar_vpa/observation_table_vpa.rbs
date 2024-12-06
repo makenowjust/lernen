@@ -9,21 +9,21 @@ module Lernen
       # @rbs generic Call   -- Type for call alphabet
       # @rbs generic Return -- Type for return alphabet
       class ObservationTableVPA[In, Call, Return]
-        @table: Hash[Array[In | Call | Return], Array[bool]]
-
-        @separators: Array[[ Array[In | Call | Return], Array[In | Call | Return] ]]
-
-        @prefixes: Array[Array[In | Call | Return]]
-
-        @cex_processing: cex_processing_method
-
-        @sul: System::SUL[In | Call | Return, bool]
-
-        @return_alphabet: Array[Return]
+        @alphabet: Array[In]
 
         @call_alphabet: Array[Call]
 
-        @alphabet: Array[In]
+        @return_alphabet: Array[Return]
+
+        @sul: System::SUL[In | Call | Return, bool]
+
+        @cex_processing: cex_processing_method
+
+        @prefixes: Array[Array[In | Call | Return]]
+
+        @separators: Array[[ Array[In | Call | Return], Array[In | Call | Return] ]]
+
+        @table: Hash[Array[In | Call | Return], Array[bool]]
 
         # : (
         #     Array[In] alphabet, Array[Call] call_alphabet, Array[Return] return_alphabet,

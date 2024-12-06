@@ -10,19 +10,19 @@ module Lernen
       # @rbs generic In  -- Type for input alphabet
       # @rbs generic Out -- Type for output values
       class ObservationTable[In, Out]
-        @table: Hash[Array[In], Array[Out]]
-
-        @suffixes: Array[Array[In]]
-
-        @prefixes: Array[Array[In]]
-
-        @cex_processing: cex_processing_method | nil
-
-        @automaton_type: Automaton::transition_system_type
+        @alphabet: Array[In]
 
         @sul: System::SUL[In, Out]
 
-        @alphabet: Array[In]
+        @automaton_type: Automaton::transition_system_type
+
+        @cex_processing: cex_processing_method | nil
+
+        @prefixes: Array[Array[In]]
+
+        @suffixes: Array[Array[In]]
+
+        @table: Hash[Array[In], Array[Out]]
 
         # : (
         #     Array[In] alphabet,
