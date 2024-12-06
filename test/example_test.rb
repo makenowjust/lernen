@@ -4,6 +4,8 @@
 require_relative "test_helper"
 
 require "open3"
+require "prism"
+require "rubygems"
 
 class ExampleTest < Minitest::Test
   EXAMPLES_DIR = File.expand_path("../examples", __dir__ || ".") #: String
@@ -32,6 +34,8 @@ class ExampleTest < Minitest::Test
 
   #: () -> void
   def test_text_example_ripper_prism
+    skip "This example depends on the old Prism (<=1.0.0)." if Gem::Version.new("1.0.0") < Prism::VERSION
+
     assert_equal <<~'STDOUT', capture("bundle", "exec", "ruby", File.join(EXAMPLES_DIR, "ripper_prism.rb"))
       Infer Ripper VPA...
       Infer Prism VPA...
