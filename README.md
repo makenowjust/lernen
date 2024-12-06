@@ -495,7 +495,7 @@ puts sep_word&.join
 ```
 
 Then, we got `"(\"a\":)"` as the separating word between Ripper and Prism VPAs.
-As of 2024/09/08 (Prism 1.0.0 and Ruby 3.3.5), this is indeed a counterexample of a string that behaves differently in Prism and `parse.y`.
+As of 2024/09 (Prism 1.0.0 and Ruby 3.3.5), this is indeed a counterexample of a string that behaves differently in Prism and `parse.y`.
 
 ```ruby
 !Ripper.parse("(\"a\":)").nil?
@@ -504,7 +504,10 @@ Prism.parse("(\"a\":)").success?
 # => true
 ```
 
-This seems like a bug, since Prism parses this as a symbol literal surrounded by parentheses.
+> [!NOTE]
+> This bug is fixed at [Prism v1.1.0](https://github.com/ruby/prism/releases/tag/v1.1.0).
+
+This seems like a bug (reported as [ruby/prism#3035](https://github.com/ruby/prism/issues/3035)), since Prism parses this as a symbol literal surrounded by parentheses.
 
 ## Contributing
 
