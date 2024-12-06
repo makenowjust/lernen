@@ -2,7 +2,7 @@
 path: ".gem_rbs_collection"
 gems:
 - name: prism
-  version: 1.0.0
+  version: 1.2.0
   source:
     type: rubygems
 - name: simplecov
@@ -10,7 +10,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 4f55d83688a772342f0d96966cd51d06af03c2c8
+    revision: 0a6ea105a0afc7eaee4494585a7775f47eea6145
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 gemfile_lock_path: Gemfile.lock

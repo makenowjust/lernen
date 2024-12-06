@@ -21,7 +21,7 @@ class LernenTest < Minitest::Test
     [:dhc, { cex_processing: :binary }],
     [:dhc, { cex_processing: :linear }],
     [:dhc, { cex_processing: :exponential }],
-    [:lsharp, {}]
+    [:lsharp, {}] #: [Lernen::algorithm_name, Hash[Symbol, Symbol]]
   ].freeze #: Array[[Lernen::algorithm_name, Hash[Symbol, Symbol]]]
 
   TEST_CASES.each do |(algorithm, params)|

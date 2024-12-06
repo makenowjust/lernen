@@ -23,19 +23,19 @@ module Lernen
           def self.[]: [In, Call, Return] (Array[In | Call | Return] prefix) -> Leaf[In, Call, Return]
         end
 
-        @root: Node[In, Call, Return]
-
-        @path_hash: Hash[Array[In | Call | Return], Array[bool]]
-
-        @cex_processing: cex_processing_method
-
-        @sul: System::MooreLikeSUL[In | Call | Return, bool]
-
-        @return_alphabet: Array[Return]
+        @alphabet: Array[In]
 
         @call_alphabet: Array[Call]
 
-        @alphabet: Array[In]
+        @return_alphabet: Array[Return]
+
+        @sul: System::MooreLikeSUL[In | Call | Return, bool]
+
+        @cex_processing: cex_processing_method
+
+        @path_hash: Hash[Array[In | Call | Return], Array[bool]]
+
+        @root: Node[In, Call, Return]
 
         # : (
         #     Array[In] alphabet,

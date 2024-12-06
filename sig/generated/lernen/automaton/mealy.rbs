@@ -7,9 +7,9 @@ module Lernen
     # @rbs generic In  -- Type for input alphabet
     # @rbs generic Out -- Type for output values
     class Mealy[In, Out] < TransitionSystem[Integer, In, Out]
-      @transition_function: Hash[[ Integer, In ], [ Out, Integer ]]
-
       @initial_state: Integer
+
+      @transition_function: Hash[[ Integer, In ], [ Out, Integer ]]
 
       # : (
       #     Integer initial_state,
