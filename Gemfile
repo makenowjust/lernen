@@ -18,6 +18,6 @@ group :development do
 end
 
 group :experiments do
-  gem "json", "~> 2.9.0", require: false
+  gem "json", "~> 2.10.0", require: false
   gem "optparse", "~> 0.5", require: false
 end
