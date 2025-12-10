@@ -49,7 +49,7 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
-    optparse (0.6.0)
+    optparse (0.8.1)
     parallel (1.27.0)
     parser (3.3.8.0)
       ast (~> 2.4.1)
